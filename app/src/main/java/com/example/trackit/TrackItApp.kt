@@ -10,12 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.trackit.data.Page
+import com.example.trackit.data.Screen
 import com.example.trackit.ui.FitnessPage
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.HomePage
@@ -28,8 +27,8 @@ fun TrackItApp(
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
-    val currentPage = Page.valueOf(
-        backStackEntry?.destination?.route ?: Page.Home.name
+    val currentScreen = Screen.valueOf(
+        backStackEntry?.destination?.route ?: Screen.Home.name
     )
 
     Scaffold(
@@ -37,46 +36,46 @@ fun TrackItApp(
             BottomNavigation {
                 // Food page
                 BottomNavigationItem(
-                    selected = currentPage == Page.Food,
+                    selected = currentScreen == Screen.Food,
                     icon = { Icon(Icons.Rounded.Favorite, contentDescription = null) },
-                    label = { Text(text = Page.Food.name) },
+                    label = { Text(text = Screen.Food.name) },
                     onClick = {
-                        navController.navigate(Page.Food.name)
+                        navController.navigate(Screen.Food.name)
                     }
                 )
 
                 // Home page
                 BottomNavigationItem(
-                    selected = currentPage == Page.Home,
+                    selected = currentScreen == Screen.Home,
                     icon = { Icon(Icons.Filled.Person, contentDescription = null) },
-                    label = { Text(text = Page.Home.name) },
+                    label = { Text(text = Screen.Home.name) },
                     onClick = {
-                        navController.navigate(Page.Home.name)
+                        navController.navigate(Screen.Home.name)
                     }
                 )
 
                 // Fitness page
                 BottomNavigationItem(
-                    selected = currentPage == Page.Fitness,
+                    selected = currentScreen == Screen.Fitness,
                     icon = { Icon(Icons.Rounded.Favorite, contentDescription = null) },
-                    label = { Text(text = Page.Fitness.name) },
+                    label = { Text(text = Screen.Fitness.name) },
                     onClick = {
-                        navController.navigate(Page.Fitness.name)
+                        navController.navigate(Screen.Fitness.name)
                     }
                 )
             }
         }
     ) { innerPadding ->
-        NavHost(navController, startDestination = Page.Home.name, Modifier.padding(innerPadding)) {
-            composable(route = Page.Home.name){
+        NavHost(navController, startDestination = Screen.Home.name, Modifier.padding(innerPadding)) {
+            composable(route = Screen.Home.name){
                 HomePage()
             }
 
-            composable(route = Page.Fitness.name){
+            composable(route = Screen.Fitness.name){
                 FitnessPage()
             }
 
-            composable(route = Page.Food.name){
+            composable(route = Screen.Food.name){
                 FoodPage()
             }
         }

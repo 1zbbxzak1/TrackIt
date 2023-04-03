@@ -1,6 +1,6 @@
 package com.example.trackit.data
 
-enum class Page {
+enum class Screen {
     Home,
     Fitness,
     Food
