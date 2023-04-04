@@ -7,8 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +21,7 @@ import com.example.trackit.ui.FitnessPage
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.HomePage
 import com.example.trackit.ui.theme.TrackItTheme
+import java.time.LocalDate
 
 @Composable
 fun TrackItApp(
@@ -30,6 +30,11 @@ fun TrackItApp(
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
 
+    // Current selected date in calendar
+    val selectedDate = remember {
+        mutableStateOf(LocalDate.now())
+    }
+
     val currentScreen = Screen.valueOf(
         backStackEntry?.destination?.route ?: Screen.Home.name
     )
@@ -37,7 +42,10 @@ fun TrackItApp(
     Scaffold(
         bottomBar = {
             Column {
-                ExpandableCalendar()
+                ExpandableCalendar(
+                    onDateSelected = {date -> selectedDate.value = date},
+                    Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
+                )
 
                 BottomNavigation {
                     // Food page
@@ -89,10 +97,18 @@ fun TrackItApp(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PreviewTrackItApp(){
     TrackItTheme {
+        TrackItApp()
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewTrackItAppDarkTheme(){
+    TrackItTheme(darkTheme = true) {
         TrackItApp()
     }
 }
