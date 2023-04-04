@@ -1,5 +1,8 @@
 package com.example.trackit.calendar
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -30,43 +33,50 @@ fun ExpandableCalendar(
     var expanded by remember { mutableStateOf(false) }
 
     val selectionState = remember {
-        DynamicSelectionState(
-            selection = emptyList(), selectionMode = SelectionMode.Single
-        )
+        DynamicSelectionState(selection = emptyList(), selectionMode = SelectionMode.Single)
     }
 
-    if (!expanded){
-        val calendarState = rememberSelectableWeekCalendarState(
-            selectionState = selectionState,
-            initialWeek = getWeekFromDate(selectionState.selection)
+    Column(
+        modifier = Modifier.animateContentSize(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioLowBouncy,
+                stiffness = Spring.StiffnessMedium
+            )
         )
+    ) {
+        if (!expanded){
+            val calendarState = rememberSelectableWeekCalendarState(
+                selectionState = selectionState,
+                initialWeek = getWeekFromDate(selectionState.selection)
+            )
 
-        CalendarCard(modifier.clickable { expanded = !expanded },
-            cardContent = {
-                SelectableWeekCalendar( calendarState = calendarState, weekHeader = {})
-            },
-            expandIcon = { ExpandIcon(expanded) }
-        )
+            CalendarCard(modifier.clickable { expanded = !expanded },
+                cardContent = {
+                    SelectableWeekCalendar( calendarState = calendarState, weekHeader = {})
+                },
+                expandIcon = { ExpandIcon(expanded) }
+            )
 
-        if (calendarState.selectionState.selection.isNotEmpty()){
-            onDateSelected(calendarState.selectionState.selection[0])
+            if (calendarState.selectionState.selection.isNotEmpty()){
+                onDateSelected(calendarState.selectionState.selection[0])
+            }
         }
-    }
-    else {
-        val calendarState = rememberSelectableCalendarState(
-            selectionState = selectionState,
-            initialMonth = getMonthFromDate(selectionState.selection)
-        )
+        else {
+            val calendarState = rememberSelectableCalendarState(
+                selectionState = selectionState,
+                initialMonth = getMonthFromDate(selectionState.selection)
+            )
 
-        CalendarCard(modifier.clickable { expanded = !expanded },
-            cardContent = {
-                SelectableCalendar(calendarState = calendarState)
-            },
-            expandIcon = { ExpandIcon(expanded) }
-        )
+            CalendarCard(modifier.clickable { expanded = !expanded },
+                cardContent = {
+                    SelectableCalendar(calendarState = calendarState)
+                },
+                expandIcon = { ExpandIcon(expanded) }
+            )
 
-        if (calendarState.selectionState.selection.isNotEmpty()){
-            onDateSelected(calendarState.selectionState.selection[0])
+            if (calendarState.selectionState.selection.isNotEmpty()){
+                onDateSelected(calendarState.selectionState.selection[0])
+            }
         }
     }
 }
