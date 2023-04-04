@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.trackit.ui.theme.TrackItTheme
-import io.github.boguszpawlowski.composecalendar.SelectableCalendar
-import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
-import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
-import io.github.boguszpawlowski.composecalendar.rememberSelectableWeekCalendarState
+import io.github.boguszpawlowski.composecalendar.*
+import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
+import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
+import io.github.boguszpawlowski.composecalendar.week.Week
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun ExpandableCalendar(
@@ -28,8 +29,18 @@ fun ExpandableCalendar(
 ){
     var expanded by remember { mutableStateOf(false) }
 
+    val selectionState = remember {
+        DynamicSelectionState(
+            selection = emptyList(), selectionMode = SelectionMode.Single
+        )
+    }
+
     if (!expanded){
-        val calendarState = rememberSelectableWeekCalendarState()
+        val calendarState = rememberSelectableWeekCalendarState(
+            selectionState = selectionState,
+            initialWeek = getWeekFromDate(selectionState.selection)
+        )
+
         CalendarCard(modifier.clickable { expanded = !expanded },
             cardContent = {
                 SelectableWeekCalendar( calendarState = calendarState, weekHeader = {})
@@ -42,7 +53,11 @@ fun ExpandableCalendar(
         }
     }
     else {
-        val calendarState = rememberSelectableCalendarState()
+        val calendarState = rememberSelectableCalendarState(
+            selectionState = selectionState,
+            initialMonth = getMonthFromDate(selectionState.selection)
+        )
+
         CalendarCard(modifier.clickable { expanded = !expanded },
             cardContent = {
                 SelectableCalendar(calendarState = calendarState)
@@ -80,6 +95,26 @@ private fun CalendarCard(
 private fun ExpandIcon(expanded: Boolean){
     val icon = if(!expanded) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowDown
     Icon(icon, contentDescription = null)
+}
+
+private fun getMonthFromDate(dateList: List<LocalDate>): YearMonth {
+    if (dateList.isNotEmpty()){
+        val date = dateList[0]
+        return YearMonth.from(date)
+
+    }
+    return YearMonth.now()
+}
+
+private fun getWeekFromDate(dateList: List<LocalDate>): Week {
+    if (dateList.isNotEmpty()){
+        val date = dateList[0]
+        val monday = date.minusDays((date.dayOfWeek.value - 1).toLong())
+        val weekList = List<LocalDate> (7) { monday.plusDays(it.toLong()) }
+
+        return Week(weekList)
+    }
+    return Week.now()
 }
 
 @Preview(showBackground = true)
