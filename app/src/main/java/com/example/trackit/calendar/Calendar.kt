@@ -5,10 +5,12 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -52,9 +54,12 @@ fun ExpandableCalendar(
 
             CalendarCard(modifier.clickable { expanded = !expanded },
                 cardContent = {
-                    SelectableWeekCalendar( calendarState = calendarState, weekHeader = {})
-                },
-                expandIcon = { ExpandIcon(expanded) }
+                    SelectableWeekCalendar( calendarState = calendarState, weekHeader = {
+                        Surface(modifier = Modifier.fillMaxWidth()) {
+                            ExpandIcon(expanded = false)
+                        }
+                    })
+                }
             )
 
             if (calendarState.selectionState.selection.isNotEmpty()){
@@ -69,9 +74,10 @@ fun ExpandableCalendar(
 
             CalendarCard(modifier.clickable { expanded = !expanded },
                 cardContent = {
-                    SelectableCalendar(calendarState = calendarState)
-                },
-                expandIcon = { ExpandIcon(expanded) }
+                    SelectableCalendar(
+                        calendarState = calendarState, 
+                        monthHeader = { MonthHeader(monthState = it)})
+                }
             )
 
             if (calendarState.selectionState.selection.isNotEmpty()){
@@ -84,8 +90,7 @@ fun ExpandableCalendar(
 @Composable
 private fun CalendarCard(
     modifier: Modifier = Modifier,
-    cardContent: @Composable () -> Unit,
-    expandIcon: @Composable () -> Unit
+    cardContent: @Composable () -> Unit
     ){
     Card(
         elevation = 10.dp,
@@ -95,14 +100,13 @@ private fun CalendarCard(
         Column(modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            expandIcon()
             cardContent()
         }
     }
 }
 
 @Composable
-private fun ExpandIcon(expanded: Boolean){
+fun ExpandIcon(expanded: Boolean){
     val icon = if(!expanded) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowDown
     Icon(icon, contentDescription = null)
 }
@@ -132,8 +136,7 @@ private fun getWeekFromDate(dateList: List<LocalDate>): Week {
 private fun CalendarPreview(){
     TrackItTheme {
         CalendarCard(Modifier.clickable {  },
-            cardContent = { SelectableCalendar() },
-            expandIcon = { ExpandIcon(true) }
+            cardContent = { SelectableCalendar() }
         )
     }
 }
@@ -143,8 +146,7 @@ private fun CalendarPreview(){
 private fun CalendarWeekPreview(){
     TrackItTheme {
         CalendarCard(Modifier.clickable {  },
-            cardContent = { SelectableWeekCalendar( weekHeader = {}) },
-            expandIcon = { ExpandIcon(false) }
+            cardContent = { SelectableWeekCalendar( weekHeader = {}) }
         )
     }
 }
