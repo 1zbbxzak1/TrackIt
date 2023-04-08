@@ -6,20 +6,24 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.trackit.data.Screen
-import com.example.trackit.ui.WorkoutPage
+import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.ui.workout.WorkoutPage
+import com.example.trackit.ui.workout.WorkoutViewModel
+import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
 @Composable
 fun TrackItApp(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ){
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -56,7 +60,7 @@ fun TrackItApp(
     }
 
     Scaffold(
-        floatingActionButton = {FloatingButton(navController)},
+        floatingActionButton = {FloatingButton(navController, onClick = {})},
         isFloatingActionButtonDocked = true,
         bottomBar = {
             BottomBar(
