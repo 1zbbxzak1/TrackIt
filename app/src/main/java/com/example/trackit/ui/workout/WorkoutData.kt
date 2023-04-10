@@ -18,13 +18,14 @@ data class Exercise(
     val name: String
 )
 
-@Entity(tableName = "categories")
-data class Category(
+@Entity(tableName = "workout_categories")
+data class WorkoutCategory(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String,
     val exercises: List<Exercise>
 )
+
 
 class ExerciseConverter {
     @TypeConverter
@@ -35,6 +36,18 @@ class ExerciseConverter {
     @TypeConverter
     fun toExercise(name: String): Exercise {
         return Exercise(name)
+    }
+
+    @TypeConverter
+    fun fromString(value: String?): List<Exercise> {
+        return value?.let {
+            it.split(",").map { Exercise(it) }
+        } ?: emptyList()
+    }
+
+    @TypeConverter
+    fun toString(exercises: List<Exercise>): String {
+        return exercises.joinToString(separator = ",") { it.name }
     }
 }
 

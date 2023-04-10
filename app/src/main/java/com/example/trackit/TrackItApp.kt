@@ -7,17 +7,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.ProfilePage
+import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.ui.workout.WorkoutCategory
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.WorkoutViewModel
+import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
+import com.example.trackit.ui.workout.exercise.WorkoutExerciseScreen
 import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
@@ -57,13 +63,19 @@ fun TrackItApp(
             topBarState.value = false
             floatingButtonState.value = true
         }
+        Screen.WorkoutCategory.name -> {
+            bottomBarState.value = false
+            topBarState.value = true
+            floatingButtonState.value = true
+        }
     }
 
     Scaffold(
-        floatingActionButton = {FloatingButton(navController, onClick = {})},
-        isFloatingActionButtonDocked = true,
+        //floatingActionButton = {FloatingButton(onClick = {})},
+        //isFloatingActionButtonDocked = true,
         bottomBar = {
             BottomBar(
+                bottomBarState.value,
                 onDateSelected = {selectedDate.value = it},
                 navController = navController,
                 currentScreen = currentScreen
@@ -76,8 +88,29 @@ fun TrackItApp(
             }
 
             composable(route = Screen.Workout.name){
-                WorkoutPage()
+                WorkoutPage(navigateToEntry = {navController.navigate(Screen.WorkoutCategory.name)}, selectedDate.value)
             }
+
+            composable(route = Screen.WorkoutCategory.name){
+                WorkoutCategoryScreen(
+                    onCategorySelect = {categoryId ->
+                        navController.currentBackStackEntry?.arguments?.putInt("categoryId", categoryId)
+                        navController.navigate(Screen.WorkoutExercise.name)
+
+                    },
+                    navigateBack = {navController.popBackStack()}
+                )
+            }
+
+            composable(
+                route = Screen.WorkoutExercise.name
+            ){
+                val categoryId = navController.previousBackStackEntry?.arguments?.getInt("categoryId", 0)
+                WorkoutExerciseScreen(
+                    categoryId,
+                    navigateBack = {navController.popBackStack()},
+                    navigateToWorkoutPage = {navController.navigate(Screen.Workout.name)}
+                )}
 
             composable(route = Screen.Food.name){
                 FoodPage()

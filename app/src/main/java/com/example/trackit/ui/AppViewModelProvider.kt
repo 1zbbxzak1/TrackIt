@@ -6,11 +6,24 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.trackit.TrackItApplication
 import com.example.trackit.ui.workout.WorkoutViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import com.example.trackit.ui.workout.category.WorkoutCategoryViewModel
+import com.example.trackit.ui.workout.exercise.WorkoutExerciseViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             WorkoutViewModel(trackItApplication().container.workoutItemsRepository)
+        }
+
+        initializer {
+            WorkoutCategoryViewModel(trackItApplication().container.workoutCategoryRepository)
+        }
+
+        initializer {
+            WorkoutExerciseViewModel(
+                trackItApplication().container.workoutItemsRepository,
+                trackItApplication().container.workoutCategoryRepository
+            )
         }
     }
 }

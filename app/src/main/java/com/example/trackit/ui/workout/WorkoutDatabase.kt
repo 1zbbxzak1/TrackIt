@@ -24,3 +24,24 @@ abstract class WorkoutDatabase : RoomDatabase() {
         }
     }
 }
+
+@Database(entities = [WorkoutCategory::class], version = 1, exportSchema = false)
+@TypeConverters(ExerciseConverter::class)
+abstract class WorkoutCategoryDatabase : RoomDatabase(){
+    abstract fun itemDao(): WorkoutCategoryDao
+
+    companion object {
+        @Volatile
+        private var Instance: WorkoutCategoryDatabase? = null
+
+        fun getDatabase(context: Context): WorkoutCategoryDatabase {
+            // if the Instance is not null, return it, otherwise create a new database instance.
+            return Instance ?: synchronized(this) {
+                Room.databaseBuilder(context, WorkoutCategoryDatabase::class.java, "workout_categories_database")
+                    .fallbackToDestructiveMigration()
+                    .build()
+                    .also { Instance = it }
+            }
+        }
+    }
+}
