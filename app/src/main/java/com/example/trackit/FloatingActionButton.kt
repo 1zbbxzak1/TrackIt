@@ -11,15 +11,15 @@ import com.example.trackit.data.Screen
 
 @Composable
 fun FloatingButton(
-    navController: NavController
+    currentRoute: String,
+    onClick: () -> Unit = {}
 ){
-    val currentRoute = navController.currentDestination?.route ?: Screen.Profile.name
     val currentIcon = when(currentRoute){
         Screen.Profile.name -> { Icons.Rounded.Edit }
         else -> { Icons.Rounded.Add }
     }
 
-    FloatingActionButton(onClick = { /*TODO*/ }) {
+    FloatingActionButton(onClick = { onClick() }) {
         Icon(currentIcon, contentDescription = null)
     }
 }

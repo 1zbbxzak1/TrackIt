@@ -20,7 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.trackit.ui.theme.TrackItTheme
-import io.github.boguszpawlowski.composecalendar.*
+import io.github.boguszpawlowski.composecalendar.SelectableCalendar
+import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
+import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
+import io.github.boguszpawlowski.composecalendar.rememberSelectableWeekCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 import io.github.boguszpawlowski.composecalendar.week.Week
