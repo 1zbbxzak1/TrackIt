@@ -3,8 +3,13 @@ package com.example.trackit.ui.workout.exercise
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.trackit.ui.workout.*
-import kotlinx.coroutines.flow.*
+import com.example.trackit.ui.workout.Exercise
+import com.example.trackit.ui.workout.WorkoutCategoryRepository
+import com.example.trackit.ui.workout.WorkoutEntity
+import com.example.trackit.ui.workout.WorkoutItemsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class WorkoutExerciseViewModel(
@@ -17,19 +22,6 @@ class WorkoutExerciseViewModel(
     private val _exercisesUiState = MutableStateFlow(WorkoutExerciseUiState())
 
     val exerciseUiState: StateFlow<WorkoutExerciseUiState> = _exercisesUiState
-
-    /*
-    private var selectedCategory = categoryRepository.getItemStream(selectedCategoryId.value)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-            initialValue = WorkoutCategory(0, "", listOf())
-        )
-
-
-     */
-
-    //var exercises = MutableStateFlow(WorkoutExerciseUiState()).asStateFlow()
 
     fun updateSelectedCategory(categoryId: Int){
         selectedCategoryId.value = categoryId

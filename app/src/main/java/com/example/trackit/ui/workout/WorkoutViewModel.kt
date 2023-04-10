@@ -4,7 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -21,7 +24,7 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
         selectedDate.value = date
         viewModelScope.launch {
             _workoutUiState.value = repository.getItemsOnDate(date).map { WorkoutUiState(it) }.first()
-            Log.d("CURRENT_WORKOUT_LIST", _workoutUiState.value.itemList.toString())
+            //Log.d("CURRENT_WORKOUT_LIST", _workoutUiState.value.itemList.toString())
         }
     }
 

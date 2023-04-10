@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,9 +22,7 @@ import com.example.trackit.FloatingButton
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.navigation.WorkoutEditTopBar
-import com.example.trackit.ui.workout.Exercise
 import com.example.trackit.ui.workout.WorkoutCategory
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -40,17 +41,11 @@ fun WorkoutCategoryScreen(
         },
         topBar = { WorkoutEditTopBar(title = "Выберите категорию", navigateBack = navigateBack) }
     ) {
-        WorkoutCategoryBody(itemList = uiState.itemList, onCategorySelect)
-
-        /*
-        Button(onClick = { coroutineScope.launch {  viewModel.insertItem(WorkoutCategory(0, "C", listOf(
-            Exercise("1"),
-            Exercise("2")
-        )))} }) {
-            Text(text = "ADD", style = MaterialTheme.typography.h3)
-        }
-
-         */
+        WorkoutCategoryBody(
+            itemList = uiState.itemList,
+            onCategorySelect,
+            modifier = modifier.padding(top = 8.dp)
+        )
     }
 }
 
@@ -86,8 +81,15 @@ private fun WorkoutCategoryItem(
             .fillMaxWidth()
             .padding(start = 4.dp, end = 4.dp)
     ) {
-        Row(modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)) {
-            Text(text = item.name, style = MaterialTheme.typography.h4)
+        Row(
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+            Icon(
+                Icons.Rounded.KeyboardArrowRight,
+                contentDescription = null,
+                modifier = Modifier.padding(start = 8.dp, end = 12.dp))
         }
     }
 }

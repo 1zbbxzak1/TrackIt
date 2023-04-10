@@ -1,7 +1,6 @@
 package com.example.trackit.ui.workout.exercise
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,13 +8,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.trackit.FloatingButton
+import com.example.trackit.data.Screen
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.navigation.WorkoutEditTopBar
 import com.example.trackit.ui.workout.Exercise
@@ -39,7 +43,9 @@ fun WorkoutExerciseScreen(
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = { WorkoutEditTopBar(title = "Выберите упражнение: <${viewModel.selectedCategoryId.value}>", navigateBack = navigateBack) },
-        modifier = modifier
+        floatingActionButton = {
+            FloatingButton(currentRoute = Screen.WorkoutExercise.name, onClick = {})
+        }
     ) {
         WorkoutExerciseBody(
             itemList = uiState.itemList,
@@ -49,6 +55,7 @@ fun WorkoutExerciseScreen(
                 }
                 navigateToWorkoutPage()
             },
+            modifier = modifier.padding(top = 8.dp)
         )
     }
 }
@@ -85,8 +92,16 @@ private fun WorkoutExerciseItem(
             .fillMaxWidth()
             .padding(start = 4.dp, end = 4.dp)
     ) {
-        Row(modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)) {
-            Text(text = item.name, style = MaterialTheme.typography.h4)
+        Row(
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(10f))
+            Icon(
+                Icons.Rounded.KeyboardArrowRight,
+                contentDescription = null,
+                modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+            )
         }
     }
 }
