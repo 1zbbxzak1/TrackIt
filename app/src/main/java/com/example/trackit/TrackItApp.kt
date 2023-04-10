@@ -109,7 +109,8 @@ fun TrackItApp(
                 WorkoutExerciseScreen(
                     categoryId,
                     navigateBack = {navController.popBackStack()},
-                    navigateToWorkoutPage = {navController.navigate(Screen.Workout.name)}
+                    navigateToWorkoutPage = {navController.navigate(Screen.Workout.name)},
+                    selectedDate = selectedDate.value
                 )}
 
             composable(route = Screen.Food.name){

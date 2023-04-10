@@ -2,6 +2,11 @@ package com.example.trackit.ui.workout
 
 import android.content.Context
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import values.preCreatedCategoryList
+import java.util.concurrent.Executors
 
 @Database(entities = [WorkoutEntity::class], version = 1, exportSchema = false)
 @TypeConverters(LocalDateConverter::class, ExerciseConverter::class)
@@ -39,6 +44,17 @@ abstract class WorkoutCategoryDatabase : RoomDatabase(){
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(context, WorkoutCategoryDatabase::class.java, "workout_categories_database")
                     .fallbackToDestructiveMigration()
+                    .addCallback(object : RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            // Insert pre-created objects into the database
+                            GlobalScope.launch {
+                                preCreatedCategoryList.forEach{category ->
+                                    getDatabase(context).itemDao().insert(category)
+                                }
+                            }
+                        }
+                    })
                     .build()
                     .also { Instance = it }
             }

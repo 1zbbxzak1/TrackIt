@@ -27,4 +27,8 @@ class WorkoutCategoryRepository(private val itemDao: WorkoutCategoryDao){
     suspend fun deleteItem(item: WorkoutCategory) = itemDao.delete(item)
 
     suspend fun updateItem(item: WorkoutCategory) = itemDao.update(item)
+
+    suspend fun insertPreCreatedCategories(categories: List<WorkoutCategory>){
+        categories.forEach{ category -> itemDao.insert(category) }
+    }
 }
