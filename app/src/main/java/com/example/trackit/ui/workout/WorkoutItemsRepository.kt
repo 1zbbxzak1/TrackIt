@@ -10,7 +10,7 @@ class WorkoutItemsRepository(private val itemDao: WorkoutItemsDao) {
 
     suspend fun insertItem(item: WorkoutEntity) = itemDao.insert(item)
 
-    suspend fun deleteItem(item: WorkoutEntity) = itemDao.delete(item)
+    suspend fun deleteItem(item: WorkoutEntity) = itemDao.delete(item.id)
 
     suspend fun updateItem(item: WorkoutEntity) = itemDao.update(item)
 

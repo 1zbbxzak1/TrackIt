@@ -1,19 +1,24 @@
 package com.example.trackit.ui.workout
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,6 +26,8 @@ import com.example.trackit.FloatingButton
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.theme.TrackItTheme
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
@@ -59,24 +66,66 @@ fun WorkoutPage(
 
             Divider()
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
-            WorkoutBody(itemList = workoutUiState.itemList, modifier = Modifier.align(Alignment.CenterHorizontally))
+            WorkoutBody(
+                itemList = workoutUiState.itemList,
+                onDismiss = {item -> coroutineScope.launch {
+                    viewModel.deleteItem(item)
+                }},
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .weight(3f))
         }
     }
 }
 
 @Composable
-private fun WorkoutBody(itemList: List<WorkoutEntity>, modifier: Modifier = Modifier){
-    WorkoutList(itemList = itemList, modifier = modifier)
+private fun WorkoutBody(
+    itemList: List<WorkoutEntity>,
+    onDismiss: (WorkoutEntity) -> Unit,
+    modifier: Modifier = Modifier
+){
+    WorkoutList(itemList = itemList, onDismiss = onDismiss, modifier = modifier)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun WorkoutList(itemList: List<WorkoutEntity>, modifier: Modifier = Modifier){
+private fun WorkoutList(
+    itemList: List<WorkoutEntity>,
+    onDismiss: (WorkoutEntity) -> Unit,
+    modifier: Modifier = Modifier
+){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        items(itemList) {item ->
-            WorkoutItem(item = item)
-        }
+        items(items = itemList, key = { item -> item.id }, itemContent = {item ->
+            val currentItem by rememberUpdatedState(item)
+
+            val dismissState = rememberDismissState(confirmStateChange = {
+                onDismiss(currentItem)
+                true
+            })
+            Log.d("123", dismissState.isDismissed(DismissDirection.EndToStart).toString())
+
+            /*
+            if(dismissState.isDismissed(DismissDirection.EndToStart)){
+                onDismiss(item)
+                Log.d("oops", "dismissed oopsy " + item.name)
+            }
+             */
+
+            SwipeToDismiss(
+                state = dismissState,
+                modifier = Modifier,
+                background = {
+                    SwipeBackground(dismissState = dismissState)
+                },
+                dismissContent = {
+                    WorkoutItem(item = item)
+                },
+            )
+
+            //WorkoutItem(item = item)
+        })
     }
 }
 
@@ -97,6 +146,38 @@ private fun WorkoutItem(item: WorkoutEntity, modifier: Modifier = Modifier){
                 modifier = Modifier.padding(start = 8.dp, end = 12.dp)
             )
         }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterialApi::class)
+fun SwipeBackground(dismissState: DismissState) {
+
+    val color by animateColorAsState(
+        when (dismissState.targetValue) {
+            DismissValue.Default -> Color.White
+            else -> Color.Red
+        }
+    )
+    val alignment = Alignment.CenterEnd
+    val icon = Icons.Default.Delete
+
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+    )
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(horizontal = 20.dp),
+        contentAlignment = alignment
+    ) {
+        Icon(
+            icon,
+            contentDescription = null,
+            modifier = Modifier.scale(scale)
+        )
     }
 }
 

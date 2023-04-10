@@ -13,8 +13,9 @@ interface WorkoutItemsDao {
     @Update
     suspend fun update(item: WorkoutEntity)
 
-    @Delete
-    suspend fun delete(item: WorkoutEntity)
+
+    @Query("DELETE FROM workout_items WHERE id = :id")
+    suspend fun delete(id: Int)
 
     @Query("SELECT * from workout_items WHERE id = :id")
     fun getItem(id: Int): Flow<WorkoutEntity>

@@ -28,8 +28,17 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
         }
     }
 
+    /*
     suspend fun insertItem(date: LocalDate){
         repository.insertItem(WorkoutEntity(0, "Name", Exercise("Exercise"), date))
+    }
+     */
+
+    suspend fun deleteItem(item: WorkoutEntity){
+        repository.deleteItem(item)
+        viewModelScope.launch {
+            _workoutUiState.value = repository.getItemsOnDate(selectedDate.value).map { WorkoutUiState(it) }.first()
+        }
     }
 
     companion object {
