@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -89,7 +90,7 @@ private fun WorkoutBody(
     WorkoutList(itemList = itemList, onDismiss = onDismiss, modifier = modifier)
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun WorkoutList(
     itemList: List<WorkoutEntity>,
@@ -100,31 +101,36 @@ private fun WorkoutList(
         items(items = itemList, key = { item -> item.id }, itemContent = {item ->
             val currentItem by rememberUpdatedState(item)
 
-            val dismissState = rememberDismissState(confirmStateChange = {
-                onDismiss(currentItem)
-                true
-            })
-            Log.d("123", dismissState.isDismissed(DismissDirection.EndToStart).toString())
-
-            /*
-            if(dismissState.isDismissed(DismissDirection.EndToStart)){
-                onDismiss(item)
-                Log.d("oops", "dismissed oopsy " + item.name)
-            }
-             */
+            val dismissState = rememberDismissState(
+                confirmStateChange = {
+                    when (it) {
+                        DismissValue.DismissedToStart -> {
+                            onDismiss(currentItem)
+                            true
+                        }
+                        else -> { false }
+                    }
+                }
+            )
 
             SwipeToDismiss(
                 state = dismissState,
-                modifier = Modifier,
+                directions = setOf(DismissDirection.EndToStart),
+                dismissThresholds = {
+                    FractionalThreshold(
+                        0.5f
+                    )
+                },
+                modifier = Modifier
+                    .padding(vertical = 1.dp)
+                    .animateItemPlacement(),
                 background = {
                     SwipeBackground(dismissState = dismissState)
                 },
                 dismissContent = {
                     WorkoutItem(item = item)
-                },
+                }
             )
-
-            //WorkoutItem(item = item)
         })
     }
 }
@@ -155,13 +161,13 @@ fun SwipeBackground(dismissState: DismissState) {
 
     val color by animateColorAsState(
         when (dismissState.targetValue) {
-            DismissValue.Default -> Color.White
+            DismissValue.Default -> Color(android.graphics.Color.parseColor("#DDEDAA"))
             else -> Color.Red
         }
     )
+
     val alignment = Alignment.CenterEnd
     val icon = Icons.Default.Delete
-
     val scale by animateFloatAsState(
         if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
     )
@@ -175,7 +181,7 @@ fun SwipeBackground(dismissState: DismissState) {
     ) {
         Icon(
             icon,
-            contentDescription = null,
+            contentDescription = "Localized description",
             modifier = Modifier.scale(scale)
         )
     }

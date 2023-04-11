@@ -24,25 +24,14 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
         selectedDate.value = date
         viewModelScope.launch {
             _workoutUiState.value = repository.getItemsOnDate(date).map { WorkoutUiState(it) }.first()
-            //Log.d("CURRENT_WORKOUT_LIST", _workoutUiState.value.itemList.toString())
         }
     }
-
-    /*
-    suspend fun insertItem(date: LocalDate){
-        repository.insertItem(WorkoutEntity(0, "Name", Exercise("Exercise"), date))
-    }
-     */
 
     suspend fun deleteItem(item: WorkoutEntity){
         repository.deleteItem(item)
         viewModelScope.launch {
             _workoutUiState.value = repository.getItemsOnDate(selectedDate.value).map { WorkoutUiState(it) }.first()
         }
-    }
-
-    companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
