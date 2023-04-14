@@ -32,13 +32,14 @@ import java.time.YearMonth
 
 @Composable
 fun ExpandableCalendar(
+    expanded: Boolean,
+    onClick: () -> Unit,
     onDateSelected: (LocalDate) -> Unit,
+    currentDate: LocalDate = LocalDate.now(),
     modifier: Modifier = Modifier
 ){
-    var expanded by remember { mutableStateOf(false) }
-
     val selectionState = remember {
-        DynamicSelectionState(selection = emptyList(), selectionMode = SelectionMode.Single)
+        DynamicSelectionState(selection = listOf(currentDate), selectionMode = SelectionMode.Single)
     }
 
     Column(
@@ -55,7 +56,7 @@ fun ExpandableCalendar(
                 initialWeek = getWeekFromDate(selectionState.selection)
             )
 
-            CalendarCard(modifier.clickable { expanded = !expanded },
+            CalendarCard(modifier.clickable { onClick() },
                 cardContent = {
                     SelectableWeekCalendar( calendarState = calendarState, weekHeader = {
                         Surface(modifier = Modifier.fillMaxWidth()) {
@@ -67,6 +68,8 @@ fun ExpandableCalendar(
 
             if (calendarState.selectionState.selection.isNotEmpty()){
                 onDateSelected(calendarState.selectionState.selection[0])
+            } else {
+                onDateSelected(LocalDate.now())
             }
         }
         else {
@@ -75,9 +78,10 @@ fun ExpandableCalendar(
                 initialMonth = getMonthFromDate(selectionState.selection)
             )
 
-            CalendarCard(modifier.clickable { expanded = !expanded },
+            CalendarCard(modifier.clickable { onClick() },
                 cardContent = {
                     SelectableCalendar(
+
                         calendarState = calendarState, 
                         monthHeader = { MonthHeader(monthState = it)})
                 }
@@ -85,6 +89,8 @@ fun ExpandableCalendar(
 
             if (calendarState.selectionState.selection.isNotEmpty()){
                 onDateSelected(calendarState.selectionState.selection[0])
+            } else{
+                onDateSelected(LocalDate.now())
             }
         }
     }

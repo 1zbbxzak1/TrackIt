@@ -75,6 +75,7 @@ fun TrackItApp(
         //isFloatingActionButtonDocked = true,
         bottomBar = {
             BottomBar(
+                selectedDate.value,
                 bottomBarState.value,
                 onDateSelected = {selectedDate.value = it},
                 navController = navController,

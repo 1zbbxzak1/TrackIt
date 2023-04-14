@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,18 +16,27 @@ import com.example.trackit.calendar.ExpandableCalendar
 import com.example.trackit.data.Screen
 import java.time.LocalDate
 import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.*
 
 @Composable
 fun BottomBar(
+    currentDate: LocalDate = LocalDate.now(),
     barState: Boolean,
     onDateSelected: (LocalDate) -> Unit,
     navController: NavController,
     currentScreen: Screen
 ){
+    var calendarExpanded by remember {
+        mutableStateOf(false)
+    }
+
     if (barState) {
         Column {
             ExpandableCalendar(
+                calendarExpanded,
+                {calendarExpanded = !calendarExpanded},
                 onDateSelected = { onDateSelected(it) },
+                currentDate,
                 Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
             )
             BottomNavigation {
@@ -38,6 +46,7 @@ fun BottomBar(
                     icon = { Icon(Icons.Rounded.Favorite, contentDescription = null) },
                     label = { Text(text = stringResource(id = R.string.food_page)) },
                     onClick = {
+                        calendarExpanded = false
                         navController.navigate(Screen.Food.name)
                     }
                 )
@@ -48,6 +57,7 @@ fun BottomBar(
                     icon = { Icon(Icons.Filled.Person, contentDescription = null) },
                     label = { Text(text = stringResource(id = R.string.profile_page)) },
                     onClick = {
+                        calendarExpanded = false
                         navController.navigate(Screen.Profile.name)
                     }
                 )
@@ -58,6 +68,7 @@ fun BottomBar(
                     icon = { Icon(Icons.Rounded.Favorite, contentDescription = null) },
                     label = { Text(text = stringResource(id = R.string.workout_page)) },
                     onClick = {
+                        calendarExpanded = false
                         navController.navigate(Screen.Workout.name)
                     }
                 )
