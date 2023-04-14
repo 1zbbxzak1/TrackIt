@@ -22,8 +22,8 @@ data class Exercise(
 data class WorkoutCategory(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val name: String,
-    val exercises: List<Exercise>
+    val name: String = "",
+    val exercises: MutableList<Exercise>
 )
 
 

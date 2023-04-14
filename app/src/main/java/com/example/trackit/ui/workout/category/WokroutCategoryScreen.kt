@@ -1,28 +1,28 @@
 package com.example.trackit.ui.workout.category
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.trackit.FloatingButton
-import com.example.trackit.data.Screen
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.navigation.WorkoutEditTopBar
+import com.example.trackit.ui.workout.Exercise
 import com.example.trackit.ui.workout.WorkoutCategory
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -34,10 +34,13 @@ fun WorkoutCategoryScreen(
 ){
     val uiState by viewModel.workoutCategoryUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val dialogState = remember { mutableStateOf(false) }
 
     Scaffold(
         floatingActionButton = {
-            FloatingButton(currentRoute = Screen.WorkoutCategory.name, onClick = {})
+            FloatingActionButton(onClick = { dialogState.value = true }) {
+                Icon(Icons.Rounded.Add, contentDescription = "Add category")
+            }
         },
         topBar = { WorkoutEditTopBar(title = "Выберите категорию", navigateBack = navigateBack) }
     ) {
@@ -46,6 +49,20 @@ fun WorkoutCategoryScreen(
             onCategorySelect,
             modifier = modifier.padding(top = 8.dp)
         )
+
+        if (dialogState.value) {
+            AddCategoryDialog(
+                "Добавление категории",
+                "Название категории:",
+                onAddCategory = { name ->
+                    coroutineScope.launch {
+                        viewModel.insertItem(WorkoutCategory(0, name, mutableListOf()))
+                    }
+                    dialogState.value = false
+                },
+                onDismiss = { dialogState.value = false }
+            )
+        }
     }
 }
 
@@ -90,6 +107,72 @@ private fun WorkoutCategoryItem(
                 Icons.Rounded.KeyboardArrowRight,
                 contentDescription = null,
                 modifier = Modifier.padding(start = 8.dp, end = 12.dp))
+        }
+    }
+}
+
+@Composable
+fun AddCategoryDialog(
+    label: String,
+    textFieldLabel: String,
+    onAddCategory: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var categoryName by remember { mutableStateOf("") }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(16.dp)
+            //color = MaterialTheme.colors.secondary
+        ) {
+            Box(
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = label, style = MaterialTheme.typography.h5)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    TextField(
+                        modifier = Modifier.padding(32.dp),
+                        value = categoryName,
+                        onValueChange = { categoryName = it },
+                        label = { Text(textFieldLabel) }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(){
+                        Row {
+                            Button(
+                                onClick = onDismiss,
+                                shape = RoundedCornerShape(30.dp)
+                            ) {
+                                   Text(text = "Отмена", style = MaterialTheme.typography.h6)
+                            }
+                            
+                            Spacer(modifier = Modifier.width(10.dp))
+                            
+                            Button(onClick = {
+                                onAddCategory(categoryName)
+                                onDismiss()
+                                },
+                                shape = RoundedCornerShape(30.dp),
+                                enabled = categoryName.isNotBlank()
+                            ) {
+                                Text(text = "Добавить", style = MaterialTheme.typography.h6)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

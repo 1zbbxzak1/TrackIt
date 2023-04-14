@@ -1,22 +1,21 @@
 package com.example.trackit.ui.workout.exercise
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import android.util.Log
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.FloatingButton
 import com.example.trackit.data.Screen
@@ -37,14 +36,17 @@ fun WorkoutExerciseScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkoutExerciseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    viewModel.updateSelectedCategory(categoryId ?: -1)
-    val uiState by viewModel.exerciseUiState.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
+    viewModel.updateSelectedCategory(categoryId ?: -1)
+    val uiState by viewModel.exerciseUiState.collectAsState()
+    val dialogState = remember { mutableStateOf(false) }
+
+
     Scaffold(
-        topBar = { WorkoutEditTopBar(title = "Выберите упражнение: <${viewModel.selectedCategoryId.value}>", navigateBack = navigateBack) },
+        topBar = { WorkoutEditTopBar(title = "Выберите упражнение: <${viewModel.selectedId.value}>", navigateBack = navigateBack) },
         floatingActionButton = {
-            FloatingButton(currentRoute = Screen.WorkoutExercise.name, onClick = {})
+            FloatingButton(currentRoute = Screen.WorkoutExercise.name, onClick = { dialogState.value = true })
         }
     ) {
         WorkoutExerciseBody(
@@ -57,6 +59,17 @@ fun WorkoutExerciseScreen(
             },
             modifier = modifier.padding(top = 8.dp)
         )
+
+        if (dialogState.value) {
+            AddExerciseDialog(
+                onAddExercise = {exercise ->
+                    coroutineScope.launch {
+                        viewModel.updateExercise(exercise)
+                    }
+                },
+                onDismiss = { dialogState.value = false }
+            )
+        }
     }
 }
 
@@ -73,9 +86,56 @@ private fun WorkoutExerciseList(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)){
-        items(itemList){item ->
-            WorkoutExerciseItem(item, onClick)
+    val state = rememberLazyListState()
+
+    val isInitialLoading by remember {
+        derivedStateOf {
+            state.layoutInfo.viewportSize  == IntSize.Zero
+        }
+    }
+
+    //Empty list or empty space
+    val hasEmptySpace by remember {
+        derivedStateOf {
+            val layoutInfo = state.layoutInfo
+            val visibleItemsInfo = layoutInfo.visibleItemsInfo
+            if (layoutInfo.totalItemsCount == 0) {
+                true
+            } else {
+                val lastVisibleItem = visibleItemsInfo.last()
+                val viewportHeight = layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset
+
+                (lastVisibleItem.index + 1 == layoutInfo.totalItemsCount &&
+                        lastVisibleItem.offset + lastVisibleItem.size < viewportHeight)
+            }
+        }
+    }
+
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+        LazyColumn(
+            state = state,
+            modifier = modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item(){
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(modifier.height(50.dp))
+                    Text(text = "Упражнения", style = MaterialTheme.typography.h4)
+                    Spacer(modifier.height(50.dp))
+                    Divider()
+                }
+            }
+
+            //TODO: fix empty cards
+            items(itemList) { item ->
+                WorkoutExerciseItem(item, onClick)
+            }
+
+            if (!hasEmptySpace){
+                item(){
+                    Spacer(modifier.height(100.dp))
+                }
+            }
         }
     }
 }
@@ -102,6 +162,69 @@ private fun WorkoutExerciseItem(
                 contentDescription = null,
                 modifier = Modifier.padding(start = 8.dp, end = 12.dp)
             )
+        }
+    }
+}
+
+@Composable
+fun AddExerciseDialog(
+    onAddExercise: (Exercise) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var categoryName by remember { mutableStateOf("") }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(20.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Добавление упражнения", style = MaterialTheme.typography.h5)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    TextField(
+                        modifier = Modifier.padding(32.dp),
+                        value = categoryName,
+                        onValueChange = { categoryName = it },
+                        label = { Text("Название упражнения:") }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(){
+                        Row {
+                            Button(
+                                onClick = onDismiss,
+                                shape = RoundedCornerShape(30.dp)
+                            ) {
+                                Text(text = "Отмена", style = MaterialTheme.typography.h6)
+                            }
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                            Button(onClick = {
+                                onAddExercise(Exercise(categoryName))
+                                onDismiss()
+                            },
+                                shape = RoundedCornerShape(30.dp),
+                                enabled = categoryName.isNotBlank()
+                            ) {
+                                Text(text = "Добавить", style = MaterialTheme.typography.h6)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
