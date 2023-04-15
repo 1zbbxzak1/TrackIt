@@ -105,7 +105,7 @@ private fun WorkoutList(
 ){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(items = itemList, key = { item -> item.id }, itemContent = {item ->
-            val dismissThreshold = 0.5f
+            val dismissThreshold = 0.45f
             val currentFraction = remember { mutableStateOf(0f) }
 
             val dismissState = rememberDismissState(
@@ -150,16 +150,20 @@ private fun WorkoutItem(
 ){
     Card(modifier = modifier
         .fillMaxWidth()
-        .padding(start = 4.dp, end = 4.dp)
+        .padding(start = 4.dp, end = 4.dp),
+        shape = RoundedCornerShape(10.dp)
     ) {
         Row(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Checkbox(checked = item.completed, onCheckedChange = {
+            Checkbox(
+                checked = item.completed,
+                onCheckedChange = {
                 onCheckedChange(WorkoutEntity(item.id, item.name, item.exercise, item.date, it))
-            })
+                }
+            )
 
             Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
 
@@ -178,7 +182,7 @@ fun SwipeBackground(dismissState: DismissState, updateFraction: (Float) -> Unit)
 
     val color by animateColorAsState(
         when (dismissState.targetValue) {
-            DismissValue.Default -> Color(android.graphics.Color.parseColor("#DDEDAA"))
+            DismissValue.Default -> MaterialTheme.colors.background
             else -> Color.Red
         }
     )

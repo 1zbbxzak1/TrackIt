@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -57,6 +58,11 @@ fun WorkoutExerciseScreen(
                 }
                 navigateToWorkoutPage()
             },
+            onDelete = {
+                coroutineScope.launch {
+                    viewModel.deleteItem(it)
+                }
+            },
             modifier = modifier.padding(top = 8.dp)
         )
 
@@ -76,40 +82,19 @@ fun WorkoutExerciseScreen(
 @Composable
 private fun WorkoutExerciseBody(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
+    onDelete: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutExerciseList(itemList, onClick, modifier = modifier)
+    WorkoutExerciseList(itemList, onClick, onDelete, modifier = modifier)
 }
 
 @Composable
 private fun WorkoutExerciseList(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
+    onDelete: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
     val state = rememberLazyListState()
-
-    val isInitialLoading by remember {
-        derivedStateOf {
-            state.layoutInfo.viewportSize  == IntSize.Zero
-        }
-    }
-
-    //Empty list or empty space
-    val hasEmptySpace by remember {
-        derivedStateOf {
-            val layoutInfo = state.layoutInfo
-            val visibleItemsInfo = layoutInfo.visibleItemsInfo
-            if (layoutInfo.totalItemsCount == 0) {
-                true
-            } else {
-                val lastVisibleItem = visibleItemsInfo.last()
-                val viewportHeight = layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset
-
-                (lastVisibleItem.index + 1 == layoutInfo.totalItemsCount &&
-                        lastVisibleItem.offset + lastVisibleItem.size < viewportHeight)
-            }
-        }
-    }
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         LazyColumn(
@@ -126,15 +111,12 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            //TODO: fix empty cards
-            items(itemList) { item ->
-                WorkoutExerciseItem(item, onClick)
+            items(items = itemList, key = { item -> item.name }) { item ->
+                WorkoutExerciseItem(item, onClick, onDelete)
             }
 
-            if (!hasEmptySpace){
-                item(){
-                    Spacer(modifier.height(100.dp))
-                }
+            item(){
+                Spacer(modifier.height(100.dp))
             }
         }
     }
@@ -144,24 +126,32 @@ private fun WorkoutExerciseList(
 @Composable
 private fun WorkoutExerciseItem(
     item: Exercise, onClick: (Exercise) -> Unit,
+    onDelete: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
-    Card(
-        onClick = {onClick(item)},
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 4.dp, end = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(10f))
-            Icon(
-                Icons.Rounded.KeyboardArrowRight,
-                contentDescription = null,
-                modifier = Modifier.padding(start = 8.dp, end = 12.dp)
-            )
+    if (item.name.isNotBlank()){
+        Card(
+            onClick = {onClick(item)},
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 4.dp, end = 4.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(10f))
+
+                IconButton(onClick = { onDelete(item) }) {
+                    Icon(Icons.Rounded.Delete, contentDescription = "Удалить упражнение")
+                }
+
+                Icon(
+                    Icons.Rounded.KeyboardArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+                )
+            }
         }
     }
 }

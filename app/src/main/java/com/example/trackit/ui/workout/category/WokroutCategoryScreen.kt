@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,6 +48,11 @@ fun WorkoutCategoryScreen(
         WorkoutCategoryBody(
             itemList = uiState.itemList,
             onCategorySelect,
+            onDelete = {
+                coroutineScope.launch {
+                    viewModel.deleteItem(it)
+                }
+            },
             modifier = modifier.padding(top = 8.dp)
         )
 
@@ -69,19 +75,21 @@ fun WorkoutCategoryScreen(
 @Composable
 private fun WorkoutCategoryBody(
     itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
+    onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutCategoryList(itemList = itemList, onClick, modifier = modifier)
+    WorkoutCategoryList(itemList = itemList, onClick, onDelete, modifier = modifier)
 }
 
 @Composable
 private fun WorkoutCategoryList(
     itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
+    onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
 ){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)){
         items(itemList){item ->
-            WorkoutCategoryItem(item = item, onClick)
+            WorkoutCategoryItem(item = item, onClick, onDelete)
         }
     }
 }
@@ -90,6 +98,7 @@ private fun WorkoutCategoryList(
 @Composable
 private fun WorkoutCategoryItem(
     item: WorkoutCategory, onClick: (Int) -> Unit,
+    onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
 ){
     Card(
@@ -103,6 +112,11 @@ private fun WorkoutCategoryItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+
+            IconButton(onClick = { onDelete(item) }) {
+                Icon(Icons.Rounded.Delete, contentDescription = "Удалить категорию")
+            }
+
             Icon(
                 Icons.Rounded.KeyboardArrowRight,
                 contentDescription = null,

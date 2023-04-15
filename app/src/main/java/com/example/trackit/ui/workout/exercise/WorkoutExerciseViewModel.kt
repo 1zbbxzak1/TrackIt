@@ -31,6 +31,14 @@ class WorkoutExerciseViewModel(
         updateUi()
     }
 
+    fun isEmpty(): Boolean {
+        val isEmpty = mutableStateOf(true)
+        viewModelScope.launch {
+            isEmpty.value = _selectedCategory.value.exercises[0].name.isBlank()
+        }
+        return isEmpty.value
+    }
+
     suspend fun updateExercise(exercise: Exercise){
         viewModelScope.launch {
             if (_selectedCategory.value.exercises[0].name.isBlank()){
@@ -47,6 +55,17 @@ class WorkoutExerciseViewModel(
 
     private fun updateUi(){
         viewModelScope.launch {
+            _exercisesUiState.value =
+                WorkoutExerciseUiState(categoryRepository.getItemStream(selectedId.value).first()?.exercises ?: listOf())
+        }
+    }
+
+    suspend fun deleteItem(exercise: Exercise){
+        viewModelScope.launch {
+            _selectedCategory.value.exercises.remove(exercise)
+
+            categoryRepository.updateItem(_selectedCategory.value)
+
             _exercisesUiState.value =
                 WorkoutExerciseUiState(categoryRepository.getItemStream(selectedId.value).first()?.exercises ?: listOf())
         }
