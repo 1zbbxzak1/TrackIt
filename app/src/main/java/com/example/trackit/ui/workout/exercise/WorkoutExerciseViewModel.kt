@@ -31,17 +31,9 @@ class WorkoutExerciseViewModel(
         updateUi()
     }
 
-    fun isEmpty(): Boolean {
-        val isEmpty = mutableStateOf(true)
-        viewModelScope.launch {
-            isEmpty.value = _selectedCategory.value.exercises[0].name.isBlank()
-        }
-        return isEmpty.value
-    }
-
     suspend fun updateExercise(exercise: Exercise){
         viewModelScope.launch {
-            if (_selectedCategory.value.exercises[0].name.isBlank()){
+            if (_selectedCategory.value.exercises.isEmpty() || _selectedCategory.value.exercises[0].name.isBlank()){
                 _selectedCategory.value = WorkoutCategory(selectedId.value, _selectedCategory.value.name, mutableListOf(exercise))
             }else{
                 _selectedCategory.value.exercises.add(exercise)

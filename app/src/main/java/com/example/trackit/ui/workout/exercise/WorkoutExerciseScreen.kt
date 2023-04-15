@@ -111,7 +111,7 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            items(items = itemList, key = { item -> item.name }) { item ->
+            items(items = itemList) { item ->
                 WorkoutExerciseItem(item, onClick, onDelete)
             }
 
