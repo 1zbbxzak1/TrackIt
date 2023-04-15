@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -104,16 +105,19 @@ private fun WorkoutList(
 ){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         items(items = itemList, key = { item -> item.id }, itemContent = {item ->
-            val currentItem by rememberUpdatedState(item)
+            val dismissThreshold = 0.5f
+            val currentFraction = remember { mutableStateOf(0f) }
 
             val dismissState = rememberDismissState(
                 confirmStateChange = {
-                    when (it) {
+                    when(it){
                         DismissValue.DismissedToStart -> {
-                            onDismiss(currentItem)
-                            true
+                            if (currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f) {
+                                onDismiss(item)
+                            }
+                            currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f
                         }
-                        else -> { false }
+                        else -> false
                     }
                 }
             )
@@ -122,21 +126,13 @@ private fun WorkoutList(
                 state = dismissState,
                 directions = setOf(DismissDirection.EndToStart),
                 dismissThresholds = {
-                    if (item.completed){
-                        FractionalThreshold(
-                            0.7f
-                        )
-                    } else {
-                        FractionalThreshold(
-                            0.5f
-                        )
-                    }
+                    FractionalThreshold(dismissThreshold)
                 },
                 modifier = Modifier
                     .padding(vertical = 1.dp)
                     .animateItemPlacement(),
                 background = {
-                    SwipeBackground(dismissState = dismissState)
+                    SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
                 },
                 dismissContent = {
                     WorkoutItem(item = item, onCheckedChange)
@@ -178,7 +174,7 @@ private fun WorkoutItem(
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-fun SwipeBackground(dismissState: DismissState) {
+fun SwipeBackground(dismissState: DismissState, updateFraction: (Float) -> Unit) {
 
     val color by animateColorAsState(
         when (dismissState.targetValue) {
@@ -200,6 +196,8 @@ fun SwipeBackground(dismissState: DismissState) {
             .padding(horizontal = 20.dp),
         contentAlignment = alignment
     ) {
+        updateFraction(dismissState.progress.fraction)
+
         Icon(
             icon,
             contentDescription = "Localized description",
