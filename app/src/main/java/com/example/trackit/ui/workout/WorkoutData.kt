@@ -11,7 +11,8 @@ data class WorkoutEntity(
     val id: Int = 0,
     val name: String,
     val exercise: Exercise,
-    val date: LocalDate
+    val date: LocalDate,
+    var completed: Boolean
 )
 
 data class Exercise(

@@ -53,7 +53,7 @@ fun WorkoutExerciseScreen(
             itemList = uiState.itemList,
             onClick = {exercise ->
                 coroutineScope.launch {
-                    viewModel.insertWorkoutEntity(WorkoutEntity(0, exercise.name, exercise, selectedDate))
+                    viewModel.insertWorkoutEntity(WorkoutEntity(0, exercise.name, exercise, selectedDate, false))
                 }
                 navigateToWorkoutPage()
             },

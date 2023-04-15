@@ -20,6 +20,13 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
 
     val workoutUiState: StateFlow<WorkoutUiState> = _workoutUiState
 
+    suspend fun updateItem(item: WorkoutEntity){
+        repository.updateItem(item)
+        viewModelScope.launch {
+            _workoutUiState.value = repository.getItemsOnDate(selectedDate.value).map { WorkoutUiState(it) }.first()
+        }
+    }
+
     fun updateSelectedDate(date: LocalDate){
         selectedDate.value = date
         viewModelScope.launch {

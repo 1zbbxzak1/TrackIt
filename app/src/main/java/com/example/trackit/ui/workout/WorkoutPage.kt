@@ -74,6 +74,9 @@ fun WorkoutPage(
                 onDismiss = {item -> coroutineScope.launch {
                     viewModel.deleteItem(item)
                 }},
+                onCheckedChange = {coroutineScope.launch {
+                    viewModel.updateItem(it)
+                }},
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .weight(3f))
@@ -85,9 +88,10 @@ fun WorkoutPage(
 private fun WorkoutBody(
     itemList: List<WorkoutEntity>,
     onDismiss: (WorkoutEntity) -> Unit,
+    onCheckedChange: (WorkoutEntity) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutList(itemList = itemList, onDismiss = onDismiss, modifier = modifier)
+    WorkoutList(itemList = itemList, onDismiss = onDismiss, onCheckedChange, modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -95,6 +99,7 @@ private fun WorkoutBody(
 private fun WorkoutList(
     itemList: List<WorkoutEntity>,
     onDismiss: (WorkoutEntity) -> Unit,
+    onCheckedChange: (WorkoutEntity) -> Unit,
     modifier: Modifier = Modifier
 ){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -117,9 +122,15 @@ private fun WorkoutList(
                 state = dismissState,
                 directions = setOf(DismissDirection.EndToStart),
                 dismissThresholds = {
-                    FractionalThreshold(
-                        0.5f
-                    )
+                    if (item.completed){
+                        FractionalThreshold(
+                            0.7f
+                        )
+                    } else {
+                        FractionalThreshold(
+                            0.5f
+                        )
+                    }
                 },
                 modifier = Modifier
                     .padding(vertical = 1.dp)
@@ -128,7 +139,7 @@ private fun WorkoutList(
                     SwipeBackground(dismissState = dismissState)
                 },
                 dismissContent = {
-                    WorkoutItem(item = item)
+                    WorkoutItem(item = item, onCheckedChange)
                 }
             )
         })
@@ -136,7 +147,11 @@ private fun WorkoutList(
 }
 
 @Composable
-private fun WorkoutItem(item: WorkoutEntity, modifier: Modifier = Modifier){
+private fun WorkoutItem(
+    item: WorkoutEntity,
+    onCheckedChange: (WorkoutEntity) -> Unit,
+    modifier: Modifier = Modifier
+){
     Card(modifier = modifier
         .fillMaxWidth()
         .padding(start = 4.dp, end = 4.dp)
@@ -145,7 +160,13 @@ private fun WorkoutItem(item: WorkoutEntity, modifier: Modifier = Modifier){
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            Checkbox(checked = item.completed, onCheckedChange = {
+                onCheckedChange(WorkoutEntity(item.id, item.name, item.exercise, item.date, it))
+            })
+
             Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
+
             Icon(
                 Icons.Rounded.Edit,
                 contentDescription = null,
