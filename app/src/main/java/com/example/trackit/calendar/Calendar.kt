@@ -3,25 +3,27 @@ package com.example.trackit.calendar
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.trackit.ui.theme.TrackItTheme
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
+import io.github.boguszpawlowski.composecalendar.day.DayState
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.rememberSelectableWeekCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
@@ -56,13 +58,22 @@ fun ExpandableCalendar(
                 initialWeek = getWeekFromDate(selectionState.selection)
             )
 
-            CalendarCard(modifier.clickable { onClick() },
+            CalendarCard(modifier.clickable { onClick() }
+                .padding(start = 8.dp, end = 8.dp, bottom = 10.dp),
                 cardContent = {
-                    SelectableWeekCalendar( calendarState = calendarState, weekHeader = {
-                        Surface(modifier = Modifier.fillMaxWidth()) {
-                            ExpandIcon(expanded = false)
+                    SelectableWeekCalendar(
+                        calendarState = calendarState,
+                        dayContent = {DayContent(state = it)},
+                        weekHeader = {
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onClick() }
+                            ) {
+                                ExpandIcon(expanded = false)
+                            }
                         }
-                    })
+                    )
                 }
             )
 
@@ -70,6 +81,7 @@ fun ExpandableCalendar(
                 onDateSelected(calendarState.selectionState.selection[0])
             } else {
                 onDateSelected(LocalDate.now())
+                calendarState.selectionState.onDateSelected(LocalDate.now())
             }
         }
         else {
@@ -78,12 +90,14 @@ fun ExpandableCalendar(
                 initialMonth = getMonthFromDate(selectionState.selection)
             )
 
-            CalendarCard(modifier.clickable { onClick() },
+            CalendarCard(modifier.clickable { onClick() }
+                .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
                 cardContent = {
                     SelectableCalendar(
-
-                        calendarState = calendarState, 
-                        monthHeader = { MonthHeader(monthState = it)})
+                        calendarState = calendarState,
+                        dayContent = {DayContent(state = it)},
+                        monthHeader = { MonthHeader(monthState = it, onClick) }
+                    )
                 }
             )
 
@@ -91,6 +105,7 @@ fun ExpandableCalendar(
                 onDateSelected(calendarState.selectionState.selection[0])
             } else{
                 onDateSelected(LocalDate.now())
+                calendarState.selectionState.onDateSelected(LocalDate.now())
             }
         }
     }
@@ -106,10 +121,54 @@ private fun CalendarCard(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
     ) {
-        Column(modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
+        Column(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             cardContent()
+        }
+    }
+}
+
+@Composable
+private fun DayContent(
+    state: DayState<DynamicSelectionState>,
+    modifier: Modifier = Modifier,
+    selectionColor: Color = MaterialTheme.colors.secondary,
+    currentDayColor: Color = MaterialTheme.colors.primary,
+    onClick: (LocalDate) -> Unit = {},
+){
+    val date = state.date
+    val selectionState = state.selectionState
+
+    val isSelected = selectionState.isDateSelected(date)
+
+    val border = if (isSelected) BorderStroke(1.dp, currentDayColor) else null
+
+    Card(
+        modifier = Modifier
+            .aspectRatio(1f)
+            .padding(4.dp),
+        elevation = 0.dp,
+        border = border
+    ) {
+        Box(
+            modifier = Modifier.clickable {
+                    onClick(date)
+                    selectionState.onDateSelected(date)
+                }
+                .background(
+                    if (state.isCurrentDay && isSelected) Color.Yellow
+                    else MaterialTheme.colors.surface),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = date.dayOfMonth.toString(),
+                Modifier
+                    .alpha(if (state.isFromCurrentMonth) 1.0f else 0.6f)
+                    .background(if (state.isCurrentDay) Color.Yellow
+                    else MaterialTheme.colors.surface)
+                    .padding(2.dp)
+            )
         }
     }
 }
@@ -144,9 +203,7 @@ private fun getWeekFromDate(dateList: List<LocalDate>): Week {
 @Composable
 private fun CalendarPreview(){
     TrackItTheme {
-        CalendarCard(Modifier.clickable {  },
-            cardContent = { SelectableCalendar() }
-        )
+        ExpandableCalendar(expanded = true, onClick = { /*TODO*/ }, onDateSelected = {})
     }
 }
 
@@ -154,8 +211,6 @@ private fun CalendarPreview(){
 @Composable
 private fun CalendarWeekPreview(){
     TrackItTheme {
-        CalendarCard(Modifier.clickable {  },
-            cardContent = { SelectableWeekCalendar( weekHeader = {}) }
-        )
+        ExpandableCalendar(expanded = false, onClick = { /*TODO*/ }, onDateSelected = {})
     }
 }

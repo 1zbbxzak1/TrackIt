@@ -1,5 +1,6 @@
 package com.example.trackit.calendar
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -17,10 +18,11 @@ import java.util.*
 @Composable
 fun MonthHeader(
     monthState: MonthState,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    Row {
-        Surface(modifier = modifier.weight(1f).padding(bottom = 2.dp)) {
+    Row(modifier = modifier.clickable { onClick() }) {
+        Surface(modifier = Modifier.weight(1f).padding(bottom = 2.dp)) {
             Row(horizontalArrangement = Arrangement.Center) {
                 Text(text = monthState.currentMonth.month
                     .getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
@@ -36,14 +38,6 @@ fun MonthHeader(
         Surface() {
             ExpandIcon(expanded = true)
         }
-        Spacer(modifier = modifier.weight(1f))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MonthHeaderPreview(){
-    TrackItTheme {
-        MonthHeader(monthState = MonthState(initialMonth = YearMonth.now()))
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
