@@ -18,8 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.trackit.R
+import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.TrackItTheme
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
@@ -44,13 +48,14 @@ fun ExpandableCalendar(
         DynamicSelectionState(selection = listOf(currentDate), selectionMode = SelectionMode.Single)
     }
 
-    Column(
+    Surface(
         modifier = Modifier.animateContentSize(
             animationSpec = spring(
                 dampingRatio = Spring.DampingRatioLowBouncy,
                 stiffness = Spring.StiffnessMedium
             )
-        )
+        ),
+        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
     ) {
         if (!expanded){
             val calendarState = rememberSelectableWeekCalendarState(
@@ -58,8 +63,7 @@ fun ExpandableCalendar(
                 initialWeek = getWeekFromDate(selectionState.selection)
             )
 
-            CalendarCard(modifier.clickable { onClick() }
-                .padding(start = 8.dp, end = 8.dp, bottom = 10.dp),
+            CalendarCard(modifier.clickable { onClick() },
                 cardContent = {
                     SelectableWeekCalendar(
                         calendarState = calendarState,
@@ -68,9 +72,12 @@ fun ExpandableCalendar(
                             Surface(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onClick() }
+                                    .clickable { onClick() },
+                                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                             ) {
-                                ExpandIcon(expanded = false)
+                                Box(modifier = Modifier.height(14.dp), contentAlignment = Alignment.Center){
+                                    Icon(painterResource(id = R.drawable.expand_icon), contentDescription = null)
+                                }
                             }
                         }
                     )
@@ -90,8 +97,7 @@ fun ExpandableCalendar(
                 initialMonth = getMonthFromDate(selectionState.selection)
             )
 
-            CalendarCard(modifier.clickable { onClick() }
-                .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
+            CalendarCard(modifier.clickable { onClick() },
                 cardContent = {
                     SelectableCalendar(
                         calendarState = calendarState,
@@ -117,15 +123,10 @@ private fun CalendarCard(
     cardContent: @Composable () -> Unit
     ){
     Card(
-        elevation = 10.dp,
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier
+        modifier = modifier,
+        elevation = 0.dp
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            cardContent()
-        }
+        cardContent()
     }
 }
 
@@ -142,41 +143,43 @@ private fun DayContent(
 
     val isSelected = selectionState.isDateSelected(date)
 
-    val border = if (isSelected) BorderStroke(1.dp, currentDayColor) else null
+    val boxColor =
+        if (isSelected) MaterialTheme.colors.primaryVariant
+        else MaterialTheme.colors.surface
 
-    Card(
-        modifier = Modifier
-            .aspectRatio(1f)
-            .padding(4.dp),
-        elevation = 0.dp,
-        border = border
+    Box(
+        modifier = modifier
+            .aspectRatio(1f),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            modifier = Modifier.clickable {
+        Surface(
+            shape = RoundedCornerShape(100.dp),
+            color = boxColor,
+            modifier = Modifier
+                .padding(4.dp)
+                .size(28.dp)
+                .clickable {
                     onClick(date)
                     selectionState.onDateSelected(date)
-                }
-                .background(
-                    if (state.isCurrentDay && isSelected) Color.Yellow
-                    else MaterialTheme.colors.surface),
-            contentAlignment = Alignment.Center
+                },
         ) {
-            Text(
-                text = date.dayOfMonth.toString(),
-                Modifier
-                    .alpha(if (state.isFromCurrentMonth) 1.0f else 0.6f)
-                    .background(if (state.isCurrentDay) Color.Yellow
-                    else MaterialTheme.colors.surface)
-                    .padding(2.dp)
-            )
+            Box(modifier = Modifier.fillMaxSize(1f)){
+                Text(
+                    text = date.dayOfMonth.toString(),
+                    Modifier
+                        .alpha(if (state.isFromCurrentMonth) 1.0f else 0.6f)
+                        .align(Alignment.Center),
+                    color =
+                    if (state.isCurrentDay) AndroidGreen
+                    else if (isSelected) MaterialTheme.colors.surface
+                    else MaterialTheme.colors.primaryVariant,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.body1,
+
+                )
+            }
         }
     }
-}
-
-@Composable
-fun ExpandIcon(expanded: Boolean){
-    val icon = if(!expanded) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowDown
-    Icon(icon, contentDescription = null)
 }
 
 private fun getMonthFromDate(dateList: List<LocalDate>): YearMonth {
