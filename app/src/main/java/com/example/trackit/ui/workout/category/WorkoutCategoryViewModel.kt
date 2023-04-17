@@ -2,6 +2,7 @@ package com.example.trackit.ui.workout.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.trackit.ui.workout.Exercise
 import com.example.trackit.ui.workout.WorkoutCategory
 import com.example.trackit.ui.workout.WorkoutCategoryRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +21,10 @@ class WorkoutCategoryViewModel(private val repository: WorkoutCategoryRepository
 
     suspend fun insertItem(item: WorkoutCategory){
         repository.insertItem(item)
+    }
+
+    suspend fun deleteItem(item: WorkoutCategory){
+        repository.deleteItem(item)
     }
 
     companion object {

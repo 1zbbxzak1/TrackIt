@@ -13,8 +13,9 @@ interface WorkoutItemsDao {
     @Update
     suspend fun update(item: WorkoutEntity)
 
-    @Delete
-    suspend fun delete(item: WorkoutEntity)
+
+    @Query("DELETE FROM workout_items WHERE id = :id")
+    suspend fun delete(id: Int)
 
     @Query("SELECT * from workout_items WHERE id = :id")
     fun getItem(id: Int): Flow<WorkoutEntity>
@@ -22,7 +23,7 @@ interface WorkoutItemsDao {
     @Query("SELECT * from workout_items WHERE date = :date")
     fun getItemsOnDate(date: LocalDate): Flow<List<WorkoutEntity>>
 
-    @Query("SELECT * from workout_items ORDER BY name ASC")
+    @Query("SELECT * from workout_items ORDER BY name DESC")
     fun getAllItems(): Flow<List<WorkoutEntity>>
 }
 
@@ -41,6 +42,7 @@ interface WorkoutCategoryDao {
     @Query("SELECT * from workout_categories WHERE id = :id")
     fun getItem(id: Int): Flow<WorkoutCategory>
 
-    @Query("SELECT * from workout_categories ORDER BY name ASC")
+    @Query("SELECT * from workout_categories ORDER BY id DESC")
     fun getAllItems(): Flow<List<WorkoutCategory>>
+
 }

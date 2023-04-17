@@ -21,6 +21,7 @@ private val LightColorPalette = lightColors(
     primary = Purple500,
     primaryVariant = Arsenic,
     secondary = Teal200,
+
     background = AntiFlashWhite
 
     /* Other default colors to override

@@ -7,7 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import values.preCreatedCategoryList
 
-@Database(entities = [WorkoutEntity::class], version = 1, exportSchema = false)
+@Database(entities = [WorkoutEntity::class], version = 2, exportSchema = false)
 @TypeConverters(LocalDateConverter::class, ExerciseConverter::class)
 abstract class WorkoutDatabase : RoomDatabase() {
 
