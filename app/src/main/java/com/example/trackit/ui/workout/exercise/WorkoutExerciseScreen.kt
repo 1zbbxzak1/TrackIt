@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -26,6 +27,8 @@ import com.example.trackit.ui.workout.Exercise
 import com.example.trackit.ui.workout.WorkoutEntity
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -42,10 +45,11 @@ fun WorkoutExerciseScreen(
     viewModel.updateSelectedCategory(categoryId ?: -1)
     val uiState by viewModel.exerciseUiState.collectAsState()
     val dialogState = remember { mutableStateOf(false) }
+    val textState = remember { mutableStateOf(TextFieldValue("")) }
 
 
     Scaffold(
-        topBar = { WorkoutEditTopBar(title = "Выберите упражнение: <${viewModel.selectedId.value}>", navigateBack = navigateBack) },
+        topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) },
         floatingActionButton = {
             FloatingButton(currentRoute = Screen.WorkoutExercise.name, onClick = { dialogState.value = true })
         }
@@ -58,6 +62,7 @@ fun WorkoutExerciseScreen(
                 }
                 navigateToWorkoutPage()
             },
+            textState,
             onDelete = {
                 coroutineScope.launch {
                     viewModel.deleteItem(it)
@@ -82,19 +87,22 @@ fun WorkoutExerciseScreen(
 @Composable
 private fun WorkoutExerciseBody(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
+    textState: MutableState<TextFieldValue>,
     onDelete: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutExerciseList(itemList, onClick, onDelete, modifier = modifier)
+    WorkoutExerciseList(itemList, onClick, textState, onDelete, modifier = modifier)
 }
 
 @Composable
 private fun WorkoutExerciseList(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
+    textState: MutableState<TextFieldValue>,
     onDelete: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
     val state = rememberLazyListState()
+    var filteredItems: List<Exercise>
 
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         LazyColumn(
@@ -102,6 +110,20 @@ private fun WorkoutExerciseList(
             modifier = modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            val searchedText = textState.value.text
+            filteredItems = if (searchedText.isEmpty()){
+                itemList
+            } else {
+                val resultList = ArrayList<Exercise>()
+                for (item in itemList){
+                    if (item.name.lowercase(Locale.getDefault())
+                            .contains(searchedText.lowercase(Locale.getDefault()))){
+                        resultList.add(item)
+                    }
+                }
+                resultList
+            }
+
             item(){
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Spacer(modifier.height(50.dp))
@@ -111,7 +133,7 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            items(items = itemList) { item ->
+            items(filteredItems) { item ->
                 WorkoutExerciseItem(item, onClick, onDelete)
             }
 
@@ -186,7 +208,9 @@ fun AddExerciseDialog(
                         modifier = Modifier.padding(32.dp),
                         value = categoryName,
                         onValueChange = { categoryName = it },
-                        label = { Text("Название упражнения:") }
+                        label = { Text("Название упражнения:") },
+                        maxLines = 1,
+                        singleLine = true,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))

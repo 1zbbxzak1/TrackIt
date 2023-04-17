@@ -52,7 +52,7 @@ fun WorkoutPage(
         Column(modifier = modifier) {
             Text(
                 text = "Тренировки",
-                fontSize = 50.sp,
+                style = MaterialTheme.typography.h3,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
@@ -67,8 +67,6 @@ fun WorkoutPage(
             )
 
             Divider()
-
-            Spacer(modifier = Modifier.weight(1f))
 
             WorkoutBody(
                 itemList = workoutUiState.itemList,
@@ -104,6 +102,10 @@ private fun WorkoutList(
     modifier: Modifier = Modifier
 ){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        item{
+            Spacer(modifier.height(60.dp))
+        }
+
         items(items = itemList, key = { item -> item.id }, itemContent = {item ->
             val dismissThreshold = 0.45f
             val currentFraction = remember { mutableStateOf(0f) }
@@ -139,6 +141,10 @@ private fun WorkoutList(
                 }
             )
         })
+
+        item {
+            Spacer(modifier.height(100.dp))
+        }
     }
 }
 

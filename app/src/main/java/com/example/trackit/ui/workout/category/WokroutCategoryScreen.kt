@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,6 +25,8 @@ import com.example.trackit.ui.navigation.WorkoutEditTopBar
 import com.example.trackit.ui.workout.Exercise
 import com.example.trackit.ui.workout.WorkoutCategory
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -36,6 +39,7 @@ fun WorkoutCategoryScreen(
     val uiState by viewModel.workoutCategoryUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val dialogState = remember { mutableStateOf(false) }
+    val textState = remember { mutableStateOf(TextFieldValue("")) }
 
     Scaffold(
         floatingActionButton = {
@@ -43,11 +47,12 @@ fun WorkoutCategoryScreen(
                 Icon(Icons.Rounded.Add, contentDescription = "Add category")
             }
         },
-        topBar = { WorkoutEditTopBar(title = "Выберите категорию", navigateBack = navigateBack) }
+        topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) }
     ) {
         WorkoutCategoryBody(
             itemList = uiState.itemList,
             onCategorySelect,
+            textState,
             onDelete = {
                 coroutineScope.launch {
                     viewModel.deleteItem(it)
@@ -75,21 +80,53 @@ fun WorkoutCategoryScreen(
 @Composable
 private fun WorkoutCategoryBody(
     itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
+    textState: MutableState<TextFieldValue>,
     onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutCategoryList(itemList = itemList, onClick, onDelete, modifier = modifier)
+    WorkoutCategoryList(itemList = itemList, onClick, textState, onDelete, modifier = modifier)
 }
 
 @Composable
 private fun WorkoutCategoryList(
     itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
+    textState: MutableState<TextFieldValue>,
     onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
 ){
+    var filteredItems: List<WorkoutCategory>
+
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)){
-        items(itemList){item ->
+        val searchedText = textState.value.text
+        filteredItems = if (searchedText.isEmpty()){
+            itemList
+        } else {
+            val resultList = ArrayList<WorkoutCategory>()
+            for (item in itemList){
+                if (item.name.lowercase(Locale.getDefault())
+                        .contains(searchedText.lowercase(Locale.getDefault()))
+                ){
+                    resultList.add(item)
+                }
+            }
+            resultList
+        }
+
+        item(){
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier.height(50.dp))
+                Text(text = "Категории", style = MaterialTheme.typography.h4)
+                Spacer(modifier.height(50.dp))
+                Divider()
+            }
+        }
+
+        items(filteredItems){item ->
             WorkoutCategoryItem(item = item, onClick, onDelete)
+        }
+
+        item(){
+            Spacer(modifier.height(100.dp))
         }
     }
 }
@@ -158,22 +195,22 @@ fun AddCategoryDialog(
                         modifier = Modifier.padding(32.dp),
                         value = categoryName,
                         onValueChange = { categoryName = it },
-                        label = { Text(textFieldLabel) }
+                        label = { Text(textFieldLabel) },
+                        maxLines = 1,
+                        singleLine = true,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Box(){
-                        Row {
+                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
                             Button(
                                 onClick = onDismiss,
                                 shape = RoundedCornerShape(30.dp)
                             ) {
                                    Text(text = "Отмена", style = MaterialTheme.typography.h6)
                             }
-                            
-                            Spacer(modifier = Modifier.width(10.dp))
-                            
+
                             Button(onClick = {
                                 onAddCategory(categoryName)
                                 onDismiss()
