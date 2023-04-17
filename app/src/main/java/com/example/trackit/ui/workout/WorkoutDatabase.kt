@@ -5,7 +5,7 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import values.preCreatedCategoryList
+import com.example.trackit.data.preCreatedCategoryList
 
 @Database(entities = [WorkoutEntity::class], version = 2, exportSchema = false)
 @TypeConverters(LocalDateConverter::class, ExerciseConverter::class)
@@ -48,7 +48,7 @@ abstract class WorkoutCategoryDatabase : RoomDatabase(){
                             super.onCreate(db)
                             // Insert pre-created objects into the database
                             GlobalScope.launch {
-                                preCreatedCategoryList.forEach{category ->
+                                preCreatedCategoryList.forEach{ category ->
                                     getDatabase(context).itemDao().insert(category)
                                 }
                             }

@@ -1,4 +1,4 @@
-package values
+package com.example.trackit.data
 
 import com.example.trackit.ui.workout.Exercise
 import com.example.trackit.ui.workout.WorkoutCategory

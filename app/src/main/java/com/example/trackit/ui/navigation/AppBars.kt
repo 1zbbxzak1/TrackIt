@@ -1,52 +1,37 @@
 package com.example.trackit.ui.navigation
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import android.content.res.Resources.Theme
-import android.graphics.Color.parseColor
-import androidx.compose.foundation.background
-import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Favorite
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.trackit.R
-import com.example.trackit.calendar.ExpandableCalendar
-import com.example.trackit.data.Screen
-import java.time.LocalDate
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.trackit.ui.theme.TrackItTheme
-import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.trackit.R
+import com.example.trackit.calendar.ExpandableCalendar
+import com.example.trackit.data.Screen
 import com.example.trackit.ui.theme.AndroidGreen
+import java.time.LocalDate
 
 @Composable
 fun BottomBar(
@@ -217,7 +202,7 @@ fun SearchView(state: MutableState<TextFieldValue>, modifier: Modifier = Modifie
             }
             .focusRequester(focusRequester),
         textStyle = MaterialTheme.typography.body1,
-        placeholder = { Text(text = "Искать", style = MaterialTheme.typography.body1) },
+        placeholder = { Text(text = "Искать", color = Color.White, style = MaterialTheme.typography.body1) },
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -255,7 +240,7 @@ fun SearchView(state: MutableState<TextFieldValue>, modifier: Modifier = Modifie
         shape = RoundedCornerShape(10.dp), // The TextFiled has rounded corners top left and right by default
         colors = TextFieldDefaults.textFieldColors(
             textColor = Color.White,
-            cursorColor = MaterialTheme.colors.primary,
+            cursorColor = AndroidGreen,
             leadingIconColor = Color.White,
             trailingIconColor = Color.White,
             backgroundColor = MaterialTheme.colors.primaryVariant,
