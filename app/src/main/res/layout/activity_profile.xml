@@ -1,60 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profile_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".Activity.ProfileActivity">
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#eff2f3">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/Profile_card"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="6dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            app:cardCornerRadius="10dp">
-
+            android:layout_height="130dp"
+            card_view:cardBackgroundColor="@android:color/transparent"
+            card_view:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/card_border"
                 android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="1">
+                android:background="@drawable/card_back"
+                android:padding="35dp"
+                android:weightSum="0">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="0dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:src="@drawable/resume" />
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/profile_icon" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
+                            android:fontFamily="sans-serif-medium"
                             android:text="Профиль"
-                            android:textColor="#000"
-                            android:textSize="36dp" />
+                            android:layout_marginStart="15dp"
+                            android:textColor="@color/white"
+                            android:textSize="46dp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -62,21 +57,22 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/ruler" />
 
                 <LinearLayout
@@ -93,17 +89,19 @@
                         android:layout_marginTop="1dp"
                         android:gravity="center_horizontal"
                         android:text="Рост"
+                        android:fontFamily="sans-serif-medium"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <EditText
                         android:id="@+id/height_edit_text"
-                        android:layout_width="41dp"
+                        android:layout_width="35dp"
                         android:layout_height="25dp"
                         android:layout_marginStart="175dp"
                         android:layout_marginLeft="40dp"
                         android:background="@null"
                         android:hint="..."
+                        android:fontFamily="sans-serif-medium"
                         android:inputType="numberDecimal" />
 
                     <TextView
@@ -112,7 +110,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="0dp"
-                        android:text="cm"
+                        android:text="см"
+                        android:fontFamily="sans-serif-medium"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
@@ -122,20 +121,21 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="15dp"
+            android:gravity="center">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/cake" />
 
                 <LinearLayout
@@ -148,151 +148,171 @@
                         android:id="@+id/age_label"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="7dp"
                         android:layout_marginTop="1dp"
                         android:gravity="center_horizontal"
                         android:text="Возраст"
+                        android:fontFamily="sans-serif-medium"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <EditText
                         android:id="@+id/age_edit_text"
                         android:background="@null"
-                        android:layout_width="40dp"
+                        android:layout_width="35dp"
                         android:layout_height="25dp"
-                        android:layout_marginStart="165dp"
+                        android:layout_marginStart="160dp"
                         android:layout_marginLeft="40dp"
                         android:hint="..."
+                        android:fontFamily="sans-serif-medium"
                         android:inputType="numberDecimal" />
 
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/scale" />
+
+            <LinearLayout
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="1dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/weight_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center_horizontal"
+                    android:text="Вес"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/weight_edit_text"
+                    android:background="@null"
+                    android:layout_width="40dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="185dp"
+                    android:layout_marginLeft="40dp"
+                    android:hint="..."
+                    android:fontFamily="sans-serif-medium"
+                    android:inputType="numberDecimal" />
+
+                <TextView
+                    android:id="@+id/w_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:text="кг"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="395dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
                     android:src="@drawable/gender" />
 
                 <LinearLayout
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/g_label"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="5dp"
+                        android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
                         android:text="Пол"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
-                    <RadioGroup
-                        android:id="@+id/radio_group_gender"
-                        android:layout_width="210dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="90dp"
-                        android:orientation="horizontal"
-                        android:paddingLeft="8dp"
-                        android:paddingTop="3dp"
-                        android:paddingRight="8dp">
-
-                        <RadioButton
-                            android:id="@+id/maleRadioButton"
-                            android:layout_width="95dp"
-                            android:layout_height="match_parent"
-                            android:text="Мужской"
-                            android:checked="true"
-                            android:buttonTint="@color/black"
-                            android:textColor="@color/black" />
-
-                        <RadioButton
-                            android:id="@+id/femaleRadioButton"
-                            android:layout_width="98dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="1dp"
-                            android:text="Женский"
-                            android:checked="false"
-                            android:buttonTint="@color/black"
-                            android:textColor="@color/black" />
-
-                    </RadioGroup>
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginTop="10dp">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/scale" />
-
-                <LinearLayout
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/weight_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="25dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="0dp"
-                        android:gravity="center_horizontal"
-                        android:text="Вес"
-                        android:textColor="@color/black"
-                        android:textSize="20sp" />
-
-                    <EditText
-                        android:id="@+id/weight_edit_text"
-                        android:background="@null"
-                        android:layout_width="40dp"
-                        android:layout_height="25dp"
-                        android:layout_marginStart="187dp"
-                        android:layout_marginLeft="40dp"
-                        android:hint="..."
-                        android:inputType="numberDecimal" />
-
-                    <TextView
-                        android:id="@+id/w_label"
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/group_card"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="0dp"
-                        android:layout_marginTop="0dp"
-                        android:text="kg"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:layout_marginStart="108dp"
+                        card_view:cardBackgroundColor="@android:color/transparent"
+                        card_view:cardCornerRadius="10dp"
+                        card_view:cardElevation="0dp">
 
+                        <RadioGroup
+                            android:id="@+id/radio_group_gender"
+                            android:layout_width="182dp"
+                            android:layout_height="35dp"
+                            android:orientation="horizontal"
+                            android:paddingLeft="0dp"
+                            android:paddingRight="0dp">
+
+                            <RadioButton
+                                android:id="@+id/maleRadioButton"
+                                android:layout_width="85dp"
+                                android:layout_height="27dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:button="@null"
+                                android:checked="true"
+                                android:fontFamily="sans-serif"
+                                android:text="Мужской"
+                                android:textAlignment="center"
+                                android:textColor="@color/black" />
+
+                            <RadioButton
+                                android:id="@+id/femaleRadioButton"
+                                android:layout_width="87dp"
+                                android:layout_height="27dp"
+                                android:layout_gravity="center"
+                                android:button="@null"
+                                android:checked="true"
+                                android:fontFamily="sans-serif"
+                                android:text="Женский"
+                                android:textAlignment="center"
+                                android:textColor="@color/black" />
+
+                        </RadioGroup>
+                    </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

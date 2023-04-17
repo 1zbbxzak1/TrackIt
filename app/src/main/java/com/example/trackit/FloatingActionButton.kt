@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import com.example.trackit.data.Screen
 
 @Composable

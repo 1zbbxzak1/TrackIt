@@ -29,9 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.trackit.R
 import com.example.trackit.calendar.ExpandableCalendar
+import java.time.LocalDate
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.painterResource
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.theme.AndroidGreen
-import java.time.LocalDate
 
 @Composable
 fun BottomBar(

@@ -6,25 +6,20 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.trackit.data.Screen
-import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.FoodPage
+import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.WorkoutCategory
 import com.example.trackit.ui.workout.WorkoutPage
-import com.example.trackit.ui.workout.WorkoutViewModel
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseScreen
-import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
 @Composable
@@ -115,7 +110,15 @@ fun TrackItApp(
                 )}
 
             composable(route = Screen.Food.name){
-                FoodPage()
+                FoodPage(navigateToEntry = {navController.navigate(Screen.NutritionFood.name)}, selectedDate.value)
+            }
+
+            composable(route = Screen.NutritionFood.name){
+                FoodScreen(
+                    navigateBack = { navController.popBackStack() },
+                    navigateToFoodPage = { navController.navigate(Screen.Food.name) },
+                    selectedDate = selectedDate.value
+                )
             }
         }
     }
