@@ -9,3 +9,8 @@ enum class Screen {
     Food,
     NutritionFood
 }
+
+enum class ExerciseType {
+    Cardio,
+    Strength
+}

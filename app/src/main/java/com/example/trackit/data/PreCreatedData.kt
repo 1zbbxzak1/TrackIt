@@ -1,64 +1,67 @@
 package com.example.trackit.data
 
+import com.example.trackit.ui.workout.CardioExercise
 import com.example.trackit.ui.workout.Exercise
+import com.example.trackit.ui.workout.StrengthExercise
 import com.example.trackit.ui.workout.WorkoutCategory
+import java.time.Duration
+import java.time.LocalTime
 
 val preCreatedCategoryList = listOf(
     WorkoutCategory(0, "Грудные мышцы", mutableListOf(
-        Exercise("Жим штанги лежа"),
-        Exercise("Жим гантелей лежа"),
-        Exercise("Жим гантелей на наклонной скамье"),
-        Exercise("Разводка гантелей на горизонтальной скамье"),
-        Exercise("Отжимания от пола")
-    )
-    ),
+        StrengthExercise("Жим штанги лежа", 0.0f, 0, 0),
+        StrengthExercise("Жим гантелей лежа", 0.0f, 0, 0),
+        StrengthExercise("Жим гантелей на наклонной скамье", 0.0f, 0, 0),
+        StrengthExercise("Разводка гантелей на горизонтальной скамье", 0.0f, 0, 0),
+        StrengthExercise("Отжимания от пола", 0.0f, 0, 0)
+    )),
     WorkoutCategory(1, "Руки", mutableListOf(
-        Exercise("Жим штанги на бицепс"),
-        Exercise("Сгибания рук со гантелями"),
-        Exercise("Отжимания на брусьях"),
-        Exercise("Молотковый подъем"),
-        Exercise("Упражнение \"Бритва\"")
+        StrengthExercise("Жим штанги на бицепс", 0.0f, 0, 0),
+        StrengthExercise("Сгибания рук со гантелями", 0.0f, 0, 0),
+        StrengthExercise("Отжимания на брусьях", 0.0f, 0, 0),
+        StrengthExercise("Молотковый подъем", 0.0f, 0, 0),
+        StrengthExercise("Упражнение \"Бритва\"", 0.0f, 0, 0)
     )),
     WorkoutCategory(2, "Плечи", mutableListOf(
-        Exercise("Жим гантелей стоя"),
-        Exercise("Французский жим"),
-        Exercise("Подтягивания к подбородку"),
-        Exercise("Вращения гантелей наружу и внутрь"),
-        Exercise("Жим штанги узким хватом")
+        StrengthExercise("Жим гантелей стоя", 0.0f, 0, 0),
+        StrengthExercise("Французский жим", 0.0f, 0, 0),
+        StrengthExercise("Подтягивания к подбородку", 0.0f, 0, 0),
+        StrengthExercise("Вращения гантелей наружу и внутрь", 0.0f, 0, 0),
+        StrengthExercise("Жим штанги узким хватом", 0.0f, 0, 0)
     )),
     WorkoutCategory(3, "Ноги", mutableListOf(
-        Exercise("Приседания"),
-        Exercise("Выпады"),
-        Exercise("Подъем на носки с гантелями"),
-        Exercise("Жим ногами на тренажере"),
-        Exercise("Шаги с гантелями")
+        StrengthExercise("Приседания", 0.0f, 0, 0),
+        StrengthExercise("Выпады", 0.0f, 0, 0),
+        StrengthExercise("Подъем на носки с гантелями", 0.0f, 0, 0),
+        StrengthExercise("Жим ногами на тренажере", 0.0f, 0, 0),
+        StrengthExercise("Шаги с гантелями", 0.0f, 0, 0)
     )),
     WorkoutCategory(4,"Спина", mutableListOf(
-        Exercise("Подтягивания"),
-        Exercise("Широкое разведение рук с гантелями"),
-        Exercise("Тяга к груди"),
-        Exercise("Гиперэкстензия"),
-        Exercise("Отведение рук с резиной")
+        StrengthExercise("Подтягивания", 0.0f, 0, 0),
+        StrengthExercise("Широкое разведение рук с гантелями", 0.0f, 0, 0),
+        StrengthExercise("Тяга к груди", 0.0f, 0, 0),
+        StrengthExercise("Гиперэкстензия", 0.0f, 0, 0),
+        StrengthExercise("Отведение рук с резиной", 0.0f, 0, 0)
     )),
     WorkoutCategory(5,"Растяжка", mutableListOf(
-        Exercise("Дочка"),
-        Exercise("Кобра"),
-        Exercise("Глубокий выпад вперед"),
-        Exercise("Поза мостика"),
-        Exercise("Нисходящий собака")
+        CardioExercise("Дочка", Duration.ZERO),
+        CardioExercise("Кобра", Duration.ZERO),
+        CardioExercise("Глубокий выпад вперед", Duration.ZERO),
+        CardioExercise("Поза мостика", Duration.ZERO),
+        CardioExercise("Нисходящий собака", Duration.ZERO)
     )),
     WorkoutCategory(6,"Пресс", mutableListOf(
-        Exercise("Классические скручивания на пресс"),
-        Exercise("Боковые скручивания"),
-        Exercise("Велосипед"),
-        Exercise("Планка"),
-        Exercise("Упражнение \"Ножницы\"")
+        StrengthExercise("Классические скручивания на пресс", 0.0f, 0, 0),
+        StrengthExercise("Боковые скручивания", 0.0f, 0, 0),
+        CardioExercise("Велосипед", Duration.ZERO),
+        CardioExercise("Планка", Duration.ZERO),
+        CardioExercise("Упражнение \"Ножницы\"", Duration.ZERO)
     )),
     WorkoutCategory(7,"Кардио-тренировки", mutableListOf(
-        Exercise("Бег"),
-        Exercise("Прыжки на скакалке"),
-        Exercise("Велотренажер"),
-        Exercise("Бёрпи"),
-        Exercise("Плавание")
+        CardioExercise("Бег", Duration.ZERO),
+        CardioExercise("Прыжки на скакалке", Duration.ZERO),
+        CardioExercise("Велотренажер", Duration.ZERO),
+        StrengthExercise("Бёрпи", 0.0f, 0, 0),
+        CardioExercise("Плавание", Duration.ZERO)
     ))
 )

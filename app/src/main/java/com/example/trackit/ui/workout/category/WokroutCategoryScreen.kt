@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
@@ -23,6 +24,7 @@ import com.example.trackit.ui.workout.WorkoutCategory
 import kotlinx.coroutines.launch
 import java.util.*
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutCategoryScreen(
@@ -36,39 +38,67 @@ fun WorkoutCategoryScreen(
     val dialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { dialogState.value = true }) {
-                Icon(Icons.Rounded.Add, contentDescription = "Add category")
-            }
-        },
-        topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) }
-    ) {
-        WorkoutCategoryBody(
-            itemList = uiState.itemList,
-            onCategorySelect,
-            textState,
-            onDelete = {
-                coroutineScope.launch {
-                    viewModel.deleteItem(it)
-                }
-            },
-            modifier = modifier.padding(top = 8.dp)
-        )
+    Scaffold(topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) }) {
+        Column() {
 
-        if (dialogState.value) {
-            AddCategoryDialog(
-                "Добавление категории",
-                "Название категории:",
-                onAddCategory = { name ->
+            Card(
+                onClick = { dialogState.value = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp, top = 8.dp),
+                elevation = 12.dp
+            ) {
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Создать категорию",
+                        style = MaterialTheme.typography.h5,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Icon(
+                        Icons.Rounded.AddCircle, contentDescription = "Создать категорию",
+                        modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier.height(25.dp))
+                Text(text = "Категории", style = MaterialTheme.typography.h4)
+                Spacer(modifier.height(25.dp))
+                Divider()
+            }
+
+            WorkoutCategoryBody(
+                itemList = uiState.itemList,
+                onCategorySelect,
+                textState,
+                onDelete = {
                     coroutineScope.launch {
-                        viewModel.insertItem(WorkoutCategory(0, name, mutableListOf()))
+                        viewModel.deleteItem(it)
                     }
-                    dialogState.value = false
                 },
-                onDismiss = { dialogState.value = false }
+                modifier = modifier.padding(top = 8.dp)
             )
+
+            if (dialogState.value) {
+                AddCategoryDialog(
+                    "Добавление категории",
+                    "Название категории:",
+                    onAddCategory = { name ->
+                        coroutineScope.launch {
+                            viewModel.insertItem(WorkoutCategory(0, name, mutableListOf()))
+                        }
+                        dialogState.value = false
+                    },
+                    onDismiss = { dialogState.value = false }
+                )
+            }
         }
+
     }
 }
 
@@ -105,15 +135,6 @@ private fun WorkoutCategoryList(
                 }
             }
             resultList
-        }
-
-        item(){
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier.height(50.dp))
-                Text(text = "Категории", style = MaterialTheme.typography.h4)
-                Spacer(modifier.height(50.dp))
-                Divider()
-            }
         }
 
         items(filteredItems){item ->

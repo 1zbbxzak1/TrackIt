@@ -6,28 +6,35 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.FloatingButton
+import com.example.trackit.data.ExerciseType
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.navigation.WorkoutEditTopBar
-import com.example.trackit.ui.workout.Exercise
-import com.example.trackit.ui.workout.WorkoutEntity
+import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.ui.workout.*
 import kotlinx.coroutines.launch
+import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutExerciseScreen(
     categoryId: Int?,
@@ -40,42 +47,85 @@ fun WorkoutExerciseScreen(
 
     val coroutineScope = rememberCoroutineScope()
     viewModel.updateSelectedCategory(categoryId ?: -1)
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
     val uiState by viewModel.exerciseUiState.collectAsState()
-    val dialogState = remember { mutableStateOf(false) }
+    val creationDialogState = remember { mutableStateOf(false) }
+    val addDialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
-
+    var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
 
     Scaffold(
         topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) },
-        floatingActionButton = {
-            FloatingButton(currentRoute = Screen.WorkoutExercise.name, onClick = { dialogState.value = true })
-        }
     ) {
-        WorkoutExerciseBody(
-            itemList = uiState.itemList,
-            onClick = {exercise ->
-                coroutineScope.launch {
-                    viewModel.insertWorkoutEntity(WorkoutEntity(0, exercise.name, exercise, selectedDate, false))
-                }
-                navigateToWorkoutPage()
-            },
-            textState,
-            onDelete = {
-                coroutineScope.launch {
-                    viewModel.deleteItem(it)
-                }
-            },
-            modifier = modifier.padding(top = 8.dp)
-        )
 
-        if (dialogState.value) {
-            AddExerciseDialog(
+        Column() {
+            Card(
+                onClick = { creationDialogState.value = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 4.dp, end = 4.dp, top = 8.dp),
+                elevation = 12.dp
+            ) {
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Создать упражнение",
+                        style = MaterialTheme.typography.h5,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Icon(
+                        Icons.Rounded.AddCircle, contentDescription = "создать упражнение",
+                        modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+                    )
+                }
+            }
+
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier.height(25.dp))
+                Text(text = "Упражнения", style = MaterialTheme.typography.h4)
+                Spacer(modifier.height(25.dp))
+                Divider()
+            }
+
+            WorkoutExerciseBody(
+                itemList = uiState.itemList,
+                onClick = {exercise ->
+                    selectedExercise = exercise
+                    addDialogState.value = true
+                },
+                textState,
+                onDelete = {
+                    coroutineScope.launch {
+                        viewModel.deleteItem(it)
+                    }
+                },
+                modifier = modifier.padding(top = 8.dp)
+            )
+        }
+
+
+        if (creationDialogState.value) {
+            CreateNewExerciseDialog(
                 onAddExercise = {exercise ->
                     coroutineScope.launch {
                         viewModel.updateExercise(exercise)
                     }
                 },
-                onDismiss = { dialogState.value = false }
+                onDismiss = { creationDialogState.value = false }
+            )
+        } else if (addDialogState.value){
+            AddExerciseDialog(
+                selectedExercise = selectedExercise,
+                onAddExercise = { exercise ->
+                    coroutineScope.launch {
+                        viewModel.insertWorkoutEntity(WorkoutEntity(0, exercise.name, exercise, selectedCategory, selectedDate, false))
+                    }
+                    navigateToWorkoutPage()
+                },
+                onDismiss = { addDialogState.value = false }
             )
         }
     }
@@ -121,15 +171,6 @@ private fun WorkoutExerciseList(
                 resultList
             }
 
-            item(){
-                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Spacer(modifier.height(50.dp))
-                    Text(text = "Упражнения", style = MaterialTheme.typography.h4)
-                    Spacer(modifier.height(50.dp))
-                    Divider()
-                }
-            }
-
             items(filteredItems) { item ->
                 WorkoutExerciseItem(item, onClick, onDelete)
             }
@@ -150,7 +191,7 @@ private fun WorkoutExerciseItem(
 ){
     if (item.name.isNotBlank()){
         Card(
-            onClick = {onClick(item)},
+            onClick = { onClick(item) },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(start = 4.dp, end = 4.dp)
@@ -170,71 +211,6 @@ private fun WorkoutExerciseItem(
                     contentDescription = null,
                     modifier = Modifier.padding(start = 8.dp, end = 12.dp)
                 )
-            }
-        }
-    }
-}
-
-@Composable
-fun AddExerciseDialog(
-    onAddExercise: (Exercise) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var categoryName by remember { mutableStateOf("") }
-
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Box(
-                contentAlignment = Alignment.Center
-            ){
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "Добавление упражнения", style = MaterialTheme.typography.h5)
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    TextField(
-                        modifier = Modifier.padding(32.dp),
-                        value = categoryName,
-                        onValueChange = { categoryName = it },
-                        label = { Text("Название упражнения:") },
-                        maxLines = 1,
-                        singleLine = true,
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Box(){
-                        Row {
-                            Button(
-                                onClick = onDismiss,
-                                shape = RoundedCornerShape(30.dp)
-                            ) {
-                                Text(text = "Отмена", style = MaterialTheme.typography.h6)
-                            }
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            Button(onClick = {
-                                onAddExercise(Exercise(categoryName))
-                                onDismiss()
-                            },
-                                shape = RoundedCornerShape(30.dp),
-                                enabled = categoryName.isNotBlank()
-                            ) {
-                                Text(text = "Добавить", style = MaterialTheme.typography.h6)
-                            }
-                        }
-                    }
-                }
             }
         }
     }
