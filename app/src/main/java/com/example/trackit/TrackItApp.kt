@@ -16,7 +16,6 @@ import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.TrackItTheme
-import com.example.trackit.ui.workout.WorkoutCategory
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseScreen
@@ -61,7 +60,12 @@ fun TrackItApp(
         Screen.WorkoutCategory.name -> {
             bottomBarState.value = false
             topBarState.value = true
-            floatingButtonState.value = true
+            floatingButtonState.value = false
+        }
+        Screen.NutritionFood.name -> {
+            bottomBarState.value = false
+            topBarState.value = true
+            floatingButtonState.value = false
         }
     }
 
