@@ -1,5 +1,7 @@
 package com.example.trackit.ui.navigation
 
+import android.annotation.SuppressLint
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectableGroup
@@ -31,10 +33,19 @@ import com.example.trackit.R
 import com.example.trackit.calendar.ExpandableCalendar
 import java.time.LocalDate
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.theme.AndroidGreen
+import com.example.trackit.ui.theme.Arsenic
+import com.example.trackit.ui.theme.BrightGray
+import com.example.trackit.ui.theme.TrackItTheme
 
 @Composable
 fun BottomBar(
@@ -163,27 +174,118 @@ fun BottomBar(
 }
 
 @Composable
+fun ExerciseTopBar(
+    label: String,
+    @DrawableRes categoryIcon: Int,
+    navigateBack: () -> Unit = {},
+    modifier: Modifier = Modifier
+){
+    Row(modifier = modifier
+        .padding(start = 10.dp, end = 10.dp, top = 30.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(
+            onClick = navigateBack
+        ) {
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                backgroundColor = BrightGray,
+                elevation = 20.dp,
+                modifier = Modifier
+                    .size(54.dp)
+            ) {
+                Icon(
+                    Icons.Rounded.ArrowBack,
+                    contentDescription = "Вернуться",
+                    modifier = Modifier.padding(12.dp)
+                )
+            }
+        }
+
+        Icon(painterResource(R.drawable.line),
+            null,
+            Modifier
+                .align(Alignment.CenterVertically)
+                .padding(horizontal = 4.dp)
+                .weight(1f),
+            Arsenic)
+
+        Text(
+            text = label,
+            textAlign = TextAlign.Center,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily.Default,
+            softWrap = false
+        )
+
+        Icon(painterResource(R.drawable.line),
+            null,
+            Modifier
+                .align(Alignment.CenterVertically)
+                .padding(horizontal = 4.dp)
+                .weight(1f),
+            Arsenic)
+
+        Card(
+            shape = RoundedCornerShape(20.dp),
+            backgroundColor = BrightGray,
+            elevation = 20.dp,
+            modifier = Modifier
+                .size(54.dp)
+        ) {
+            Icon(
+                painterResource(id = categoryIcon),
+                contentDescription = "Вернуться",
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+    }
+}
+
+@Composable
 fun WorkoutEditTopBar(
     state: MutableState<TextFieldValue>,
     navigateBack: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
-    Surface(
-        shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IconButton(onClick = navigateBack, Modifier.padding(start = 10.dp, end = 20.dp)) {
-                Icon(Icons.Rounded.ArrowBack, contentDescription = "Вернуться")
-            }
+   Row(modifier = modifier
+           .padding(start = 10.dp, end = 10.dp, top = 30.dp, bottom = 10.dp),
+       verticalAlignment = Alignment.CenterVertically,
+   ) {
+       IconButton(
+           onClick = navigateBack
+       ) {
+           Card(
+               shape = RoundedCornerShape(20.dp),
+               backgroundColor = BrightGray,
+               elevation = 20.dp,
+               modifier = Modifier.size(54.dp)
+           ) {
+               Icon(
+                   Icons.Rounded.ArrowBack,
+                   contentDescription = "Вернуться",
+                   modifier = Modifier.padding(12.dp)
+               )
+           }
+       }
 
-            SearchView(state = state,
-                Modifier
-                    .weight(1f)
-                    .padding(end = 10.dp, top = 2.dp, bottom = 2.dp))
-        }
+       Spacer(modifier = Modifier.width(10.dp))
+
+       SearchView(
+           state = state,
+           Modifier
+               .weight(1f)
+       )
+   }
+}
+
+@SuppressLint("UnrememberedMutableState")
+@Preview(showBackground = true)
+@Composable
+fun Barr(){
+    TrackItTheme {
+        ExerciseTopBar(label = "Кардио", R.drawable.workout_icon)
     }
 }
 
@@ -203,7 +305,8 @@ fun SearchView(state: MutableState<TextFieldValue>, modifier: Modifier = Modifie
             .fillMaxWidth()
             .onFocusChanged { focusState ->
             }
-            .focusRequester(focusRequester),
+            .focusRequester(focusRequester)
+            .height(54.dp),
         textStyle = MaterialTheme.typography.body1,
         placeholder = { Text(text = "Искать", color = Color.White, style = MaterialTheme.typography.body1) },
         leadingIcon = {

@@ -21,8 +21,10 @@ private val LightColorPalette = lightColors(
     primary = Purple500,
     primaryVariant = Arsenic,
     secondary = Teal200,
-
-    background = AntiFlashWhite
+    surface = BrightGray,
+    onError = PermanentGeraniumLake,
+    onSurface = Arsenic,
+    background = Color.White
 
     /* Other default colors to override
     background = Color.White,
@@ -35,7 +37,10 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun TrackItTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun TrackItTheme(
+    darkTheme: Boolean = false, //isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     val systemUiController = rememberSystemUiController()
 
     val colors: Colors

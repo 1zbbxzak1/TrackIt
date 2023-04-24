@@ -1,6 +1,8 @@
-package com.example.trackit.ui.workout
+package com.example.trackit.data.workout
 
 import androidx.room.*
+import com.example.trackit.data.workout.WorkoutCategory
+import com.example.trackit.data.workout.WorkoutEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

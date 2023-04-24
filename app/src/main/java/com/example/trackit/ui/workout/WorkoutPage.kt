@@ -1,7 +1,5 @@
 package com.example.trackit.ui.workout
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -22,21 +20,27 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.FloatingButton
+import com.example.trackit.R
 import com.example.trackit.data.Screen
+import com.example.trackit.data.workout.CardioExercise
+import com.example.trackit.data.workout.StrengthExercise
+import com.example.trackit.data.workout.WorkoutCategory
+import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
-import com.example.trackit.ui.theme.AntiFlashWhite
-import com.example.trackit.ui.theme.Arsenic
+import com.example.trackit.ui.theme.*
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.*
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutPage(
     navigateToEntry: () -> Unit,
@@ -64,24 +68,29 @@ fun WorkoutPage(
     Scaffold(floatingActionButton = {
         FloatingButton(Screen.Workout.name, onClick = { navigateToEntry() })
     }) {
-        Column(modifier = modifier) {
-            Text(
-                text = "Тренировки",
-                style = MaterialTheme.typography.h3,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+        Column(modifier = modifier.padding(bottom = it.calculateBottomPadding())) {
 
-            Divider()
+            Surface(
+                color = MaterialTheme.colors.primaryVariant,
+                shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                modifier = Modifier.height(70.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(painterResource(id = R.drawable.workout_label), contentDescription = null, tint = Color.Unspecified)
+                }
+            }
 
-            Text(text = selectedDate.dayOfMonth.toString() + " " + selectedDate.month
-                .getDisplayName(TextStyle.FULL, Locale.getDefault())
-                .lowercase()
-                .replaceFirstChar { it.titlecase() } + " " + selectedDate.year,
-                style = MaterialTheme.typography.body1,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Divider()
+//            Text(text = selectedDate.dayOfMonth.toString() + " " + selectedDate.month
+//                .getDisplayName(TextStyle.FULL, Locale.getDefault())
+//                .lowercase()
+//                .replaceFirstChar { it.titlecase() } + " " + selectedDate.year,
+//                style = MaterialTheme.typography.body1,
+//                modifier = Modifier.align(Alignment.CenterHorizontally)
+//            )
 
             WorkoutBody(
                 itemList = workoutUiState.itemList,
@@ -133,13 +142,13 @@ private fun WorkoutList(
     onEdit: (WorkoutEntity) -> Unit,
     modifier: Modifier = Modifier
 ){
-    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
         item{
             Spacer(modifier.height(60.dp))
         }
 
         items(items = itemList, key = { item -> item.id }, itemContent = {item ->
-            val dismissThreshold = 0.45f
+            val dismissThreshold = 0.25f
             val currentFraction = remember { mutableStateOf(0f) }
 
             val dismissState = rememberDismissState(
@@ -186,7 +195,8 @@ private fun WorkoutItem(
     item: WorkoutEntity,
     onCheckedChange: (WorkoutEntity) -> Unit,
     onEdit: (WorkoutEntity) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    icon: Int = R.drawable.workout_icon
 ){
     var expanded by remember {
         mutableStateOf(false)
@@ -194,70 +204,87 @@ private fun WorkoutItem(
 
     Card(modifier = modifier
         .fillMaxWidth()
-        .padding(start = 4.dp, end = 4.dp)
-        .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded },
-        shape = RoundedCornerShape(10.dp)
+        .padding(horizontal = 10.dp)
+        .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded }
+        .shadow(10.dp, RoundedCornerShape(20.dp))
+        .animateContentSize(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioNoBouncy,
+                stiffness = Spring.StiffnessMedium
+            )
+        ),
+        shape = RoundedCornerShape(20.dp),
     ) {
-        Column(modifier = Modifier.animateContentSize( animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        )
-        )) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Row(
-                modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-    
-                Checkbox(
+
+                CustomCheckBox(
                     checked = item.completed,
                     onCheckedChange = {
                     onCheckedChange(WorkoutEntity(item.id, item.name, item.exercise, item.category, item.date, it))
-                    }
+                    },
+                    item.category.icon,
+                    modifier = Modifier.padding(start = 10.dp, end = 5.dp)
                 )
-    
-                Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(1f))
-    
-                Card (
-                    modifier = Modifier
-                        .clickable(remember { MutableInteractionSource() }, null) {onEdit(item)},
-                    shape = RoundedCornerShape(16.dp),
-                    backgroundColor = AntiFlashWhite,
-                ){
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
-                    ) {
-                        when (item.exercise){
-                            is StrengthExercise -> {
-                                Row(modifier = Modifier.padding(horizontal = 8.dp)) {
-                                    Text("${item.exercise.weight}")
-                                    Text(text = "x", Modifier.padding(horizontal = 1.dp))
-                                    Text("${item.exercise.repeatCount}")
-                                    Text(text = "x", Modifier.padding(horizontal = 1.dp))
-                                    Text("${item.exercise.approachCount}")
+
+                Text(text = item.name, style = WorkoutCaption, modifier = Modifier.weight(1f))
+
+                if (!expanded){
+                    Card (
+                        modifier = Modifier
+                            .clickable(
+                                remember { MutableInteractionSource() },
+                                null
+                            ) { onEdit(item) }
+                            .padding(horizontal = 10.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = 0.dp
+                    ){
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                        ) {
+                            when (item.exercise){
+                                is StrengthExercise -> {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text("${item.exercise.weight}",
+                                        style = WorkoutCaption)
+                                        Icon(painterResource(R.drawable.x), contentDescription = null,
+                                            modifier = Modifier.padding(horizontal = 3.dp))
+                                        Text("${item.exercise.repeatCount}",
+                                            style = WorkoutCaption)
+                                        Icon(painterResource(R.drawable.x), contentDescription = null,
+                                            modifier = Modifier.padding(horizontal = 3.dp))
+                                        Text("${item.exercise.approachCount}",
+                                            style = WorkoutCaption)
+                                    }
                                 }
-                            }
-                            is CardioExercise -> {
-                                Text("${item.exercise.time.toMinutes()} мин")
+                                is CardioExercise -> {
+                                    Text("${item.exercise.time.toMinutes()} мин",
+                                        style = WorkoutCaption)
+                                }
                             }
                         }
                     }
                 }
-
-                Icon(
-                    if (!expanded) Icons.Rounded.KeyboardArrowDown
-                    else Icons.Rounded.KeyboardArrowUp,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 12.dp)
-                )
             }
 
-            AnimatedVisibility(visible = expanded){
+            if(expanded){
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(1f)
-                        .padding(horizontal = 6.dp, vertical = 8.dp),
+                        .padding(horizontal = 6.dp, vertical = 8.dp)
+                        .background(BrightGray)
+                        .clickable { onEdit(item) },
                     elevation = 20.dp,
                     backgroundColor = Arsenic,
                     contentColor = Color.White
@@ -272,21 +299,35 @@ private fun WorkoutItem(
 
                         when (item.exercise){
                             is StrengthExercise -> {
+                                val weight = item.exercise.weight
+                                val repeatCount = item.exercise.repeatCount
+                                val approachCount = item.exercise.approachCount
+
+                                val resources = LocalContext.current.resources
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(1f),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceAround
                                 ) {
                                     Text(
-                                        text = "${item.exercise.weight} кг",
+                                        text = "$weight кг",
                                         style = MaterialTheme.typography.body1
                                     )
+
+                                    Icon(painterResource(R.drawable.x), contentDescription = null,
+                                        modifier = Modifier.padding(horizontal = 5.dp))
+
                                     Text(
-                                        text = "${item.exercise.repeatCount} повторений",
+                                        text = resources.getQuantityString(R.plurals.repeats, repeatCount, repeatCount),
                                         style = MaterialTheme.typography.body1
                                     )
+
+                                    Icon(painterResource(R.drawable.x), contentDescription = null,
+                                        modifier = Modifier.padding(horizontal = 5.dp))
+
                                     Text(
-                                        text = "${item.exercise.approachCount} подходов",
+                                        text = resources.getQuantityString(R.plurals.approaches, approachCount, approachCount),
                                         style = MaterialTheme.typography.body1
                                     )
                                 }
@@ -307,6 +348,12 @@ private fun WorkoutItem(
                     }
                 }
             }
+            Icon(
+                if (!expanded) Icons.Rounded.KeyboardArrowDown
+                else Icons.Rounded.KeyboardArrowUp,
+                contentDescription = null,
+                tint = Arsenic,
+            )
         }
     }
 }
@@ -318,14 +365,14 @@ fun SwipeBackground(dismissState: DismissState, updateFraction: (Float) -> Unit)
     val color by animateColorAsState(
         when (dismissState.targetValue) {
             DismissValue.Default -> MaterialTheme.colors.background
-            else -> Color.Red
+            else -> PermanentGeraniumLake
         }
     )
 
     val alignment = Alignment.CenterEnd
     val icon = Icons.Default.Delete
     val scale by animateFloatAsState(
-        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1.2f
     )
 
     Box(
@@ -341,6 +388,29 @@ fun SwipeBackground(dismissState: DismissState, updateFraction: (Float) -> Unit)
             icon,
             contentDescription = "Localized description",
             modifier = Modifier.scale(scale)
+        )
+    }
+}
+
+@Composable
+fun CustomCheckBox(
+    checked: Boolean = false,
+    onCheckedChange: (Boolean) -> Unit,
+    icon: Int,
+    modifier: Modifier = Modifier
+){
+    Button(
+        onClick = {onCheckedChange(!checked)},
+        border = if (checked) BorderStroke(2.dp, AndroidGreen) else BorderStroke(2.dp, Arsenic),
+        shape = RoundedCornerShape(30.dp),
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (checked) AndroidGreen else MaterialTheme.colors.surface),
+        modifier = modifier.size(50.dp)
+    ){
+        Icon(
+            painterResource(id = if (checked) R.drawable.completed else icon),
+            contentDescription = null,
+            tint = Arsenic,
+            modifier = Modifier.size(30.dp)
         )
     }
 }

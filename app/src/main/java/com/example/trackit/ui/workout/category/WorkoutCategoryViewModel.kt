@@ -2,8 +2,8 @@ package com.example.trackit.ui.workout.category
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.trackit.ui.workout.WorkoutCategory
-import com.example.trackit.ui.workout.WorkoutCategoryRepository
+import com.example.trackit.data.workout.WorkoutCategory
+import com.example.trackit.data.workout.WorkoutCategoryRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

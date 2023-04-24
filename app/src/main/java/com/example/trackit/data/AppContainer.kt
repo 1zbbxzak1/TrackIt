@@ -1,10 +1,10 @@
 package com.example.trackit.data
 
 import android.content.Context
-import com.example.trackit.ui.workout.WorkoutCategoryDatabase
-import com.example.trackit.ui.workout.WorkoutCategoryRepository
-import com.example.trackit.ui.workout.WorkoutDatabase
-import com.example.trackit.ui.workout.WorkoutItemsRepository
+import com.example.trackit.data.workout.WorkoutCategoryDatabase
+import com.example.trackit.data.workout.WorkoutCategoryRepository
+import com.example.trackit.data.workout.WorkoutDatabase
+import com.example.trackit.data.workout.WorkoutItemsRepository
 
 interface AppContainer {
     val workoutItemsRepository: WorkoutItemsRepository

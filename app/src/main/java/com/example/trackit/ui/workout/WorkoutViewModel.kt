@@ -3,6 +3,8 @@ package com.example.trackit.ui.workout
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.trackit.data.workout.WorkoutEntity
+import com.example.trackit.data.workout.WorkoutItemsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first

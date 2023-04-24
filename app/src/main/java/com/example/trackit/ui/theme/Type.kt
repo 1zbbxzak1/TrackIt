@@ -26,3 +26,10 @@ val Typography = Typography(
     )
     */
 )
+
+val WorkoutCaption = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Bold,
+    fontSize = 18.sp
+)
+

@@ -24,7 +24,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.FloatingButton
 import com.example.trackit.data.ExerciseType
 import com.example.trackit.data.Screen
+import com.example.trackit.data.workout.CardioExercise
+import com.example.trackit.data.workout.Exercise
+import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
+import com.example.trackit.ui.navigation.ExerciseTopBar
 import com.example.trackit.ui.navigation.WorkoutEditTopBar
 import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.*
@@ -44,7 +48,6 @@ fun WorkoutExerciseScreen(
     modifier: Modifier = Modifier,
     viewModel: WorkoutExerciseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-
     val coroutineScope = rememberCoroutineScope()
     viewModel.updateSelectedCategory(categoryId ?: -1)
     val selectedCategory by viewModel.selectedCategory.collectAsState()
@@ -55,7 +58,7 @@ fun WorkoutExerciseScreen(
     var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
 
     Scaffold(
-        topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) },
+        topBar = { ExerciseTopBar(selectedCategory.name,selectedCategory.icon, navigateBack) },
     ) {
 
         Column() {
@@ -63,11 +66,12 @@ fun WorkoutExerciseScreen(
                 onClick = { creationDialogState.value = true },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 4.dp, end = 4.dp, top = 8.dp),
+                    .padding(horizontal = 10.dp, vertical = 10.dp)
+                    .height(70.dp),
                 elevation = 12.dp
             ) {
                 Row(
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                    modifier = Modifier.padding(horizontal = 20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
@@ -78,16 +82,9 @@ fun WorkoutExerciseScreen(
 
                     Icon(
                         Icons.Rounded.AddCircle, contentDescription = "создать упражнение",
-                        modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
-            }
-
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier.height(25.dp))
-                Text(text = "Упражнения", style = MaterialTheme.typography.h4)
-                Spacer(modifier.height(25.dp))
-                Divider()
             }
 
             WorkoutExerciseBody(
@@ -105,7 +102,6 @@ fun WorkoutExerciseScreen(
                 modifier = modifier.padding(top = 8.dp)
             )
         }
-
 
         if (creationDialogState.value) {
             CreateNewExerciseDialog(
@@ -157,21 +153,29 @@ private fun WorkoutExerciseList(
             modifier = modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val searchedText = textState.value.text
-            filteredItems = if (searchedText.isEmpty()){
-                itemList
-            } else {
-                val resultList = ArrayList<Exercise>()
-                for (item in itemList){
-                    if (item.name.lowercase(Locale.getDefault())
-                            .contains(searchedText.lowercase(Locale.getDefault()))){
-                        resultList.add(item)
-                    }
+//            val searchedText = textState.value.text
+//            filteredItems = if (searchedText.isEmpty()){
+//                itemList
+//            } else {
+//                val resultList = ArrayList<Exercise>()
+//                for (item in itemList){
+//                    if (item.name.lowercase(Locale.getDefault())
+//                            .contains(searchedText.lowercase(Locale.getDefault()))){
+//                        resultList.add(item)
+//                    }
+//                }
+//                resultList
+//            }
+
+            item {
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(modifier.height(25.dp))
+                    Text(text = "Упражнения", style = MaterialTheme.typography.h4)
+                    Spacer(modifier.height(25.dp))
                 }
-                resultList
             }
 
-            items(filteredItems) { item ->
+            items(itemList) { item ->
                 WorkoutExerciseItem(item, onClick, onDelete)
             }
 

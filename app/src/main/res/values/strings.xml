@@ -3,4 +3,14 @@
     <string name="profile_page">Профиль</string>
     <string name="food_page">Питание</string>
     <string name="workout_page">Тренировки</string>
+    <plurals name="repeats">
+        <item quantity="one">%d повторение</item>
+        <item quantity="few">%d повторения</item>
+        <item quantity="other">%d повторений</item>
+    </plurals>
+    <plurals name="approaches">
+        <item quantity="one">%d подход</item>
+        <item quantity="few">%d подхода</item>
+        <item quantity="other">%d подходов</item>
+    </plurals>
 </resources>

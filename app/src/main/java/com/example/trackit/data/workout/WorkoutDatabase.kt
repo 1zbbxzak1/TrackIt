@@ -1,4 +1,4 @@
-package com.example.trackit.ui.workout
+package com.example.trackit.data.workout
 
 import android.content.Context
 import androidx.room.*

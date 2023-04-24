@@ -1,12 +1,11 @@
-package com.example.trackit.ui.workout
+package com.example.trackit.data.workout
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.example.trackit.R
 import java.time.Duration
 import java.time.LocalDate
-import java.time.LocalTime
-import kotlin.time.toKotlinDuration
 
 @Entity(tableName = "workout_items")
 data class WorkoutEntity(
@@ -30,7 +29,7 @@ data class CardioExercise(
 
 data class StrengthExercise(
     override val name: String,
-    val weight: Float,
+    val weight: Int,
     val repeatCount: Int,
     val approachCount: Int
 ) : Exercise()
@@ -40,7 +39,8 @@ data class WorkoutCategory(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val name: String = "",
-    val exercises: MutableList<Exercise> = mutableListOf()
+    val exercises: MutableList<Exercise> = mutableListOf(),
+    val icon: Int = R.drawable.workout_icon
 )
 
 
@@ -57,8 +57,16 @@ class ExerciseConverter {
     fun toExercise(value: String): Exercise {
         val parts = value.split(":")
         return when (parts[0]) {
-            "cardio" -> CardioExercise(parts[1], Duration.parse(parts[2]))
-            "strength" -> StrengthExercise(parts[1], parts[2].toFloat(), parts[3].toInt(), parts[4].toInt())
+            "cardio" -> CardioExercise(
+                parts[1],
+                Duration.parse(parts[2])
+            )
+            "strength" -> StrengthExercise(
+                parts[1],
+                parts[2].toInt(),
+                parts[3].toInt(),
+                parts[4].toInt()
+            )
             else -> CardioExercise("", Duration.ZERO)
         }
     }
@@ -77,7 +85,7 @@ class ExerciseConverter {
 
     @TypeConverter
     fun fromWorkoutCategory(category: WorkoutCategory): String {
-        return "${category.name}:${category.id}"
+        return "${category.name}:${category.id}:${category.icon}"
     }
 
     @TypeConverter
@@ -85,7 +93,8 @@ class ExerciseConverter {
         val parts = value.split(":")
         val categoryName = parts[0]
         val categoryId = parts[1].toInt()
-        return WorkoutCategory(categoryId, categoryName)
+        val categoryIcon = parts[2].toInt()
+        return WorkoutCategory(categoryId, categoryName, icon = categoryIcon)
     }
 }
 

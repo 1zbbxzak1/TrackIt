@@ -21,6 +21,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.trackit.data.ExerciseType
+import com.example.trackit.data.workout.CardioExercise
+import com.example.trackit.data.workout.Exercise
+import com.example.trackit.data.workout.StrengthExercise
+import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.theme.AntiFlashWhite
 import java.time.Duration
 
@@ -45,16 +49,12 @@ fun ExerciseDialog(
         is CardioExercise -> {
             duration = selectedEntity.exercise.time.toMinutes().toString()
         }
-
     }
+
     var durationField by remember { mutableStateOf(duration) }
     var weightField by remember { mutableStateOf(weight) }
     var repeatCountField by remember { mutableStateOf(repeatCount) }
     var approachCountField by remember { mutableStateOf(approachCount) }
-
-//    val keyboardController = LocalSoftwareKeyboardController.current
-//    val focusRequester = remember { FocusRequester() }
-//    val focusManager = LocalFocusManager.current
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -82,7 +82,7 @@ fun ExerciseDialog(
                                     maxLines = 1,
                                     singleLine = true,
                                     keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Decimal,
+                                        keyboardType = KeyboardType.Number,
                                         imeAction = ImeAction.Next
                                     ),
                                     keyboardActions = KeyboardActions(
@@ -196,7 +196,7 @@ fun ExerciseDialog(
                                             )
                                             is StrengthExercise -> StrengthExercise(
                                                 selectedEntity.name,
-                                                weightField.toFloat(),
+                                                weightField.toInt(),
                                                 repeatCountField.toInt(),
                                                 approachCountField.toInt()
                                             )
@@ -387,7 +387,7 @@ fun AddExerciseDialog(
                                         )
                                         is StrengthExercise -> StrengthExercise(
                                             selectedExercise.name,
-                                            weightField.toFloat(),
+                                            weightField.toInt(),
                                             repeatCountField.toInt(),
                                             approachCountField.toInt()
                                         )
@@ -494,7 +494,7 @@ fun CreateNewExerciseDialog(
                                         )
                                         ExerciseType.Strength -> StrengthExercise(
                                             exerciseName,
-                                            0.0f, 0, 0
+                                            0, 0, 0
                                         )
                                     }
                                 )

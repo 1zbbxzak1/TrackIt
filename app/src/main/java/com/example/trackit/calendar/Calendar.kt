@@ -3,18 +3,13 @@ package com.example.trackit.calendar
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,14 +24,12 @@ import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.TrackItTheme
 import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import io.github.boguszpawlowski.composecalendar.SelectableWeekCalendar
-import io.github.boguszpawlowski.composecalendar.day.Day
 import io.github.boguszpawlowski.composecalendar.day.DayState
 import io.github.boguszpawlowski.composecalendar.rememberSelectableCalendarState
 import io.github.boguszpawlowski.composecalendar.rememberSelectableWeekCalendarState
 import io.github.boguszpawlowski.composecalendar.selection.DynamicSelectionState
 import io.github.boguszpawlowski.composecalendar.selection.SelectionMode
 import io.github.boguszpawlowski.composecalendar.week.Week
-import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -76,7 +69,8 @@ fun ExpandableCalendar(
                             Surface(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onClick() },
+                                    .clickable { onClick() }
+                                    .background(Color.Unspecified),
                                 shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
                             ) {
                                 Box(modifier = Modifier.height(14.dp), contentAlignment = Alignment.Center){

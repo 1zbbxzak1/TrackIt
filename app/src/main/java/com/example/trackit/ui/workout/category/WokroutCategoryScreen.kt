@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
@@ -18,9 +17,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.trackit.data.workout.WorkoutCategory
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.navigation.WorkoutEditTopBar
-import com.example.trackit.ui.workout.WorkoutCategory
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -45,11 +44,12 @@ fun WorkoutCategoryScreen(
                 onClick = { dialogState.value = true },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 4.dp, end = 4.dp, top = 8.dp),
+                    .padding(horizontal = 10.dp, vertical = 10.dp)
+                    .height(70.dp),
                 elevation = 12.dp
             ) {
                 Row(
-                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
+                    modifier = Modifier.padding(horizontal = 20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     Text(
@@ -60,16 +60,9 @@ fun WorkoutCategoryScreen(
 
                     Icon(
                         Icons.Rounded.AddCircle, contentDescription = "Создать категорию",
-                        modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+                        modifier = Modifier.size(40.dp)
                     )
                 }
-            }
-
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier.height(25.dp))
-                Text(text = "Категории", style = MaterialTheme.typography.h4)
-                Spacer(modifier.height(25.dp))
-                Divider()
             }
 
             WorkoutCategoryBody(
@@ -135,6 +128,14 @@ private fun WorkoutCategoryList(
                 }
             }
             resultList
+        }
+
+        item {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier.height(25.dp))
+                Text(text = "Категории", style = MaterialTheme.typography.h4)
+                Spacer(modifier.height(25.dp))
+            }
         }
 
         items(filteredItems){item ->
