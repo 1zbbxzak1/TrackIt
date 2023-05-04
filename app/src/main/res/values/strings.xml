@@ -3,6 +3,7 @@
     <string name="profile_page">Профиль</string>
     <string name="food_page">Питание</string>
     <string name="workout_page">Тренировки</string>
+    <string name="empty_workout_page">Добавьте упражнения  из категорий для старта</string>
     <plurals name="repeats">
         <item quantity="one">%d повторение</item>
         <item quantity="few">%d повторения</item>

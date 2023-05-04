@@ -1,10 +1,8 @@
 package com.example.trackit.ui.workout
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -22,9 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.FloatingButton
 import com.example.trackit.R
@@ -38,7 +43,6 @@ import com.example.trackit.ui.theme.*
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDate
-import java.time.format.TextStyle
 import java.util.*
 
 @Composable
@@ -68,7 +72,10 @@ fun WorkoutPage(
     Scaffold(floatingActionButton = {
         FloatingButton(Screen.Workout.name, onClick = { navigateToEntry() })
     }) {
-        Column(modifier = modifier.padding(bottom = it.calculateBottomPadding())) {
+        Column(
+            modifier = modifier.padding(bottom = it.calculateBottomPadding()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             Surface(
                 color = MaterialTheme.colors.primaryVariant,
@@ -112,13 +119,22 @@ fun WorkoutPage(
 
     if (editDialogState){
         ExerciseDialog(
-            selectedEntity = selectedEntity,
-            onEntity = {entity ->
-                       coroutineScope.launch {
-                           viewModel.updateItem(entity)
-                       }
+            selectedExercise = selectedEntity.exercise,
+            onAddExercise = {exercise ->
+                coroutineScope.launch {
+                    viewModel.updateItem(WorkoutEntity(
+                        selectedEntity.id,
+                        selectedEntity.name,
+                        exercise,
+                        selectedEntity.category,
+                        selectedEntity.date,
+                        selectedEntity.completed
+                        )
+                    )
+                }
             },
-            onDismiss = { editDialogState = false })
+            onDismiss = { editDialogState = false }
+        )
     }
 }
 
@@ -147,41 +163,83 @@ private fun WorkoutList(
             Spacer(modifier.height(60.dp))
         }
 
-        items(items = itemList, key = { item -> item.id }, itemContent = {item ->
-            val dismissThreshold = 0.25f
-            val currentFraction = remember { mutableStateOf(0f) }
+        if (itemList.isEmpty()){
+            item(){
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width(243.dp)
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.empty_workout_page),
+                        contentDescription = null,
+                        tint = EmptyColor
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                    Text(
+                        text = stringResource(id = R.string.empty_workout_page),
+                        textAlign = TextAlign.Center,
+                        style = EmptyCaption,
+                        color = EmptyColor,
+                    )
+                }
+            }
+        }
+        else{
+            items(items = itemList, key = { item -> item.id }, itemContent = {item ->
+                val dismissThreshold = 0.25f
+                val currentFraction = remember { mutableStateOf(0f) }
 
-            val dismissState = rememberDismissState(
-                confirmStateChange = {
-                    when(it){
-                        DismissValue.DismissedToStart -> {
-                            if (currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f) {
-                                onDismiss(item)
+                var willDismissDirection: DismissDirection? by remember {
+                    mutableStateOf(null)
+                }
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        when(it){
+                            DismissValue.DismissedToStart -> {
+                                if (currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f) {
+                                    onDismiss(item)
+                                }
+                                currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f
                             }
-                            currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f
+                            else -> {
+                                false
+                            }
                         }
-                        else -> false
                     }
-                }
-            )
+                )
 
-            SwipeToDismiss(
-                state = dismissState,
-                directions = setOf(DismissDirection.EndToStart),
-                dismissThresholds = {
-                    FractionalThreshold(dismissThreshold)
-                },
-                modifier = Modifier
-                    .padding(vertical = 1.dp)
-                    .animateItemPlacement(),
-                background = {
-                    SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
-                },
-                dismissContent = {
-                    WorkoutItem(item = item, onCheckedChange, onEdit)
+                willDismissDirection = when(dismissState.targetValue){
+                    DismissValue.Default -> null
+                    else ->DismissDirection.EndToStart
                 }
-            )
-        })
+
+                val haptic = LocalHapticFeedback.current
+                LaunchedEffect(key1 = willDismissDirection, block = {
+                    if (willDismissDirection != null) {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
+                })
+
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    dismissThresholds = {
+                        FractionalThreshold(dismissThreshold)
+                    },
+                    modifier = Modifier
+                        .padding(vertical = 1.dp)
+                        .animateItemPlacement(),
+                    background = {
+                        SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
+                    },
+                    dismissContent = {
+                        WorkoutItem(item = item, onCheckedChange, onEdit)
+                    }
+                )
+            })
+        }
+
 
         item {
             Spacer(modifier.height(100.dp))
@@ -205,14 +263,8 @@ private fun WorkoutItem(
     Card(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = 10.dp)
-        .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded }
-        .shadow(10.dp, RoundedCornerShape(20.dp))
-        .animateContentSize(
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioNoBouncy,
-                stiffness = Spring.StiffnessMedium
-            )
-        ),
+        .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded },
+        elevation = 4.dp,
         shape = RoundedCornerShape(20.dp),
     ) {
         Column(
@@ -233,7 +285,7 @@ private fun WorkoutItem(
                     modifier = Modifier.padding(start = 10.dp, end = 5.dp)
                 )
 
-                Text(text = item.name, style = WorkoutCaption, modifier = Modifier.weight(1f))
+                Text(text = item.name, style = WorkoutCaption, fontSize = 18.sp, color = Arsenic, modifier = Modifier.weight(1f))
 
                 if (!expanded){
                     Card (
@@ -243,13 +295,14 @@ private fun WorkoutItem(
                                 null
                             ) { onEdit(item) }
                             .padding(horizontal = 10.dp),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(15.dp),
+                        backgroundColor = Arsenic,
                         elevation = 0.dp
                     ){
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             when (item.exercise){
                                 is StrengthExercise -> {
@@ -257,43 +310,50 @@ private fun WorkoutItem(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text("${item.exercise.weight}",
-                                        style = WorkoutCaption)
+                                        style = WorkoutCaption, color = Color.White)
                                         Icon(painterResource(R.drawable.x), contentDescription = null,
                                             modifier = Modifier.padding(horizontal = 3.dp))
                                         Text("${item.exercise.repeatCount}",
-                                            style = WorkoutCaption)
+                                            style = WorkoutCaption, color = Color.White)
                                         Icon(painterResource(R.drawable.x), contentDescription = null,
                                             modifier = Modifier.padding(horizontal = 3.dp))
                                         Text("${item.exercise.approachCount}",
-                                            style = WorkoutCaption)
+                                            style = WorkoutCaption, color = Color.White)
                                     }
                                 }
                                 is CardioExercise -> {
                                     Text("${item.exercise.time.toMinutes()} мин",
-                                        style = WorkoutCaption)
+                                        style = WorkoutCaption, color = Color.White)
                                 }
                             }
                         }
                     }
                 }
+                Icon(
+                    if (!expanded) Icons.Rounded.KeyboardArrowDown
+                    else Icons.Rounded.KeyboardArrowUp,
+                    contentDescription = null,
+                    tint = Arsenic,
+                )
             }
 
-            if(expanded){
+            AnimatedVisibility(visible = expanded){
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .padding(horizontal = 6.dp, vertical = 8.dp)
                         .background(BrightGray)
                         .clickable { onEdit(item) },
-                    elevation = 20.dp,
-                    backgroundColor = Arsenic,
-                    contentColor = Color.White
+                    elevation = 2.dp,
+                    backgroundColor = Arsenic
                 ) {
                     Column(
                         Modifier
                             .fillMaxSize(1f)
-                            .padding(horizontal = 6.dp, vertical = 12.dp)) {
-                        Text(text = "Категория: ${item.category.name}", style = MaterialTheme.typography.body1)
+                            .padding(horizontal = 6.dp, vertical = 8.dp)) {
+                        Text(text = "Категория: ${item.category.name}",
+                            style = WorkoutCaption
+                        )
 
                         Spacer(Modifier.height(4.dp))
 
@@ -312,7 +372,7 @@ private fun WorkoutItem(
                                 ) {
                                     Text(
                                         text = "$weight кг",
-                                        style = MaterialTheme.typography.body1
+                                        style = WorkoutCaption
                                     )
 
                                     Icon(painterResource(R.drawable.x), contentDescription = null,
@@ -320,7 +380,7 @@ private fun WorkoutItem(
 
                                     Text(
                                         text = resources.getQuantityString(R.plurals.repeats, repeatCount, repeatCount),
-                                        style = MaterialTheme.typography.body1
+                                        style = WorkoutCaption
                                     )
 
                                     Icon(painterResource(R.drawable.x), contentDescription = null,
@@ -328,7 +388,7 @@ private fun WorkoutItem(
 
                                     Text(
                                         text = resources.getQuantityString(R.plurals.approaches, approachCount, approachCount),
-                                        style = MaterialTheme.typography.body1
+                                        style = WorkoutCaption
                                     )
                                 }
                             }
@@ -340,7 +400,7 @@ private fun WorkoutItem(
                                 ) {
                                     Text(
                                         text = "${item.exercise.time.toMinutes()} минут",
-                                        style = MaterialTheme.typography.body1
+                                        style = WorkoutCaption
                                     )
                                 }
                             }
@@ -348,12 +408,6 @@ private fun WorkoutItem(
                     }
                 }
             }
-            Icon(
-                if (!expanded) Icons.Rounded.KeyboardArrowDown
-                else Icons.Rounded.KeyboardArrowUp,
-                contentDescription = null,
-                tint = Arsenic,
-            )
         }
     }
 }
@@ -403,14 +457,16 @@ fun CustomCheckBox(
         onClick = {onCheckedChange(!checked)},
         border = if (checked) BorderStroke(2.dp, AndroidGreen) else BorderStroke(2.dp, Arsenic),
         shape = RoundedCornerShape(30.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = if (checked) AndroidGreen else MaterialTheme.colors.surface),
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (checked) AndroidGreen else Color.White),
         modifier = modifier.size(50.dp)
     ){
         Icon(
             painterResource(id = if (checked) R.drawable.completed else icon),
             contentDescription = null,
             tint = Arsenic,
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier
+                .size(30.dp)
+                .requiredSize(30.dp)
         )
     }
 }

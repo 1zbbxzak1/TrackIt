@@ -6,31 +6,28 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.trackit.FloatingButton
-import com.example.trackit.data.ExerciseType
-import com.example.trackit.data.Screen
 import com.example.trackit.data.workout.CardioExercise
 import com.example.trackit.data.workout.Exercise
 import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.navigation.ExerciseTopBar
-import com.example.trackit.ui.navigation.WorkoutEditTopBar
-import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.ui.theme.AndroidGreen
+import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.workout.*
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -68,7 +65,8 @@ fun WorkoutExerciseScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 10.dp, vertical = 10.dp)
                     .height(70.dp),
-                elevation = 12.dp
+                shape = RoundedCornerShape(20.dp),
+                elevation = 8.dp
             ) {
                 Row(
                     modifier = Modifier.padding(horizontal = 20.dp),
@@ -76,13 +74,18 @@ fun WorkoutExerciseScreen(
                 ){
                     Text(
                         text = "Создать упражнение",
-                        style = MaterialTheme.typography.h5,
+                        style = TextStyle(
+                            fontFamily = FontFamily.Default,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 20.sp,
+                            color = Arsenic
+                        ),
                         modifier = Modifier.weight(1f)
                     )
 
                     Icon(
-                        Icons.Rounded.AddCircle, contentDescription = "создать упражнение",
-                        modifier = Modifier.size(40.dp)
+                        Icons.Rounded.Add, contentDescription = null,
+                        tint = Arsenic, modifier = Modifier.size(40.dp)
                     )
                 }
             }
@@ -113,7 +116,7 @@ fun WorkoutExerciseScreen(
                 onDismiss = { creationDialogState.value = false }
             )
         } else if (addDialogState.value){
-            AddExerciseDialog(
+            ExerciseDialog(
                 selectedExercise = selectedExercise,
                 onAddExercise = { exercise ->
                     coroutineScope.launch {
@@ -151,7 +154,7 @@ private fun WorkoutExerciseList(
         LazyColumn(
             state = state,
             modifier = modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
 //            val searchedText = textState.value.text
 //            filteredItems = if (searchedText.isEmpty()){
@@ -196,24 +199,35 @@ private fun WorkoutExerciseItem(
     if (item.name.isNotBlank()){
         Card(
             onClick = { onClick(item) },
+            shape = RoundedCornerShape(20.dp),
             modifier = modifier
                 .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp)
+                .padding(horizontal = 10.dp)
+                //.height(60.dp),
+            ,elevation = 2.dp
         ) {
             Row(
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Text(text = item.name, style = MaterialTheme.typography.h5, modifier = Modifier.weight(10f))
+                Text(text = item.name, style = TextStyle(
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 20.sp,
+                    color = Arsenic
+                ), modifier = Modifier.weight(10f))
 
                 IconButton(onClick = { onDelete(item) }) {
-                    Icon(Icons.Rounded.Delete, contentDescription = "Удалить упражнение")
+                    Icon(Icons.Rounded.Delete, contentDescription = "Удалить упражнение",
+                        tint = Arsenic)
                 }
 
                 Icon(
                     Icons.Rounded.KeyboardArrowRight,
                     contentDescription = null,
-                    modifier = Modifier.padding(start = 8.dp, end = 12.dp)
+                    tint = AndroidGreen,
+                    modifier = Modifier
+                        .size(width = 45.dp, height = 45.dp)
                 )
             }
         }
