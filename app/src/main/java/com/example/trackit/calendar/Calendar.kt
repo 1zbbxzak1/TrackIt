@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.trackit.R
@@ -174,12 +175,14 @@ private fun DayContent(
                     selectionState.onDateSelected(date)
                 },
         ) {
-            Box(modifier = Modifier.fillMaxSize(1f)){
+            Box(
+                contentAlignment = Alignment.Center,
+            ){
                 Text(
                     text = date.dayOfMonth.toString(),
                     Modifier
-                        .alpha(if (state.isFromCurrentMonth || isSelected) 1.0f else 0.6f)
-                        .align(Alignment.Center),
+                        .alpha(if (state.isFromCurrentMonth || isSelected) 1.0f else 0.6f),
+                    textAlign = TextAlign.Center,
                     color =
                     if (state.isCurrentDay) AndroidGreen
                     else if (isSelected) MaterialTheme.colors.primaryVariant
@@ -211,13 +214,13 @@ private fun getWeekFromDate(dateList: List<LocalDate>): Week {
     return Week.now()
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun CalendarPreview(){
-    TrackItTheme {
-        ExpandableCalendar(expanded = true, onClick = { /*TODO*/ }, onDateSelected = {})
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun CalendarPreview(){
+//    TrackItTheme {
+//        ExpandableCalendar(expanded = true, onClick = { /*TODO*/ }, onDateSelected = {})
+//    }
+//}
 
 @Preview(showBackground = true)
 @Composable

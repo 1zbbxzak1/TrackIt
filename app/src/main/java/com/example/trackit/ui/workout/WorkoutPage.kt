@@ -263,8 +263,8 @@ private fun WorkoutItem(
     Card(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = 10.dp)
-        .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded }
-        .shadow(10.dp, RoundedCornerShape(20.dp)),
+        .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded },
+        elevation = 4.dp,
         shape = RoundedCornerShape(20.dp),
     ) {
         Column(
@@ -285,7 +285,7 @@ private fun WorkoutItem(
                     modifier = Modifier.padding(start = 10.dp, end = 5.dp)
                 )
 
-                Text(text = item.name, style = WorkoutCaption, modifier = Modifier.weight(1f))
+                Text(text = item.name, style = WorkoutCaption, fontSize = 18.sp, color = Arsenic, modifier = Modifier.weight(1f))
 
                 if (!expanded){
                     Card (
@@ -295,13 +295,14 @@ private fun WorkoutItem(
                                 null
                             ) { onEdit(item) }
                             .padding(horizontal = 10.dp),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(15.dp),
+                        backgroundColor = Arsenic,
                         elevation = 0.dp
                     ){
                         Row(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             when (item.exercise){
                                 is StrengthExercise -> {
@@ -309,20 +310,20 @@ private fun WorkoutItem(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text("${item.exercise.weight}",
-                                        style = WorkoutCaption)
+                                        style = WorkoutCaption, color = Color.White)
                                         Icon(painterResource(R.drawable.x), contentDescription = null,
                                             modifier = Modifier.padding(horizontal = 3.dp))
                                         Text("${item.exercise.repeatCount}",
-                                            style = WorkoutCaption)
+                                            style = WorkoutCaption, color = Color.White)
                                         Icon(painterResource(R.drawable.x), contentDescription = null,
                                             modifier = Modifier.padding(horizontal = 3.dp))
                                         Text("${item.exercise.approachCount}",
-                                            style = WorkoutCaption)
+                                            style = WorkoutCaption, color = Color.White)
                                     }
                                 }
                                 is CardioExercise -> {
                                     Text("${item.exercise.time.toMinutes()} мин",
-                                        style = WorkoutCaption)
+                                        style = WorkoutCaption, color = Color.White)
                                 }
                             }
                         }
@@ -344,18 +345,14 @@ private fun WorkoutItem(
                         .background(BrightGray)
                         .clickable { onEdit(item) },
                     elevation = 2.dp,
-                    backgroundColor = BrightGray
+                    backgroundColor = Arsenic
                 ) {
                     Column(
                         Modifier
                             .fillMaxSize(1f)
                             .padding(horizontal = 6.dp, vertical = 8.dp)) {
                         Text(text = "Категория: ${item.category.name}",
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Arsenic
-                            )
+                            style = WorkoutCaption
                         )
 
                         Spacer(Modifier.height(4.dp))
@@ -375,11 +372,7 @@ private fun WorkoutItem(
                                 ) {
                                     Text(
                                         text = "$weight кг",
-                                        style = TextStyle(
-                                            fontSize = 16.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = Arsenic
-                                        )
+                                        style = WorkoutCaption
                                     )
 
                                     Icon(painterResource(R.drawable.x), contentDescription = null,
@@ -387,11 +380,7 @@ private fun WorkoutItem(
 
                                     Text(
                                         text = resources.getQuantityString(R.plurals.repeats, repeatCount, repeatCount),
-                                        style = TextStyle(
-                                            fontSize = 16.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = Arsenic
-                                        )
+                                        style = WorkoutCaption
                                     )
 
                                     Icon(painterResource(R.drawable.x), contentDescription = null,
@@ -399,11 +388,7 @@ private fun WorkoutItem(
 
                                     Text(
                                         text = resources.getQuantityString(R.plurals.approaches, approachCount, approachCount),
-                                        style = TextStyle(
-                                            fontSize = 16.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = Arsenic
-                                        )
+                                        style = WorkoutCaption
                                     )
                                 }
                             }
@@ -415,11 +400,7 @@ private fun WorkoutItem(
                                 ) {
                                     Text(
                                         text = "${item.exercise.time.toMinutes()} минут",
-                                        style = TextStyle(
-                                            fontSize = 16.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = Arsenic
-                                        )
+                                        style = WorkoutCaption
                                     )
                                 }
                             }
@@ -476,7 +457,7 @@ fun CustomCheckBox(
         onClick = {onCheckedChange(!checked)},
         border = if (checked) BorderStroke(2.dp, AndroidGreen) else BorderStroke(2.dp, Arsenic),
         shape = RoundedCornerShape(30.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = if (checked) AndroidGreen else MaterialTheme.colors.surface),
+        colors = ButtonDefaults.buttonColors(backgroundColor = if (checked) AndroidGreen else Color.White),
         modifier = modifier.size(50.dp)
     ){
         Icon(
