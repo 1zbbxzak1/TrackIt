@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nutrition_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <Button
             android:id="@+id/previous"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/prev"
             android:onClick="onBackButtonClick" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/searchView_card"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            app:cardBackgroundColor="#efefef"
             android:layout_margin="7dp"
-            app:cardCornerRadius="8dp">
+            app:cardCornerRadius="15dp">
 
-            <SearchView
+            <android.widget.SearchView
                 android:id="@+id/searchView"
-                android:layout_width="match_parent"
+                android:layout_width="333dp"
                 android:layout_height="wrap_content"
+                android:background="#3b4446"
                 android:layout_gravity="center"
                 android:iconifiedByDefault="false"
-                android:queryBackground="@android:color/transparent"
-                android:queryHint="Поиск ..." />
+                android:queryBackground="@null"
+                android:queryHint="Искать" />
+
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/add_cardview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp">
+        android:layout_height="70dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#efefef">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:padding="10dp">
 
             <LinearLayout
@@ -59,17 +69,19 @@
                 android:id="@+id/create_food"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="20sp"
+                android:textColor="#3B4446"
                 android:layout_gravity="center_vertical"
-                android:text="Создать новый продукт"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:text="Создать новый продукт" />
 
                 <Button
                     android:id="@+id/addButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="180dp"
-                    android:background="@drawable/plus" />
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="91dp"
+                    android:background="@drawable/add_product" />
 
             </LinearLayout>
 
@@ -77,18 +89,38 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/nutrition_card_view"
+    <RelativeLayout
+        android:id="@+id/frame_74"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="16dp">
+        android:layout_height="80dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:background="@drawable/back_pfc_food">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="horizontal"
+            android:layout_marginStart="44dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="10sp"
+                android:textColor="#99cd4e"
+                android:textAlignment="center"
+                android:text="*приведены данные калорийности и БЖУ на 100 граммов продукта"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/nameFood"
@@ -96,97 +128,69 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="Название"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="16sp"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/protein_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="135dp"
+                android:layout_marginLeft="51dp"
                 android:text="Белки"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="16sp"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/fat_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="195dp"
+                android:layout_marginLeft="15dp"
                 android:text="Жиры"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="16sp"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/carbs_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="250dp"
+                android:layout_marginLeft="13dp"
                 android:text="Углеводы"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="16sp"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/calories_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="330dp"
-                android:text="Калории"
-                android:textColor="@color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                android:layout_marginLeft="13dp"
+                android:text="Ккал"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="normal"
+                android:textSize="16sp"
+                android:textColor="@color/white" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/recycler_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        app:cardCornerRadius="16dp">
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/product_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

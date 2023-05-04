@@ -23,7 +23,7 @@ import com.example.trackit.ui.theme.TrackItTheme
 @SuppressLint("InflateParams", "SuspiciousIndentation")
 @Composable
 fun ProfilePage() {
-    val context = LocalContext.current // get the Context from the LocalContextProvider
+    val context = LocalContext.current // Получить контекст из LocalContextProvider
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
@@ -40,15 +40,15 @@ fun ProfilePage() {
          val sharedPreferencesGenderKey = "gender"
          val savedGenderIndex = sharedPreferencesGender.getInt(sharedPreferencesGenderKey, -1)
 
-        // Set up the selected radio button based on saved preference
+        // Настройка выбранной радиокнопки на основе сохраненных данных
          if (savedGenderIndex != -1) {
              setRadioButtonState(genderRadioGroup, savedGenderIndex)
          }
 
-        // Set up the radio group's background color
+        // Настройка цвета фона радиогруппы
          genderRadioGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.gray))
 
-        // Set up the radio button listeners
+        // Установка слушателей для радиокнопок
          genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
              when (checkedId) {
                  R.id.maleRadioButton -> {
@@ -63,7 +63,7 @@ fun ProfilePage() {
                  }
              }
 
-             // Set the selected radio button's text color and save it to shared preferences
+             // Установить цвет текста выбранной радиокнопки и сохранить его
              val checkedRadioButton = view.findViewById<RadioButton>(checkedId)
              if (checkedRadioButton != null) {
                  checkedRadioButton.setTextColor(ContextCompat.getColor(context, R.color.white))
@@ -73,7 +73,7 @@ fun ProfilePage() {
                  editor.apply()
              }
 
-             // Uncheck all other radio buttons and set their text color to black
+             // Снять флажки со всех остальных радиокнопок и установить для них черный цвет текста
              for (i in 0 until group.childCount) {
                  val radioButton = group.getChildAt(i) as RadioButton
                  if (radioButton.id != checkedId) {
@@ -83,7 +83,7 @@ fun ProfilePage() {
              }
          }
 
-         // Set the text color of the selected radio button if it was saved
+         // Установить цвет текста выбранной радиокнопки, если она была сохранена
          val savedSelection = sharedPreferencesGender.getInt("selectedRadioButtonId", -1)
          if (savedSelection != -1) {
              genderRadioGroup.check(savedSelection)
@@ -154,6 +154,7 @@ fun ProfilePage() {
     }
 }
 
+// Сохранение выбранного пола
 private fun saveGenderPreference(sharedPreferences: SharedPreferences, key: String, index: Int) {
     with(sharedPreferences.edit()) {
         putInt(key, index)
@@ -161,7 +162,8 @@ private fun saveGenderPreference(sharedPreferences: SharedPreferences, key: Stri
     }
 }
 
-private fun setRadioButtonState(group: RadioGroup, index: Int) {
+// выделение выбранного пола
+fun setRadioButtonState(group: RadioGroup, index: Int) {
     val radioButton = group.getChildAt(index) as? RadioButton
     radioButton?.apply {
         isChecked = true

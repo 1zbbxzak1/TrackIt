@@ -1,5 +1,6 @@
 package com.example.trackit
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -13,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.Nutrition.Food.FoodScreen
+import com.example.trackit.ui.Nutrition.FoodData
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.TrackItTheme
@@ -21,6 +23,7 @@ import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseScreen
 import java.time.LocalDate
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun TrackItApp(
     modifier: Modifier = Modifier,
@@ -114,14 +117,15 @@ fun TrackItApp(
                 )}
 
             composable(route = Screen.Food.name){
-                FoodPage(navigateToEntry = {navController.navigate(Screen.NutritionFood.name)}, selectedDate.value)
+                FoodPage(
+                    navigateToEntry = {navController.navigate(Screen.NutritionFood.name)}
+                )
             }
 
             composable(route = Screen.NutritionFood.name){
                 FoodScreen(
                     navigateBack = { navController.popBackStack() },
-                    navigateToFoodPage = { navController.navigate(Screen.Food.name) },
-                    selectedDate = selectedDate.value
+                    navigateToFoodPage = { navController.navigate(Screen.Food.name) }
                 )
             }
         }
