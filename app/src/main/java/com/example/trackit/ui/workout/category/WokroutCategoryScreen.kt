@@ -126,19 +126,12 @@ private fun WorkoutCategoryList(
     var filteredItems: List<WorkoutCategory>
 
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(18.dp)){
-        val searchedText = textState.value.text
-        filteredItems = if (searchedText.isEmpty()){
-            itemList
-        } else {
-            val resultList = ArrayList<WorkoutCategory>()
-            for (item in itemList){
-                if (item.name.lowercase(Locale.getDefault())
-                        .contains(searchedText.lowercase(Locale.getDefault()))
-                ){
-                    resultList.add(item)
-                }
-            }
-            resultList
+        val searchedText = textState.value.text.lowercase(Locale.getDefault())
+        filteredItems = itemList.filter { item ->
+            item.name.lowercase(Locale.getDefault()).contains(searchedText) ||
+                    item.exercises.any { exercise ->
+                        exercise.name.lowercase(Locale.getDefault()).contains(searchedText)
+                    }
         }
 
         item {
