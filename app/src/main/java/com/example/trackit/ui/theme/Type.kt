@@ -33,3 +33,35 @@ val WorkoutCaption = TextStyle(
     fontSize = 18.sp
 )
 
+val EmptyCaption = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.SemiBold,
+    fontSize = 20.sp
+)
+
+val CalendarDayTextStyle = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Bold,
+    fontSize = 20.sp
+)
+
+val DialogTextStyle = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Bold,
+    fontSize = 22.sp,
+    color = Arsenic
+)
+
+val TextFieldTextStyle = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Bold,
+    fontSize = 14.sp,
+    color = Arsenic
+)
+
+val TextFieldLabelTextStyle = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Light,
+    fontSize = 12.sp,
+    color = Arsenic
+)

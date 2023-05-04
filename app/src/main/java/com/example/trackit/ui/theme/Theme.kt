@@ -59,6 +59,9 @@ fun TrackItTheme(
         systemUiController.setSystemBarsColor(
             color = colors.background
         )
+        systemUiController.setStatusBarColor(
+            color = colors.primaryVariant
+        )
         systemUiController.setNavigationBarColor(
             color = colors.primaryVariant
         )
