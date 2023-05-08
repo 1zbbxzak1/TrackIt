@@ -14,7 +14,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.Nutrition.Food.FoodScreen
-import com.example.trackit.ui.Nutrition.FoodData
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.TrackItTheme
@@ -118,7 +117,8 @@ fun TrackItApp(
 
             composable(route = Screen.Food.name){
                 FoodPage(
-                    navigateToEntry = {navController.navigate(Screen.NutritionFood.name)}
+                    navigateToEntry = {navController.navigate(Screen.NutritionFood.name)},
+                    selectedDate = selectedDate.value
                 )
             }
 

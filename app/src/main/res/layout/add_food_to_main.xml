@@ -291,6 +291,7 @@
             android:layout_marginTop="5dp"
             android:backgroundTint="@android:color/transparent"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="#3b4446"/>
 
         <TextView
@@ -326,7 +327,8 @@
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="normal"
                 android:textSize="20sp"
-                android:textColor="#ffffff"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
                 android:gravity="center"
                 android:background="@android:color/transparent"
                 android:text="Отмена" />
@@ -348,7 +350,8 @@
                 android:fontFamily="sans-serif-medium"
                 android:textStyle="normal"
                 android:textSize="20sp"
-                android:textColor="#99cd4e"
+                android:textAllCaps="false"
+                android:textColor="@color/green"
                 android:gravity="center"
                 android:background="@android:color/transparent"
                 android:text="Готово"/>

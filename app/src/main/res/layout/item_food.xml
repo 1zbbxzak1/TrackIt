@@ -31,7 +31,7 @@
             android:layout_margin="7dp"
             app:cardCornerRadius="15dp">
 
-            <android.widget.SearchView
+            <SearchView
                 android:id="@+id/searchView"
                 android:layout_width="333dp"
                 android:layout_height="wrap_content"

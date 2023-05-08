@@ -1,65 +1,65 @@
 package com.example.trackit.ui
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Typeface
 import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.IconButton
+import androidx.compose.material.TabRowDefaults.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.trackit.R
-import com.example.trackit.ui.Food.Constants
-import com.example.trackit.ui.Nutrition.ExpandedPanel
+import com.example.trackit.data.food.Globals
 import com.example.trackit.ui.Nutrition.FoodData
 import com.example.trackit.ui.theme.TrackItTheme
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import java.time.LocalDate
 
 @Composable
 fun FoodPage(
-    navigateToEntry: () -> Unit
+    navigateToEntry: () -> Unit,
+    selectedDate: LocalDate = LocalDate.now()
 ) {
-
     val context = LocalContext.current
-
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { contxt ->
-            LayoutInflater.from(contxt).inflate(R.layout.activity_nutrition, null)
-        }
-    )
-
-    val breakfastFoods = loadBreakfastFoods(context)
 
     var breakfastExpanded by remember { mutableStateOf(false) }
     var lunchExpanded by remember { mutableStateOf(false) }
     var dinnerExpanded by remember { mutableStateOf(false) }
     var snackExpanded by remember { mutableStateOf(false) }
 
-    var expandedPanel by remember { mutableStateOf<ExpandedPanel?>(null) }
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = { contxt ->
+            LayoutInflater.from(contxt).inflate(R.layout.activity_nutrition, null)
+        },
+        update = { view ->
+            val pr = view.findViewById<TextView>(R.id.pr)
+            pr.text = Globals.TotalProteins.toString()
+
+            val fat = view.findViewById<TextView>(R.id.f)
+            fat.text = Globals.TotalFats.toString()
+
+            val carb = view.findViewById<TextView>(R.id.car)
+            carb.text = Globals.TotalCarbs.toString()
+
+            val cal = view.findViewById<TextView>(R.id.cal)
+            cal.text = Globals.TotalCalories.toString()
+        }
+    )
 
     LazyColumn(
         modifier = Modifier
@@ -67,94 +67,59 @@ fun FoodPage(
             .padding(top = 200.dp)
     ) {
         item {
-            BreakfastPanel(
-                isExpanded = expandedPanel == ExpandedPanel.Breakfast,
-                onPanelClicked = {
-                    expandedPanel = if (expandedPanel == ExpandedPanel.Breakfast) null else ExpandedPanel.Breakfast
-                },
+            MealPanel(
+                mealType = "Завтрак",
+                mealIcon = R.drawable.breakfast_icon,
+                foods = breakfastFoods,
+                isExpanded = breakfastExpanded,
+                onPanelClicked = { breakfastExpanded = !breakfastExpanded },
                 onAddButtonClick = { navigateToEntry() }
             )
             Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
         }
 
         item {
-            LunchPanel(
-                isExpanded = expandedPanel == ExpandedPanel.Lunch,
-                onPanelClicked = {
-                    expandedPanel = if (expandedPanel == ExpandedPanel.Lunch) null else ExpandedPanel.Lunch
-                },
+            MealPanel(
+                mealType = "Обед",
+                mealIcon = R.drawable.lunch_icon,
+                foods = lunchFoods,
+                isExpanded = lunchExpanded,
+                onPanelClicked = { lunchExpanded = !lunchExpanded },
                 onAddButtonClick = { navigateToEntry() }
             )
             Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
         }
 
         item {
-            DinnerPanel(
-                isExpanded = expandedPanel == ExpandedPanel.Dinner,
-                onPanelClicked = {
-                    expandedPanel = if (expandedPanel == ExpandedPanel.Dinner) null else ExpandedPanel.Dinner
-                },
+            MealPanel(
+                mealType = "Ужин",
+                mealIcon = R.drawable.dinner_icon,
+                foods = dinnerFoods,
+                isExpanded = dinnerExpanded,
+                onPanelClicked = { dinnerExpanded = !dinnerExpanded },
                 onAddButtonClick = { navigateToEntry() }
             )
             Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
         }
 
         item {
-            SnackPanel(
-                isExpanded = expandedPanel == ExpandedPanel.Snack,
-                onPanelClicked = {
-                    expandedPanel = if (expandedPanel == ExpandedPanel.Snack) null else ExpandedPanel.Snack
-                },
+            MealPanel(
+                mealType = "Перекус",
+                mealIcon = R.drawable.snack_icon,
+                foods = snackFoods,
+                isExpanded = snackExpanded,
+                onPanelClicked = { snackExpanded = !snackExpanded },
                 onAddButtonClick = { navigateToEntry() }
             )
         }
     }
 }
 
-val breakfastFoods = mutableListOf<FoodData>()
-fun addFoodToBreakfastList(food: FoodData) {
-    breakfastFoods.addAll(listOf(food))
-}
-
-val lunchFoods = mutableListOf<FoodData>()
-fun addFoodToLunchList(food: FoodData) {
-    lunchFoods.addAll(listOf(food))
-}
-
-val dinnerFoods = mutableListOf<FoodData>()
-fun addFoodToDinnerList(food: FoodData) {
-    dinnerFoods.addAll(listOf(food))
-}
-
-val snackFoods = mutableListOf<FoodData>()
-fun addFoodToSnackList(food: FoodData) {
-    snackFoods.addAll(listOf(food))
-}
-
-fun saveBreakfastFoods(context: Context, foods: List<FoodData>) {
-    val prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
-    val editor = prefs.edit()
-    val gson = Gson()
-    val jsonFoods = gson.toJson(foods)
-    editor.putString(Constants.BREAKFAST_FOODS, jsonFoods)
-    editor.apply()
-}
-
-fun loadBreakfastFoods(context: Context): List<FoodData> {
-    val prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE)
-    val jsonFoods = prefs.getString(Constants.BREAKFAST_FOODS, null)
-    if (jsonFoods != null) {
-        val gson = Gson()
-        val type = object : TypeToken<List<FoodData>>() {}.type
-        return gson.fromJson(jsonFoods, type)
-    }
-    return emptyList()
-}
-
-
-
 @Composable
-fun BreakfastPanel(
+fun MealPanel(
+    mealType: String,
+    mealIcon: Int,
+    foods: MutableList<FoodData>,
     isExpanded: Boolean,
     onPanelClicked: () -> Unit,
     onAddButtonClick: () -> Unit
@@ -167,20 +132,21 @@ fun BreakfastPanel(
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(
-            modifier = Modifier.clickable(onClick = onPanelClicked)
+            modifier = Modifier.clickable(onClick = onPanelClicked),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(2.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.breakfast_icon),
+                    painter = painterResource(id = mealIcon),
                     contentDescription = null,
                     modifier = Modifier.size(50.dp)
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
-                    text = "Завтрак",
+                    text = mealType,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -198,73 +164,13 @@ fun BreakfastPanel(
             }
 
             if (isExpanded) {
-                Box(
-                    Modifier
+                Column(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp)
+                        .heightIn(max = 400.dp)
                 ) {
-                    for (food in breakfastFoods) {
-                        FoodCard(food = food)
-                    }
-                }
-            }
-            }
-        }
-    }
-
-@Composable
-fun LunchPanel(
-    isExpanded: Boolean,
-    onPanelClicked: () -> Unit,
-    onAddButtonClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(20.dp)
-    ) {
-        Column(
-            modifier = Modifier.clickable(onClick = onPanelClicked)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(2.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.lunch_icon),
-                    contentDescription = null,
-                    modifier = Modifier.size(50.dp)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = "Обед",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = onAddButtonClick,
-                    modifier = Modifier.size(50.dp),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.plus),
-                        contentDescription = null,
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-            }
-
-            if (isExpanded) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    for (food in lunchFoods) {
-                        FoodCard(food = food)
-                    }
+                    FoodCardList(foods)
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
@@ -272,132 +178,41 @@ fun LunchPanel(
 }
 
 @Composable
-fun DinnerPanel(
-    isExpanded: Boolean,
-    onPanelClicked: () -> Unit,
-    onAddButtonClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(20.dp)
-    ) {
-        Column(
-            modifier = Modifier.clickable(onClick = onPanelClicked)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(2.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.dinner_icon),
-                    contentDescription = null,
-                    modifier = Modifier.size(50.dp)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = "Ужин",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = onAddButtonClick,
-                    modifier = Modifier.size(50.dp),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.plus),
-                        contentDescription = null,
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-            }
-
-            if (isExpanded) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    for (food in dinnerFoods) {
-                        FoodCard(food = food)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun SnackPanel(
-    isExpanded: Boolean,
-    onPanelClicked: () -> Unit,
-    onAddButtonClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = 4.dp,
-        shape = RoundedCornerShape(20.dp)
-    ) {
-        Column(
-            modifier = Modifier.clickable(onClick = onPanelClicked)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(2.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.snack_icon),
-                    contentDescription = null,
-                    modifier = Modifier.size(50.dp)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = "Перекус",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                IconButton(
-                    onClick = onAddButtonClick,
-                    modifier = Modifier.size(50.dp),
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.plus),
-                        contentDescription = null,
-                        modifier = Modifier.size(50.dp)
-                    )
-                }
-            }
-
-            if (isExpanded) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    for (food in snackFoods) {
-                        FoodCard(food = food)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FoodCard(food: FoodData) {
+fun FoodCardList(foods: List<FoodData>) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(15.dp),
+        shape = RoundedCornerShape(20.dp),
         backgroundColor = Color.White
     ) {
+        Column {
+            for (i in foods.indices) {
+                val food = foods[i]
+                FoodCard(
+                    food = food,
+                    modifier = if (i == 0) {
+                        Modifier.padding(16.dp)
+                    } else {
+                        Modifier
+                            .padding(16.dp)
+                            .padding(top = 0.dp)
+                    }
+                )
+                if (i != foods.lastIndex) {
+                    Divider(color = Color.LightGray)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FoodCard(food: FoodData, modifier: Modifier) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = Color.White,
+        shape = RectangleShape
+    ) {
         Column(modifier = Modifier.padding(14.dp)) {
-            val sh = FontFamily(Typeface.SANS_SERIF)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = food.name,
@@ -406,7 +221,7 @@ fun FoodCard(food: FoodData) {
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = "100 гр",
+                    text = "${food.gramsEntered} гр",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color(android.graphics.Color.parseColor("#99cd4e"))
@@ -425,6 +240,14 @@ fun FoodCard(food: FoodData) {
     }
 }
 
+val breakfastFoods = mutableStateListOf<FoodData>()
+
+val lunchFoods = mutableStateListOf<FoodData>()
+
+val dinnerFoods = mutableStateListOf<FoodData>()
+
+val snackFoods = mutableStateListOf<FoodData>()
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewFoodPage(){
@@ -432,29 +255,3 @@ fun PreviewFoodPage(){
 
     }
 }
-
-
-//
-//        val button2 = view.findViewById<Button>(R.id.add_button2)
-//        button2.setOnClickListener {
-//            buttonClicked.value = "Button 2"
-//            navigateToEntry()
-//        }
-//
-//        val button3 = view.findViewById<Button>(R.id.add_button3)
-//        button3.setOnClickListener {
-//            buttonClicked.value = "Button 3"
-//            navigateToEntry()
-//        }
-//
-//        val button4 = view.findViewById<Button>(R.id.add_button4)
-//        button4.setOnClickListener {
-//            buttonClicked.value = "Button 4"
-//            navigateToEntry()
-//        }
-//
-//        // общий счетчик КБЖУ
-//        val proteins = view.findViewById<TextView>(R.id.pr)
-//        val fats = view.findViewById<TextView>(R.id.f)
-//        val carbs = view.findViewById<TextView>(R.id.car)
-//        val calories = view.findViewById<TextView>(R.id.cal)
