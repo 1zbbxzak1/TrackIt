@@ -18,15 +18,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,15 +88,8 @@ fun WorkoutPage(
                 }
             }
 
-//            Text(text = selectedDate.dayOfMonth.toString() + " " + selectedDate.month
-//                .getDisplayName(TextStyle.FULL, Locale.getDefault())
-//                .lowercase()
-//                .replaceFirstChar { it.titlecase() } + " " + selectedDate.year,
-//                style = MaterialTheme.typography.body1,
-//                modifier = Modifier.align(Alignment.CenterHorizontally)
-//            )
-
             WorkoutBody(
+                selectedDate,
                 itemList = workoutUiState.itemList,
                 onDismiss = {item -> coroutineScope.launch {
                     viewModel.deleteItem(item)
@@ -112,8 +102,7 @@ fun WorkoutPage(
                     editDialogState = true
                 },
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .weight(3f))
+                    .align(Alignment.CenterHorizontally))
         }
     }
 
@@ -129,7 +118,7 @@ fun WorkoutPage(
                         selectedEntity.category,
                         selectedEntity.date,
                         selectedEntity.completed
-                        )
+                    )
                     )
                 }
             },
@@ -140,18 +129,20 @@ fun WorkoutPage(
 
 @Composable
 private fun WorkoutBody(
+    selectedDate: LocalDate,
     itemList: List<WorkoutEntity>,
     onDismiss: (WorkoutEntity) -> Unit,
     onCheckedChange: (WorkoutEntity) -> Unit,
     onEdit: (WorkoutEntity) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutList(itemList, onDismiss, onCheckedChange, onEdit, modifier)
+    WorkoutList(selectedDate, itemList, onDismiss, onCheckedChange, onEdit, modifier)
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun WorkoutList(
+    selectedDate: LocalDate,
     itemList: List<WorkoutEntity>,
     onDismiss: (WorkoutEntity) -> Unit,
     onCheckedChange: (WorkoutEntity) -> Unit,
@@ -160,7 +151,16 @@ private fun WorkoutList(
 ){
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
         item{
-            Spacer(modifier.height(60.dp))
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(modifier.height(25.dp))
+                Text(text = selectedDate.dayOfMonth.toString() + " " + selectedDate.month
+                    .getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault())
+                    .lowercase()
+                    .replaceFirstChar { it.titlecase() } + " " + selectedDate.year,
+                    style = MaterialTheme.typography.h4,
+                    color = Arsenic)
+                Spacer(modifier.height(20.dp))
+            }
         }
 
         if (itemList.isEmpty()){
@@ -168,20 +168,25 @@ private fun WorkoutList(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .width(243.dp)
+                        .fillMaxWidth()
                 ) {
-                    Icon(
-                        painterResource(id = R.drawable.empty_workout_page),
-                        contentDescription = null,
-                        tint = EmptyColor
-                    )
-                    Spacer(modifier = Modifier.height(15.dp))
-                    Text(
-                        text = stringResource(id = R.string.empty_workout_page),
-                        textAlign = TextAlign.Center,
-                        style = EmptyCaption,
-                        color = EmptyColor,
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .width(243.dp)
+                    ) {
+                        Icon(
+                            painterResource(id = R.drawable.empty_workout_page),
+                            contentDescription = null,
+                            tint = EmptyColor
+                        )
+                        Spacer(modifier = Modifier.height(15.dp))
+                        Text(
+                            text = stringResource(id = R.string.empty_workout_page),
+                            textAlign = TextAlign.Center,
+                            style = EmptyCaption,
+                            color = EmptyColor,
+                        )
+                    }
                 }
             }
         }
@@ -202,9 +207,7 @@ private fun WorkoutList(
                                 }
                                 currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f
                             }
-                            else -> {
-                                false
-                            }
+                            else -> false
                         }
                     }
                 )
@@ -228,7 +231,6 @@ private fun WorkoutList(
                         FractionalThreshold(dismissThreshold)
                     },
                     modifier = Modifier
-                        .padding(vertical = 1.dp)
                         .animateItemPlacement(),
                     background = {
                         SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
@@ -240,14 +242,12 @@ private fun WorkoutList(
             })
         }
 
-
         item {
             Spacer(modifier.height(100.dp))
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun WorkoutItem(
     item: WorkoutEntity,
@@ -279,7 +279,7 @@ private fun WorkoutItem(
                 CustomCheckBox(
                     checked = item.completed,
                     onCheckedChange = {
-                    onCheckedChange(WorkoutEntity(item.id, item.name, item.exercise, item.category, item.date, it))
+                        onCheckedChange(WorkoutEntity(item.id, item.name, item.exercise, item.category, item.date, it))
                     },
                     item.category.icon,
                     modifier = Modifier.padding(start = 10.dp, end = 5.dp)
@@ -296,7 +296,8 @@ private fun WorkoutItem(
                             ) { onEdit(item) }
                             .padding(horizontal = 10.dp),
                         shape = RoundedCornerShape(15.dp),
-                        backgroundColor = Arsenic,
+                        backgroundColor = Color.White,
+                        border = BorderStroke(1.dp, Arsenic),
                         elevation = 0.dp
                     ){
                         Row(
@@ -310,20 +311,20 @@ private fun WorkoutItem(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text("${item.exercise.weight}",
-                                        style = WorkoutCaption, color = Color.White)
+                                            style = WorkoutCaption, color = Arsenic)
                                         Icon(painterResource(R.drawable.x), contentDescription = null,
                                             modifier = Modifier.padding(horizontal = 3.dp))
                                         Text("${item.exercise.repeatCount}",
-                                            style = WorkoutCaption, color = Color.White)
+                                            style = WorkoutCaption, color = Arsenic)
                                         Icon(painterResource(R.drawable.x), contentDescription = null,
                                             modifier = Modifier.padding(horizontal = 3.dp))
                                         Text("${item.exercise.approachCount}",
-                                            style = WorkoutCaption, color = Color.White)
+                                            style = WorkoutCaption, color = Arsenic)
                                     }
                                 }
                                 is CardioExercise -> {
                                     Text("${item.exercise.time.toMinutes()} мин",
-                                        style = WorkoutCaption, color = Color.White)
+                                        style = WorkoutCaption, color = Arsenic)
                                 }
                             }
                         }
@@ -345,7 +346,9 @@ private fun WorkoutItem(
                         .background(BrightGray)
                         .clickable { onEdit(item) },
                     elevation = 2.dp,
-                    backgroundColor = Arsenic
+                    shape = RoundedCornerShape(15.dp),
+                    backgroundColor = Color.White,
+                    border = BorderStroke(1.dp, Arsenic)
                 ) {
                     Column(
                         Modifier
@@ -356,14 +359,13 @@ private fun WorkoutItem(
                         )
 
                         Spacer(Modifier.height(4.dp))
+                        val resources = LocalContext.current.resources
 
                         when (item.exercise){
                             is StrengthExercise -> {
                                 val weight = item.exercise.weight
                                 val repeatCount = item.exercise.repeatCount
                                 val approachCount = item.exercise.approachCount
-
-                                val resources = LocalContext.current.resources
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(1f),
@@ -399,7 +401,8 @@ private fun WorkoutItem(
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     Text(
-                                        text = "${item.exercise.time.toMinutes()} минут",
+                                        text = resources.getQuantityString(R.plurals.minutes,
+                                            item.exercise.time.toMinutes().toInt(), item.exercise.time.toMinutes().toInt()),
                                         style = WorkoutCaption
                                     )
                                 }

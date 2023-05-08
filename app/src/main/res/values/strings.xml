@@ -14,4 +14,9 @@
         <item quantity="few">%d подхода</item>
         <item quantity="other">%d подходов</item>
     </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
 </resources>

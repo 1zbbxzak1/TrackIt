@@ -45,7 +45,7 @@ fun ExerciseDialog(
 
     when (selectedExercise){
         is StrengthExercise -> {
-            weightField = if (selectedExercise.weight != 0) selectedExercise.weight.toString() else ""
+            weightField = selectedExercise.weight.toString()
             repeatCountField = if (selectedExercise.repeatCount != 0) selectedExercise.repeatCount.toString() else ""
             approachCountField = if (selectedExercise.approachCount != 0) selectedExercise.approachCount.toString() else ""
         }
@@ -86,7 +86,7 @@ fun ExerciseDialog(
                                     label = "Вес",
                                     caption = "кг",
                                     keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Decimal,
+                                        keyboardType = KeyboardType.Number,
                                         imeAction = ImeAction.Next
                                     ),
                                     keyboardActions = KeyboardActions(
@@ -218,12 +218,12 @@ fun ExerciseDialog(
                                 is StrengthExercise -> {
                                     selectedExercise.name.isNotBlank() &&
                                             weightField.isNotBlank()
-                                            && repeatCountField.isNotBlank()
-                                            && approachCountField.isNotBlank()
+                                            && repeatCountField.isNotBlank() && repeatCountField.toInt() > 0
+                                            && approachCountField.isNotBlank() && repeatCountField.toInt() > 0
                                 }
                                 is CardioExercise -> {
                                     selectedExercise.name.isNotBlank() &&
-                                            durationField.isNotBlank()
+                                            durationField.isNotBlank() && durationField.toInt() > 0
                                 }
                             },
                             modifier = Modifier.weight(1f))
