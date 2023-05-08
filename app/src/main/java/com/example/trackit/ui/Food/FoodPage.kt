@@ -128,7 +128,7 @@ fun MealPanel(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        elevation = 4.dp,
+        elevation = 8.dp,
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(

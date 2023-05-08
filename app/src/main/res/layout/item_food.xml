@@ -14,30 +14,33 @@
 
         <Button
             android:id="@+id/previous"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
+            android:elevation="20dp"
             android:background="@drawable/prev"
             android:onClick="onBackButtonClick" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/searchView_card"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:layout_gravity="center"
             app:cardBackgroundColor="#efefef"
             android:layout_margin="7dp"
-            app:cardCornerRadius="15dp">
+            android:elevation="15dp"
+            app:cardCornerRadius="20dp">
 
             <SearchView
                 android:id="@+id/searchView"
                 android:layout_width="333dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:background="#3b4446"
                 android:layout_gravity="center"
                 android:iconifiedByDefault="false"
+                android:elevation="15dp"
                 android:queryBackground="@null"
                 android:queryHint="Искать" />
 
@@ -48,16 +51,18 @@
         android:id="@+id/add_cardview"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         app:cardCornerRadius="20dp"
+        android:elevation="15dp"
         app:cardBackgroundColor="#efefef">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:elevation="15dp"
             android:padding="10dp">
 
             <LinearLayout
@@ -93,7 +98,7 @@
         android:id="@+id/frame_74"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="45dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:padding="10dp"
@@ -191,6 +196,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="1dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>
