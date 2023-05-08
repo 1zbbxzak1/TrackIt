@@ -59,6 +59,7 @@
             android:layout_marginTop="9dp"
             android:backgroundTint="@android:color/transparent"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textAllCaps="false"
             android:textColor="#3b4446"/>
     </RelativeLayout>
@@ -91,6 +92,7 @@
             android:layout_marginTop="10dp"
             android:backgroundTint="@android:color/transparent"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textAllCaps="false"
             android:textColor="#3b4446"/>
 
@@ -135,14 +137,26 @@
 
             <EditText
                 android:id="@+id/protein_add"
-                android:layout_width="match_parent"
+                android:layout_width="58dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@android:color/transparent"
                 android:textAllCaps="false"
                 android:textColor="#3b4446"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginStart="65dp"
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:textColor="#3b4446"
+                android:gravity="center_vertical"
+                android:text="гр"/>
 
         </RelativeLayout>
 
@@ -169,14 +183,26 @@
 
             <EditText
                 android:id="@+id/fat_add"
-                android:layout_width="match_parent"
+                android:layout_width="58dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="10dp"
                 android:textSize="16sp"
                 android:textAllCaps="false"
                 android:textColor="#3b4446"
+                android:textStyle="bold"
                 android:backgroundTint="@android:color/transparent"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginStart="65dp"
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:textColor="#3b4446"
+                android:gravity="center_vertical"
+                android:text="гр"/>
 
         </RelativeLayout>
 
@@ -203,14 +229,26 @@
 
             <EditText
                 android:id="@+id/carbs_add"
-                android:layout_width="match_parent"
+                android:layout_width="58dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="10dp"
                 android:textSize="16sp"
                 android:textAllCaps="false"
                 android:textColor="#3b4446"
+                android:textStyle="bold"
                 android:backgroundTint="@android:color/transparent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginStart="65dp"
+                android:textStyle="normal"
+                android:textSize="14sp"
+                android:textColor="#3b4446"
+                android:gravity="center_vertical"
+                android:text="гр"/>
 
         </RelativeLayout>
 

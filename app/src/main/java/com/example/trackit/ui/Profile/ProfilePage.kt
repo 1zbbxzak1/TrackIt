@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -27,131 +28,123 @@ fun ProfilePage() {
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
-        factory = { context ->
-            LayoutInflater.from(context).inflate(R.layout.activity_profile, null)
+        factory = { contxt ->
+            LayoutInflater.from(contxt).inflate(R.layout.activity_profile, null)
         })
-     { view ->
+         { view ->
 
-         val genderRadioGroup = view.findViewById<RadioGroup>(R.id.radio_group_gender)
-         val fem = view.findViewById<RadioButton>(R.id.femaleRadioButton)
-         val male = view.findViewById<RadioButton>(R.id.maleRadioButton)
+             val height = view.findViewById<EditText>(R.id.height_edit_text)
+             val sharedPreferencesKeyH = "height"
+             val savedHeight = loadFromSharedPreferences(context, sharedPreferencesKeyH, "")
+             height.setText(savedHeight)
 
-         val sharedPreferencesGender = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-         val sharedPreferencesGenderKey = "gender"
-         val savedGenderIndex = sharedPreferencesGender.getInt(sharedPreferencesGenderKey, -1)
-
-        // Настройка выбранной радиокнопки на основе сохраненных данных
-         if (savedGenderIndex != -1) {
-             setRadioButtonState(genderRadioGroup, savedGenderIndex)
-         }
-
-        // Настройка цвета фона радиогруппы
-         genderRadioGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.gray))
-
-        // Установка слушателей для радиокнопок
-         genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-             when (checkedId) {
-                 R.id.maleRadioButton -> {
-                     setRadioButtonState(group, 0)
-                     fem.background = null
-                     saveGenderPreference(sharedPreferencesGender, sharedPreferencesGenderKey, 0)
+             height.addTextChangedListener(object : TextWatcher {
+                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                     saveToSharedPreferences(context, sharedPreferencesKeyH, s.toString())
                  }
-                 R.id.femaleRadioButton -> {
-                     setRadioButtonState(group, 1)
-                     male.background = null
-                     saveGenderPreference(sharedPreferencesGender, sharedPreferencesGenderKey, 1)
+
+                 override fun afterTextChanged(s: Editable) {}
+             })
+
+             val age = view.findViewById<EditText>(R.id.age_edit_text)
+             val sharedPreferencesKeyA = "age"
+             val savedAge = loadFromSharedPreferences(context, sharedPreferencesKeyA, "")
+             age.setText(savedAge)
+
+             age.addTextChangedListener(object : TextWatcher {
+                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                     saveToSharedPreferences(context, sharedPreferencesKeyA, s.toString())
+                 }
+
+                 override fun afterTextChanged(s: Editable) {}
+             })
+
+             val weight = view.findViewById<EditText>(R.id.weight_edit_text)
+             val sharedPreferencesKeyW = "weight"
+             val savedWeight = loadFromSharedPreferences(context, sharedPreferencesKeyW, "")
+             weight.setText(savedWeight)
+
+             weight.addTextChangedListener(object : TextWatcher {
+                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                     saveToSharedPreferences(context, sharedPreferencesKeyW, s.toString())
+                 }
+
+                 override fun afterTextChanged(s: Editable) {}
+             })
+
+             val genderRadioGroup = view.findViewById<RadioGroup>(R.id.radio_group_gender)
+             val fem = view.findViewById<RadioButton>(R.id.femaleRadioButton)
+             val male = view.findViewById<RadioButton>(R.id.maleRadioButton)
+
+             val sharedPreferencesGender = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+             val sharedPreferencesKeyG = "gender"
+             val savedGenderIndex = sharedPreferencesGender.getInt(sharedPreferencesKeyG, -1)
+
+             // Настройка выбранной радиокнопки на основе сохраненных данных
+             if (savedGenderIndex != -1) {
+                 setRadioButtonState(genderRadioGroup, savedGenderIndex)
+             }
+
+             // Настройка цвета фона радиогруппы
+             genderRadioGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.gray))
+
+             // Установка слушателей для радиокнопок
+             genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+                 when (checkedId) {
+                     R.id.maleRadioButton -> {
+                         setRadioButtonState(group, 0)
+                         fem.background = null
+                         saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 0)
+                     }
+                     R.id.femaleRadioButton -> {
+                         setRadioButtonState(group, 1)
+                         male.background = null
+                         saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 1)
+                     }
+                 }
+
+                 // Установить цвет текста выбранной радиокнопки и сохранить его
+                 val checkedRadioButton = view.findViewById<RadioButton>(checkedId)
+                 if (checkedRadioButton != null) {
+                     checkedRadioButton.setTextColor(ContextCompat.getColor(context, R.color.white))
+                     saveSelectedRadioButtonId(sharedPreferencesGender, checkedId)
+                 }
+
+                 // Снять флажки со всех остальных радиокнопок и установить для них черный цвет текста
+                 for (i in 0 until group.childCount) {
+                     val radioButton = group.getChildAt(i) as RadioButton
+                     if (radioButton.id != checkedId) {
+                         radioButton.setTextColor(ContextCompat.getColor(context, R.color.black))
+                         radioButton.isChecked = false
+                     }
                  }
              }
 
-             // Установить цвет текста выбранной радиокнопки и сохранить его
-             val checkedRadioButton = view.findViewById<RadioButton>(checkedId)
-             if (checkedRadioButton != null) {
-                 checkedRadioButton.setTextColor(ContextCompat.getColor(context, R.color.white))
-
-                 val editor = sharedPreferencesGender.edit()
-                 editor.putInt("selectedRadioButtonId", checkedId)
-                 editor.apply()
+             // Установить цвет текста выбранной радиокнопки, если она была сохранена
+             val savedSelection = sharedPreferencesGender.getInt("selectedRadioButtonId", -1)
+             if (savedSelection != -1) {
+                 genderRadioGroup.check(savedSelection)
+                 setTextColorForSelectedRadioButton(view, savedSelection, R.color.white)
              }
+        }
 
-             // Снять флажки со всех остальных радиокнопок и установить для них черный цвет текста
-             for (i in 0 until group.childCount) {
-                 val radioButton = group.getChildAt(i) as RadioButton
-                 if (radioButton.id != checkedId) {
-                     radioButton.setTextColor(ContextCompat.getColor(context, R.color.black))
-                     radioButton.isChecked = false
-                 }
-             }
-         }
+}
 
-         // Установить цвет текста выбранной радиокнопки, если она была сохранена
-         val savedSelection = sharedPreferencesGender.getInt("selectedRadioButtonId", -1)
-         if (savedSelection != -1) {
-             genderRadioGroup.check(savedSelection)
+// Сохранение введенного значения
+fun saveToSharedPreferences(context: Context, key: String, value: String) {
+    val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putString(key, value)
+    editor.apply()
+}
 
-             val selectedRadioButton = view.findViewById<RadioButton>(savedSelection)
-             selectedRadioButton?.setTextColor(ContextCompat.getColor(context, R.color.white))
-         }
-
-         val editText = view.findViewById<EditText>(R.id.height_edit_text)
-        val sharedPreferencesKey = "my_key"
-
-        // загружаем сохраненное значение
-        val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        val savedText = sharedPreferences.getString(sharedPreferencesKey, "")
-        editText.setText(savedText)
-
-        // сохраняем введенное значение при каждом изменении
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val editor = sharedPreferences.edit()
-                editor.putString(sharedPreferencesKey, s.toString())
-                editor.apply()
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-
-        val editText2 = view.findViewById<EditText>(R.id.weight_edit_text)
-        val sharedPreferencesKey2 = "my_key2"
-
-        // загружаем сохраненное значение
-        val sharedPreferences2 = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        val savedText2 = sharedPreferences.getString(sharedPreferencesKey2, "")
-        editText2.setText(savedText2)
-
-        // сохраняем введенное значение при каждом изменении
-        editText2.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val editor2 = sharedPreferences2.edit()
-                editor2.putString(sharedPreferencesKey2, s.toString())
-                editor2.apply()
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-
-        val editText3 = view.findViewById<EditText>(R.id.age_edit_text)
-        val sharedPreferencesKey3 = "my_key3"
-
-        // загружаем сохраненное значение
-        val sharedPreferences3 = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-        val savedText3 = sharedPreferences.getString(sharedPreferencesKey3, "")
-        editText3.setText(savedText3)
-
-        // сохраняем введенное значение при каждом изменении
-        editText3.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val editor3 = sharedPreferences3.edit()
-                editor3.putString(sharedPreferencesKey3, s.toString())
-                editor3.apply()
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-    }
+// Выгрузка сохранненного значения
+fun loadFromSharedPreferences(context: Context, key: String, defaultValue: String): String {
+    val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+    return sharedPreferences.getString(key, defaultValue) ?: defaultValue
 }
 
 // Сохранение выбранного пола
@@ -162,13 +155,26 @@ private fun saveGenderPreference(sharedPreferences: SharedPreferences, key: Stri
     }
 }
 
-// выделение выбранного пола
+// Выделение выбранного пола
 fun setRadioButtonState(group: RadioGroup, index: Int) {
     val radioButton = group.getChildAt(index) as? RadioButton
     radioButton?.apply {
         isChecked = true
         setBackgroundResource(R.drawable.gender_back)
     }
+}
+
+// Сохранение выбранной радиокнопки по id
+fun saveSelectedRadioButtonId(sharedPreferencesGender: SharedPreferences, checkedId: Int) {
+    val editorGender = sharedPreferencesGender.edit()
+    editorGender.putInt("selectedRadioButtonId", checkedId)
+    editorGender.apply()
+}
+
+// Установка цвета текста кнопки
+fun setTextColorForSelectedRadioButton(view: View, selectedId: Int, color: Int) {
+    val selectedRadioButton = view.findViewById<RadioButton>(selectedId)
+    selectedRadioButton?.setTextColor(ContextCompat.getColor(view.context, color))
 }
 
 @Preview(showBackground = true)

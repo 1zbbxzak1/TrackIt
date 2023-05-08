@@ -78,7 +78,7 @@
                 android:textSize="20sp"
                 android:textColor="@color/white"
                 android:gravity="center_horizontal"
-                android:layout_marginStart="30dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="15dp"
                 android:text="Жиры"
                 tools:ignore="HardcodedText" />
@@ -111,13 +111,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="47dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp"
             android:layout_marginTop="60dp"
-            android:layout_marginStart="50dp">
+            android:layout_marginStart="34dp">
 
             <TextView
                 android:id="@+id/pr"
@@ -133,13 +132,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="47dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp"
             android:layout_marginTop="60dp"
-            android:layout_marginStart="137dp">
+            android:layout_marginStart="131dp">
 
             <TextView
                 android:id="@+id/f"
@@ -155,13 +153,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="47dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp"
             android:layout_marginTop="60dp"
-            android:layout_marginStart="243dp">
+            android:layout_marginStart="235dp">
 
             <TextView
                 android:id="@+id/car"
@@ -177,20 +174,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="47dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp"
             android:layout_marginTop="60dp"
-            android:layout_marginStart="342dp">
+            android:layout_marginStart="323dp">
 
             <TextView
                 android:id="@+id/cal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
-                android:gravity="center_horizontal"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="normal"
@@ -199,73 +194,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-<!--    <com.robertlevonyan.views.expandable.Expandable-->
-<!--        android:id="@+id/expandable"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="80dp"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginRight="10dp">-->
-
-<!--        <include-->
-<!--            android:id="@+id/header"-->
-<!--            layout="@layout/list_header_breakfast" />-->
-
-<!--        <include-->
-<!--            android:id="@+id/content"-->
-<!--            layout="@layout/list_item_breakfast" />-->
-<!--    </com.robertlevonyan.views.expandable.Expandable>-->
-
-<!--    <com.robertlevonyan.views.expandable.Expandable-->
-<!--        android:id="@+id/expandable2"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginRight="10dp">-->
-
-<!--        <include-->
-<!--            android:id="@+id/header"-->
-<!--            layout="@layout/list_header_lunch" />-->
-
-<!--        <include-->
-<!--            android:id="@+id/content"-->
-<!--            layout="@layout/prod_list" />-->
-<!--    </com.robertlevonyan.views.expandable.Expandable>-->
-
-<!--    <com.robertlevonyan.views.expandable.Expandable-->
-<!--        android:id="@+id/expandable3"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginRight="10dp">-->
-
-<!--        <include-->
-<!--            android:id="@+id/header"-->
-<!--            layout="@layout/list_header_dinner" />-->
-
-<!--        <include-->
-<!--            android:id="@+id/content"-->
-<!--            layout="@layout/prod_list" />-->
-<!--    </com.robertlevonyan.views.expandable.Expandable>-->
-
-<!--    <com.robertlevonyan.views.expandable.Expandable-->
-<!--        android:id="@+id/expandable4"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="40dp"-->
-<!--        android:layout_marginLeft="10dp"-->
-<!--        android:layout_marginRight="10dp">-->
-
-<!--        <include-->
-<!--            android:id="@+id/header"-->
-<!--            layout="@layout/list_header_snack" />-->
-
-<!--        <include-->
-<!--            android:id="@+id/content"-->
-<!--            layout="@layout/prod_list" />-->
-<!--    </com.robertlevonyan.views.expandable.Expandable>-->
 
 </LinearLayout>
