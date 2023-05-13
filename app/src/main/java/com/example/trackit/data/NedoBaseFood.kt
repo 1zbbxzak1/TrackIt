@@ -1,6 +1,7 @@
 package values
 
 import com.example.trackit.ui.Nutrition.FoodData
+import java.time.LocalDate
 
 val NedoFoodList = mutableListOf(
         FoodData(0,"Курица отварная",25.0,7.0,0.0,170.0,100),

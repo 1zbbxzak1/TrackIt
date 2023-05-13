@@ -1,65 +1,169 @@
 package com.example.trackit.ui
 
-import android.view.LayoutInflater
-import android.widget.TextView
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.IconButton
-import androidx.compose.material.TabRowDefaults.Divider
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import com.example.trackit.R
+import com.example.trackit.data.food.Delete
 import com.example.trackit.data.food.Globals
+import com.example.trackit.data.food.ListFood
 import com.example.trackit.ui.Nutrition.FoodData
 import com.example.trackit.ui.theme.TrackItTheme
 import java.time.LocalDate
+import com.example.trackit.ui.theme.PermanentGeraniumLake
 
 @Composable
 fun FoodPage(
     navigateToEntry: () -> Unit,
     selectedDate: LocalDate = LocalDate.now()
 ) {
-    val context = LocalContext.current
-
     var breakfastExpanded by remember { mutableStateOf(false) }
     var lunchExpanded by remember { mutableStateOf(false) }
     var dinnerExpanded by remember { mutableStateOf(false) }
     var snackExpanded by remember { mutableStateOf(false) }
 
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { contxt ->
-            LayoutInflater.from(contxt).inflate(R.layout.activity_nutrition, null)
-        },
-        update = { view ->
-            val pr = view.findViewById<TextView>(R.id.pr)
-            pr.text = Globals.TotalProteins.toString()
-
-            val fat = view.findViewById<TextView>(R.id.f)
-            fat.text = Globals.TotalFats.toString()
-
-            val carb = view.findViewById<TextView>(R.id.car)
-            carb.text = Globals.TotalCarbs.toString()
-
-            val cal = view.findViewById<TextView>(R.id.cal)
-            cal.text = Globals.TotalCalories.toString()
+    Box(modifier = Modifier.fillMaxSize()) {
+        Surface(
+            color = Color(android.graphics.Color.parseColor("#99CD4E")),
+            shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
+            modifier = Modifier
+                .height(110.dp)
+                .offset(y = 46.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Белки",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 10.dp, top = 35.dp)
+                    )
+                    Text(
+                        text = "${Globals.TotalProteins}",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                            .offset(x = 4.dp)
+                    )
+                }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Жиры",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 35.dp)
+                            .offset(x = (-7).dp)
+                    )
+                    Text(
+                        text = "${Globals.TotalFats}",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                            .offset(x = (-6).dp)
+                    )
+                }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Углеводы",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 35.dp)
+                    )
+                    Text(
+                        text = "${Globals.TotalCarbs}",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                            .offset(x = (-2).dp)
+                    )
+                }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "Ккал",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier.padding(top = 35.dp, end = 10.dp)
+                    )
+                    Text(
+                        text = "${Globals.TotalCalories}",
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                            .offset(x = (-5).dp)
+                    )
+                }
+            }
         }
-    )
+    }
+
+    Surface(
+            color = MaterialTheme.colors.primaryVariant,
+            shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+            modifier = Modifier
+                .height(70.dp)
+                .zIndex(1f)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.food_label),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            }
+        }
+
 
     LazyColumn(
         modifier = Modifier
@@ -70,10 +174,11 @@ fun FoodPage(
             MealPanel(
                 mealType = "Завтрак",
                 mealIcon = R.drawable.breakfast_icon,
-                foods = breakfastFoods,
+                foods = ListFood.breakfastFoods,
                 isExpanded = breakfastExpanded,
                 onPanelClicked = { breakfastExpanded = !breakfastExpanded },
-                onAddButtonClick = { navigateToEntry() }
+                onAddButtonClick = { navigateToEntry() },
+                onDismiss = {item -> Delete.onDeleteBreakfast(item) }
             )
             Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
         }
@@ -82,10 +187,11 @@ fun FoodPage(
             MealPanel(
                 mealType = "Обед",
                 mealIcon = R.drawable.lunch_icon,
-                foods = lunchFoods,
+                foods = ListFood.lunchFoods,
                 isExpanded = lunchExpanded,
                 onPanelClicked = { lunchExpanded = !lunchExpanded },
-                onAddButtonClick = { navigateToEntry() }
+                onAddButtonClick = { navigateToEntry() },
+                onDismiss = {item -> Delete.onDeleteLunch(item) }
             )
             Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
         }
@@ -94,10 +200,11 @@ fun FoodPage(
             MealPanel(
                 mealType = "Ужин",
                 mealIcon = R.drawable.dinner_icon,
-                foods = dinnerFoods,
+                foods = ListFood.dinnerFoods,
                 isExpanded = dinnerExpanded,
                 onPanelClicked = { dinnerExpanded = !dinnerExpanded },
-                onAddButtonClick = { navigateToEntry() }
+                onAddButtonClick = { navigateToEntry() },
+                onDismiss = {item -> Delete.onDeleteDinner(item) }
             )
             Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
         }
@@ -106,10 +213,11 @@ fun FoodPage(
             MealPanel(
                 mealType = "Перекус",
                 mealIcon = R.drawable.snack_icon,
-                foods = snackFoods,
+                foods = ListFood.snackFoods,
                 isExpanded = snackExpanded,
                 onPanelClicked = { snackExpanded = !snackExpanded },
-                onAddButtonClick = { navigateToEntry() }
+                onAddButtonClick = { navigateToEntry() },
+                onDismiss = {item -> Delete.onDeleteSnack(item) }
             )
         }
     }
@@ -119,10 +227,11 @@ fun FoodPage(
 fun MealPanel(
     mealType: String,
     mealIcon: Int,
-    foods: MutableList<FoodData>,
+    foods: List<FoodData>,
     isExpanded: Boolean,
     onPanelClicked: () -> Unit,
-    onAddButtonClick: () -> Unit
+    onAddButtonClick: () -> Unit,
+    onDismiss: (FoodData) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -169,7 +278,17 @@ fun MealPanel(
                         .fillMaxWidth()
                         .heightIn(max = 400.dp)
                 ) {
-                    FoodCardList(foods)
+                    if (foods.isEmpty()){
+                        Text(
+                            text = "Добавьте продукт",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier.padding(start = 20.dp)
+                        )
+                    }
+                    else {
+                        FoodDelete(foods = foods, onDelete = onDismiss)
+                    }
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }
@@ -177,36 +296,94 @@ fun MealPanel(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun FoodCardList(foods: List<FoodData>) {
+private fun FoodDelete(
+    foods: List<FoodData>,
+    onDelete: (FoodData) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         backgroundColor = Color.White
     ) {
-        Column {
-            for (i in foods.indices) {
-                val food = foods[i]
-                FoodCard(
-                    food = food,
-                    modifier = if (i == 0) {
-                        Modifier.padding(16.dp)
-                    } else {
-                        Modifier
-                            .padding(16.dp)
-                            .padding(top = 0.dp)
+
+        LazyColumn(modifier = modifier) {
+            items(items = foods, key = { item -> item.id }, itemContent = { item ->
+                val threshold = 0.25f
+                val fraction = remember { mutableStateOf(0f) }
+
+                var direction: DismissDirection? by remember {
+                    mutableStateOf(null)
+                }
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        when (it) {
+                            DismissValue.DismissedToStart -> {
+                                if (fraction.value >= threshold && fraction.value < 1.0f) {
+                                    onDelete(item)
+                                }
+                                fraction.value >= threshold && fraction.value < 1.0f
+                            }
+                            else -> {
+                                false
+                            }
+                        }
                     }
                 )
-                if (i != foods.lastIndex) {
+
+                direction = when (dismissState.targetValue) {
+                    DismissValue.Default -> null
+                    else -> DismissDirection.EndToStart
+                }
+
+                val hapticFeedback = LocalHapticFeedback.current
+                LaunchedEffect(key1 = direction, block = {
+                    if (direction != null) {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                    }
+                })
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    dismissThresholds = {
+                        FractionalThreshold(threshold)
+                    },
+                    modifier = Modifier.animateItemPlacement(),
+                    background = {
+                        Background(dismissState = dismissState) {
+                            fraction.value = it
+                        }
+                    },
+                    dismissContent = {
+                        FoodCard(
+                            food = item,
+                            modifier = Modifier.padding(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = if (item.id == 0) 16.dp else 0.dp
+                            ),
+                            index = item.id
+                        )
+                    }
+                )
+
+                if (item.id != foods.last().id) {
                     Divider(color = Color.LightGray)
                 }
-            }
+            })
         }
     }
 }
 
 @Composable
-fun FoodCard(food: FoodData, modifier: Modifier) {
+fun FoodCard(
+    food: FoodData,
+    modifier: Modifier,
+    index: Int
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         backgroundColor = Color.White,
@@ -231,7 +408,7 @@ fun FoodCard(food: FoodData, modifier: Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "${food.protein}", fontSize = 16.sp, modifier = Modifier.padding(start = 20.dp))
+                Text(text = "${food.protein}", fontSize = 16.sp, modifier = Modifier.padding(start = 10.dp))
                 Text(text = "${food.fat}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
                 Text(text = "${food.carbs}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
                 Text(text = "${food.calories}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
@@ -240,13 +417,41 @@ fun FoodCard(food: FoodData, modifier: Modifier) {
     }
 }
 
-val breakfastFoods = mutableStateListOf<FoodData>()
+@Composable
+@OptIn(ExperimentalMaterialApi::class)
+fun Background(
+    dismissState: DismissState,
+    updateFraction: (Float) -> Unit) {
 
-val lunchFoods = mutableStateListOf<FoodData>()
+    val color by animateColorAsState(
+        when (dismissState.targetValue) {
+            DismissValue.Default -> Color.Transparent
+            else -> PermanentGeraniumLake
+        }
+    )
 
-val dinnerFoods = mutableStateListOf<FoodData>()
+    val alignment = Alignment.CenterEnd
+    val icon = Icons.Default.Delete
+    val scale by animateFloatAsState(
+        if (dismissState.targetValue == DismissValue.Default) 0.75f else 1.2f
+    )
 
-val snackFoods = mutableStateListOf<FoodData>()
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color)
+            .padding(horizontal = 20.dp),
+        contentAlignment = alignment
+    ) {
+        updateFraction(dismissState.progress.fraction)
+
+        Icon(
+            icon,
+            contentDescription = "Localized description",
+            modifier = Modifier.scale(scale)
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

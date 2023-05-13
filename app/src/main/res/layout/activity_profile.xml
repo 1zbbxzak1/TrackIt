@@ -34,23 +34,11 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:id="@+id/vector_199"
-                            android:layout_width="225dp"
-                            android:layout_height="44dp"
-                            android:background="@drawable/label_frame"
-                            android:elevation="4dp">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/profile_label" />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:fontFamily="sans-serif-medium"
-                                android:text="Профиль"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                android:textSize="24dp" />
-
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -64,7 +52,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center_vertical"
@@ -77,7 +65,7 @@
                     android:src="@drawable/ruler" />
 
                 <LinearLayout
-                    android:layout_width="350dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="1dp"
                     android:orientation="horizontal">
@@ -96,10 +84,9 @@
 
                     <EditText
                         android:id="@+id/height_edit_text"
-                        android:layout_width="35dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginStart="175dp"
-                        android:layout_marginLeft="40dp"
+                        android:layout_marginStart="200dp"
                         android:background="@null"
                         android:hint="..."
                         android:fontFamily="sans-serif-medium"
@@ -109,7 +96,7 @@
                         android:id="@+id/h_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="0dp"
+                        android:layout_marginStart="4dp"
                         android:layout_marginTop="0dp"
                         android:text="см"
                         android:fontFamily="sans-serif-medium"
@@ -126,11 +113,12 @@
             android:orientation="vertical"
             android:layout_marginTop="15dp"
             android:gravity="center">
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -140,16 +128,15 @@
                     android:src="@drawable/cake" />
 
                 <LinearLayout
-                    android:layout_width="350dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="1dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/age_label"
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginStart="7dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="1dp"
                         android:gravity="center_horizontal"
                         android:text="Возраст"
@@ -160,10 +147,9 @@
                     <EditText
                         android:id="@+id/age_edit_text"
                         android:background="@null"
-                        android:layout_width="35dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="25dp"
-                        android:layout_marginStart="160dp"
-                        android:layout_marginLeft="40dp"
+                        android:layout_marginStart="185dp"
                         android:hint="..."
                         android:fontFamily="sans-serif-medium"
                         android:inputType="numberDecimal" />
@@ -178,22 +164,23 @@
         android:orientation="vertical"
         android:layout_marginTop="15dp"
         android:gravity="center">
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
                 android:src="@drawable/scale" />
 
             <LinearLayout
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -201,7 +188,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="25dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginTop="1dp"
                     android:gravity="center_horizontal"
                     android:text="Вес"
                     android:fontFamily="sans-serif-medium"
@@ -211,10 +198,9 @@
                 <EditText
                     android:id="@+id/weight_edit_text"
                     android:background="@null"
-                    android:layout_width="40dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="25dp"
-                    android:layout_marginStart="185dp"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginStart="212dp"
                     android:hint="..."
                     android:fontFamily="sans-serif-medium"
                     android:inputType="numberDecimal" />
@@ -223,8 +209,7 @@
                     android:id="@+id/w_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginStart="4dp"
                     android:text="кг"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/black"
@@ -242,15 +227,16 @@
             android:gravity="center">
 
             <LinearLayout
-                android:layout_width="395dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/gender" />
 
                 <LinearLayout
@@ -263,7 +249,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="25dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
                         android:text="Пол"
@@ -275,6 +261,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="108dp"
+                        android:layout_marginTop="3dp"
                         card_view:cardBackgroundColor="@android:color/transparent"
                         card_view:cardCornerRadius="10dp"
                         card_view:cardElevation="0dp">

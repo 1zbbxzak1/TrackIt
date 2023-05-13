@@ -60,6 +60,7 @@
             android:backgroundTint="@android:color/transparent"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:maxLength="24"
             android:textAllCaps="false"
             android:textColor="#3b4446"/>
     </RelativeLayout>
@@ -93,6 +94,7 @@
             android:backgroundTint="@android:color/transparent"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:maxLength="4"
             android:textAllCaps="false"
             android:textColor="#3b4446"/>
 
@@ -145,6 +147,7 @@
                 android:textAllCaps="false"
                 android:textColor="#3b4446"
                 android:textSize="16sp"
+                android:maxLength="4"
                 android:textStyle="bold" />
 
             <TextView
@@ -191,6 +194,7 @@
                 android:textAllCaps="false"
                 android:textColor="#3b4446"
                 android:textStyle="bold"
+                android:maxLength="4"
                 android:backgroundTint="@android:color/transparent"/>
 
             <TextView
@@ -237,6 +241,7 @@
                 android:textAllCaps="false"
                 android:textColor="#3b4446"
                 android:textStyle="bold"
+                android:maxLength="4"
                 android:backgroundTint="@android:color/transparent" />
 
             <TextView

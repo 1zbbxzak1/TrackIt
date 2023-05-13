@@ -292,6 +292,7 @@
             android:backgroundTint="@android:color/transparent"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:maxLength="6"
             android:textColor="#3b4446"/>
 
         <TextView

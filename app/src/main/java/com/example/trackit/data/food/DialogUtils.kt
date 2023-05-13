@@ -7,6 +7,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.trackit.R
 import com.example.trackit.data.food.Globals
+import com.example.trackit.data.food.ListFood
 import com.example.trackit.ui.*
 import com.example.trackit.ui.Nutrition.FoodAdapter
 import com.example.trackit.ui.Nutrition.FoodData
@@ -96,7 +97,7 @@ fun showAddDialog(food: FoodData, context: Context) {
     addButton.setOnClickListener {
         val gramsEntered = gramsEditText.text.toString().toIntOrNull() ?: 0
         if (gramsEntered <= 0) {
-            Toast.makeText(context, "Введите количество грамм", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Пожалуйста, введите количество грамм", Toast.LENGTH_SHORT).show()
             return@setOnClickListener
         }
         val factor = gramsEntered / 100.0 // отношение введенного количества грамм к 100 г
@@ -105,13 +106,14 @@ fun showAddDialog(food: FoodData, context: Context) {
             -1 -> {
                 Toast.makeText(
                     context,
-                    "Выберите категорию для добавления продукта",
+                    "Пожалуйста, выберите категорию для добавления продукта",
                     Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
             }
             else -> {
                 val newFood = FoodData(
+                    id = food.id,
                     name = food.name,
                     protein = round(food.protein * factor * 10.0) / 10.0,
                     fat = round(food.fat * factor * 10.0) / 10.0,
@@ -121,28 +123,28 @@ fun showAddDialog(food: FoodData, context: Context) {
                 )
                 when (checkedId) {
                     R.id.breakfast -> {
-                        breakfastFoods.add(newFood)
+                        ListFood.breakfastFoods.add(newFood)
                         Globals.TotalProteins += newFood.protein.roundToInt()
                         Globals.TotalFats += newFood.fat.roundToInt()
                         Globals.TotalCarbs += newFood.carbs.roundToInt()
                         Globals.TotalCalories += newFood.calories.roundToInt()
                     }
                     R.id.lunch -> {
-                        lunchFoods.add(newFood)
+                        ListFood.lunchFoods.add(newFood)
                         Globals.TotalProteins += newFood.protein.roundToInt()
                         Globals.TotalFats += newFood.fat.roundToInt()
                         Globals.TotalCarbs += newFood.carbs.roundToInt()
                         Globals.TotalCalories += newFood.calories.roundToInt()
                     }
                     R.id.dinner -> {
-                        dinnerFoods.add(newFood)
+                        ListFood.dinnerFoods.add(newFood)
                         Globals.TotalProteins += newFood.protein.roundToInt()
                         Globals.TotalFats += newFood.fat.roundToInt()
                         Globals.TotalCarbs += newFood.carbs.roundToInt()
                         Globals.TotalCalories += newFood.calories.roundToInt()
                     }
                     R.id.snack -> {
-                        snackFoods.add(newFood)
+                        ListFood.snackFoods.add(newFood)
                         Globals.TotalProteins += newFood.protein.roundToInt()
                         Globals.TotalFats += newFood.fat.roundToInt()
                         Globals.TotalCarbs += newFood.carbs.roundToInt()
