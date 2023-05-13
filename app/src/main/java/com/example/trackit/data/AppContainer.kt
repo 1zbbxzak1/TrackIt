@@ -1,8 +1,6 @@
 package com.example.trackit.data
 
 import android.content.Context
-import com.example.trackit.data.food.FoodDatabase
-import com.example.trackit.data.food.FoodRepository
 import com.example.trackit.data.workout.WorkoutCategoryDatabase
 import com.example.trackit.data.workout.WorkoutCategoryRepository
 import com.example.trackit.data.workout.WorkoutDatabase
@@ -11,7 +9,6 @@ import com.example.trackit.data.workout.WorkoutItemsRepository
 interface AppContainer {
     val workoutItemsRepository: WorkoutItemsRepository
     val workoutCategoryRepository: WorkoutCategoryRepository
-    val foodRepository: FoodRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
@@ -21,9 +18,5 @@ class AppDataContainer(private val context: Context) : AppContainer {
 
     override val workoutCategoryRepository: WorkoutCategoryRepository by lazy {
         WorkoutCategoryRepository(WorkoutCategoryDatabase.getDatabase(context).itemDao())
-    }
-
-    override val foodRepository: FoodRepository by lazy {
-        FoodRepository(FoodDatabase.getDatabase(context).foodDao())
     }
 }
