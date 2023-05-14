@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutCategoryScreen(
     onCategorySelect: (Int) -> Unit,
@@ -46,10 +45,9 @@ fun WorkoutCategoryScreen(
     val dialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 
-    Scaffold(
-        topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) }
-    ) {
+    Box{
         Column {
+            WorkoutEditTopBar(textState, navigateBack = navigateBack)
 
             Card(
                 onClick = { dialogState.value = true },
@@ -106,7 +104,6 @@ fun WorkoutCategoryScreen(
                 )
             }
         }
-
     }
 }
 

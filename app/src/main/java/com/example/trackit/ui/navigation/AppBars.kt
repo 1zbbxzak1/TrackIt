@@ -66,144 +66,135 @@ fun BottomBar(
         mutableStateOf(false)
     }
 
-    Column(
-    ) {
-    //    if (barState
-        AnimatedVisibility(
+    AnimatedVisibility(
             visible = barState,
             enter = slideInVertically(
                 initialOffsetY = { it },
                 animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
             ),
-            exit = ExitTransition.None
-    //        enter = slideInVertically(
-    //            initialOffsetY = { it },
-    //            animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
-    //        ),
-    //        exit = slideOutVertically (
-    //            targetOffsetY = { it },
-    //            animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing),
-    //        ),
+            exit = slideOutVertically (
+                targetOffsetY = { it },
+                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
+            ),
         ) {
-            Column(
-                modifier = Modifier
-                    .background(Color.Transparent)
+        Column(
+            modifier = Modifier
+                .background(Color.Transparent)
+        ) {
+            ExpandableCalendar(
+                calendarExpanded,
+                { calendarExpanded = !calendarExpanded },
+                onDateSelected = { onDateSelected(it) },
+                currentDate,
+                modifier = Modifier.background(Color.Transparent)
+            )
+
+            // Нижняя панель навигации
+            Surface(
+                color = MaterialTheme.colors.primaryVariant,
+                contentColor = contentColorFor(MaterialTheme.colors.primaryVariant),
+                //shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
             ) {
-                ExpandableCalendar(
-                    calendarExpanded,
-                    {calendarExpanded = !calendarExpanded},
-                    onDateSelected = { onDateSelected(it) },
-                    currentDate,
-                    modifier = Modifier.background(Color.Transparent)
-                )
-
-                // Нижняя панель навигации
-                Surface(
-                    color = MaterialTheme.colors.primaryVariant,
-                    contentColor = contentColorFor(MaterialTheme.colors.primaryVariant),
-                    //shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(68.dp)
+                        .selectableGroup(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(68.dp)
-                            .selectableGroup(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
 
-                        // Food page
-                        BottomNavigationItem(
-                            selected = currentScreen == Screen.Food,
-                            icon = {
-                                if (currentScreen == Screen.Food)
-                                    Icon(
-                                        painterResource(id = R.drawable.food_icon),
-                                        tint = AndroidGreen,
-                                        contentDescription = stringResource(id = R.string.food_page)
-                                    )
-                                else
-                                    Icon(
-                                        painterResource(id = R.drawable.food_icon),
-                                        contentDescription = null
-                                    )
-                            },
-                            label = {
-                                if (currentScreen == Screen.Food)
-                                    Text(
-                                        text = stringResource(id = R.string.food_page),
-                                        color = AndroidGreen
-                                    )
-                                else
-                                    Text(text = stringResource(id = R.string.food_page))
-                            },
-                            onClick = {
-                                calendarExpanded = false
-                                navController.navigate(Screen.Food.name)
-                            }
-                        )
+                    // Food page
+                    BottomNavigationItem(
+                        selected = currentScreen == Screen.Food,
+                        icon = {
+                            if (currentScreen == Screen.Food)
+                                Icon(
+                                    painterResource(id = R.drawable.food_icon),
+                                    tint = AndroidGreen,
+                                    contentDescription = stringResource(id = R.string.food_page)
+                                )
+                            else
+                                Icon(
+                                    painterResource(id = R.drawable.food_icon),
+                                    contentDescription = null
+                                )
+                        },
+                        label = {
+                            if (currentScreen == Screen.Food)
+                                Text(
+                                    text = stringResource(id = R.string.food_page),
+                                    color = AndroidGreen
+                                )
+                            else
+                                Text(text = stringResource(id = R.string.food_page))
+                        },
+                        onClick = {
+                            calendarExpanded = false
+                            navController.navigate(Screen.Food.name)
+                        }
+                    )
 
-                        // Profile page
-                        BottomNavigationItem(
-                            selected = currentScreen == Screen.Profile,
-                            icon = {
-                                if (currentScreen == Screen.Profile)
-                                    Icon(
-                                        painterResource(id = R.drawable.profile_icon),
-                                        tint = AndroidGreen,
-                                        contentDescription = stringResource(id = R.string.profile_page)
-                                    )
-                                else
-                                    Icon(
-                                        painterResource(id = R.drawable.profile_icon),
-                                        contentDescription = stringResource(id = R.string.profile_page)
-                                    )
-                            },
-                            label = {
-                                if (currentScreen == Screen.Profile)
-                                    Text(
-                                        text = stringResource(id = R.string.profile_page),
-                                        color = AndroidGreen
-                                    )
-                                else
-                                    Text(text = stringResource(id = R.string.profile_page))
-                            },
-                            onClick = {
-                                calendarExpanded = false
-                                navController.navigate(Screen.Profile.name)
-                            }
-                        )
+                    // Profile page
+                    BottomNavigationItem(
+                        selected = currentScreen == Screen.Profile,
+                        icon = {
+                            if (currentScreen == Screen.Profile)
+                                Icon(
+                                    painterResource(id = R.drawable.profile_icon),
+                                    tint = AndroidGreen,
+                                    contentDescription = stringResource(id = R.string.profile_page)
+                                )
+                            else
+                                Icon(
+                                    painterResource(id = R.drawable.profile_icon),
+                                    contentDescription = stringResource(id = R.string.profile_page)
+                                )
+                        },
+                        label = {
+                            if (currentScreen == Screen.Profile)
+                                Text(
+                                    text = stringResource(id = R.string.profile_page),
+                                    color = AndroidGreen
+                                )
+                            else
+                                Text(text = stringResource(id = R.string.profile_page))
+                        },
+                        onClick = {
+                            calendarExpanded = false
+                            navController.navigate(Screen.Profile.name)
+                        }
+                    )
 
-                        // Workout page
-                        BottomNavigationItem(
-                            selected = currentScreen == Screen.Workout,
-                            icon = {
-                                if (currentScreen == Screen.Workout)
-                                    Icon(
-                                        painterResource(id = R.drawable.workout_icon),
-                                        tint = AndroidGreen,
-                                        contentDescription = stringResource(id = R.string.workout_page)
-                                    )
-                                else
-                                    Icon(
-                                        painterResource(id = R.drawable.workout_icon),
-                                        contentDescription = stringResource(id = R.string.workout_page)
-                                    )
-                            },
-                            label = {
-                                if (currentScreen == Screen.Workout)
-                                    Text(
-                                        text = stringResource(id = R.string.workout_page),
-                                        color = AndroidGreen
-                                    )
-                                else
-                                    Text(text = stringResource(id = R.string.workout_page))
-                            },
-                            onClick = {
-                                calendarExpanded = false
-                                navController.navigate(Screen.Workout.name)
-                            }
-                        )
-                    }
+                    // Workout page
+                    BottomNavigationItem(
+                        selected = currentScreen == Screen.Workout,
+                        icon = {
+                            if (currentScreen == Screen.Workout)
+                                Icon(
+                                    painterResource(id = R.drawable.workout_icon),
+                                    tint = AndroidGreen,
+                                    contentDescription = stringResource(id = R.string.workout_page)
+                                )
+                            else
+                                Icon(
+                                    painterResource(id = R.drawable.workout_icon),
+                                    contentDescription = stringResource(id = R.string.workout_page)
+                                )
+                        },
+                        label = {
+                            if (currentScreen == Screen.Workout)
+                                Text(
+                                    text = stringResource(id = R.string.workout_page),
+                                    color = AndroidGreen
+                                )
+                            else
+                                Text(text = stringResource(id = R.string.workout_page))
+                        },
+                        onClick = {
+                            calendarExpanded = false
+                            navController.navigate(Screen.Workout.name)
+                        }
+                    )
                 }
             }
         }

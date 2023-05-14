@@ -9,10 +9,15 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NamedNavArgument
@@ -54,8 +59,6 @@ fun TrackItApp(
     )
 
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-    val topBarState = rememberSaveable { (mutableStateOf(false)) }
-    val floatingButtonState = rememberSaveable{ (mutableStateOf(true)) }
 
     when (backStackEntry?.destination?.route){
         Screen.Profile.name -> {
@@ -75,87 +78,94 @@ fun TrackItApp(
         }
     }
 
-    Scaffold(
-        bottomBar = {
-            BottomBar(
-                selectedDate.value,
-                bottomBarState.value,
-                onDateSelected = {selectedDate.value = it},
-                navController = navController,
-                currentScreen = currentScreen
-            )
-        }
-    ) { innerPadding ->
-        AnimatedNavHost(navController, startDestination = Screen.Profile.name, Modifier.padding(innerPadding)) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        AnimatedNavHost(
+            navController,
+            startDestination = Screen.Profile.name,
+            modifier = Modifier.weight(1f)
+        ) {
+
             composable(
                 route = Screen.Profile.name,
-            ){
+            ) {
                 ProfilePage()
             }
 
             composable(
                 route = Screen.Workout.name,
                 exitTransition = {
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down, animationSpec = tween(250))
+                    ExitTransition.None
                 }
-            ){
+            ) {
                 WorkoutPage(
                     navigateToEntry = {
                         navController.navigate(Screen.WorkoutCategory.name)
                     },
-                    selectedDate.value
+                    selectedDate.value,
                 )
             }
 
             composable(
                 route = Screen.WorkoutCategory.name,
                 enterTransition = {
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down, animationSpec = tween(700))
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(400)
+                    )
                 },
-                popEnterTransition = {
-                    slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Down, animationSpec = tween(700))
-                },
-                popExitTransition = {
-                    slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Up, animationSpec = tween(700))
-                }
-            ){
+            ) {
                 WorkoutCategoryScreen(
-                    onCategorySelect = {categoryId ->
-                        navController.currentBackStackEntry?.savedStateHandle?.set("categoryId", categoryId)
+                    onCategorySelect = { categoryId ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "categoryId",
+                            categoryId
+                        )
                         navController.navigate(Screen.WorkoutExercise.name)
                     },
-                    navigateBack = {navController.popBackStack()}
+                    navigateBack = { navController.popBackStack() }
                 )
             }
 
             composable(
                 route = Screen.WorkoutExercise.name
-            ){
-                val categoryId = navController.previousBackStackEntry?.savedStateHandle?.get<Int>("categoryId")
+            ) {
+                val categoryId =
+                    navController.previousBackStackEntry?.savedStateHandle?.get<Int>("categoryId")
                 WorkoutExerciseScreen(
                     categoryId,
-                    navigateBack = {navController.popBackStack()},
-                    navigateToWorkoutPage = {navController.navigate(Screen.Workout.name)},
+                    navigateBack = { navController.popBackStack() },
+                    navigateToWorkoutPage = { navController.navigate(Screen.Workout.name) },
                     selectedDate = selectedDate.value
-                )}
+                )
+            }
 
             composable(
                 route = Screen.Food.name
-            ){
+            ) {
                 FoodPage(
-                    navigateToEntry = {navController.navigate(Screen.NutritionFood.name)},
+                    navigateToEntry = { navController.navigate(Screen.NutritionFood.name) },
                     selectedDate = selectedDate.value
                 )
             }
 
             composable(
                 route = Screen.NutritionFood.name
-            ){
+            ) {
                 FoodScreen(
                     navigateBack = { navController.popBackStack() },
                     navigateToFoodPage = { navController.navigate(Screen.Food.name) }
                 )
             }
+        }
+
+        if (bottomBarState.value){
+            BottomBar(
+                selectedDate.value,
+                bottomBarState.value,
+                onDateSelected = { selectedDate.value = it },
+                navController = navController,
+                currentScreen = currentScreen
+            )
         }
     }
 }

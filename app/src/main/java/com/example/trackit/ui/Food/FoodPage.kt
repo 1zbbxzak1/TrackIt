@@ -46,105 +46,8 @@ fun FoodPage(
     var dinnerExpanded by remember { mutableStateOf(false) }
     var snackExpanded by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Column {
         Surface(
-            color = Color(android.graphics.Color.parseColor("#99CD4E")),
-            shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
-            modifier = Modifier
-                .height(110.dp)
-                .offset(y = 46.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = "Белки",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(start = 10.dp, top = 35.dp)
-                    )
-                    Text(
-                        text = "${Globals.TotalProteins}",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .offset(x = 4.dp)
-                    )
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = "Жиры",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 35.dp)
-                            .offset(x = (-7).dp)
-                    )
-                    Text(
-                        text = "${Globals.TotalFats}",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .offset(x = (-6).dp)
-                    )
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = "Углеводы",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(top = 35.dp)
-                    )
-                    Text(
-                        text = "${Globals.TotalCarbs}",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .offset(x = (-2).dp)
-                    )
-                }
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = "Ккал",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(top = 35.dp, end = 10.dp)
-                    )
-                    Text(
-                        text = "${Globals.TotalCalories}",
-                        fontSize = 20.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .padding(top = 6.dp)
-                            .offset(x = (-5).dp)
-                    )
-                }
-            }
-        }
-    }
-
-    Surface(
             color = MaterialTheme.colors.primaryVariant,
             shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
             modifier = Modifier
@@ -164,61 +67,159 @@ fun FoodPage(
             }
         }
 
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 200.dp)
-    ) {
-        item {
-            MealPanel(
-                mealType = "Завтрак",
-                mealIcon = R.drawable.breakfast_icon,
-                foods = ListFood.breakfastFoods,
-                isExpanded = breakfastExpanded,
-                onPanelClicked = { breakfastExpanded = !breakfastExpanded },
-                onAddButtonClick = { navigateToEntry() },
-                onDismiss = {item -> Delete.onDeleteBreakfast(item) }
-            )
-            Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
+        Box() {
+            Surface(
+                color = Color(android.graphics.Color.parseColor("#99CD4E")),
+                shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
+                modifier = Modifier
+                    .height(110.dp)
+                    .offset(0.dp, (-16).dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Белки",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(start = 10.dp, top = 35.dp)
+                        )
+                        Text(
+                            text = "${Globals.TotalProteins}",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .offset(x = 4.dp)
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Жиры",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 35.dp)
+                                .offset(x = (-7).dp)
+                        )
+                        Text(
+                            text = "${Globals.TotalFats}",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .offset(x = (-6).dp)
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Углеводы",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(top = 35.dp)
+                        )
+                        Text(
+                            text = "${Globals.TotalCarbs}",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .offset(x = (-2).dp)
+                        )
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(
+                            text = "Ккал",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(top = 35.dp, end = 10.dp)
+                        )
+                        Text(
+                            text = "${Globals.TotalCalories}",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            modifier = Modifier
+                                .padding(top = 6.dp)
+                                .offset(x = (-5).dp)
+                        )
+                    }
+                }
+            }
         }
 
-        item {
-            MealPanel(
-                mealType = "Обед",
-                mealIcon = R.drawable.lunch_icon,
-                foods = ListFood.lunchFoods,
-                isExpanded = lunchExpanded,
-                onPanelClicked = { lunchExpanded = !lunchExpanded },
-                onAddButtonClick = { navigateToEntry() },
-                onDismiss = {item -> Delete.onDeleteLunch(item) }
-            )
-            Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
-        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 50.dp)
+        ) {
+            item {
+                MealPanel(
+                    mealType = "Завтрак",
+                    mealIcon = R.drawable.breakfast_icon,
+                    foods = ListFood.breakfastFoods,
+                    isExpanded = breakfastExpanded,
+                    onPanelClicked = { breakfastExpanded = !breakfastExpanded },
+                    onAddButtonClick = { navigateToEntry() },
+                    onDismiss = {item -> Delete.onDeleteBreakfast(item) }
+                )
+                Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
+            }
 
-        item {
-            MealPanel(
-                mealType = "Ужин",
-                mealIcon = R.drawable.dinner_icon,
-                foods = ListFood.dinnerFoods,
-                isExpanded = dinnerExpanded,
-                onPanelClicked = { dinnerExpanded = !dinnerExpanded },
-                onAddButtonClick = { navigateToEntry() },
-                onDismiss = {item -> Delete.onDeleteDinner(item) }
-            )
-            Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
-        }
+            item {
+                MealPanel(
+                    mealType = "Обед",
+                    mealIcon = R.drawable.lunch_icon,
+                    foods = ListFood.lunchFoods,
+                    isExpanded = lunchExpanded,
+                    onPanelClicked = { lunchExpanded = !lunchExpanded },
+                    onAddButtonClick = { navigateToEntry() },
+                    onDismiss = {item -> Delete.onDeleteLunch(item) }
+                )
+                Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
+            }
 
-        item {
-            MealPanel(
-                mealType = "Перекус",
-                mealIcon = R.drawable.snack_icon,
-                foods = ListFood.snackFoods,
-                isExpanded = snackExpanded,
-                onPanelClicked = { snackExpanded = !snackExpanded },
-                onAddButtonClick = { navigateToEntry() },
-                onDismiss = {item -> Delete.onDeleteSnack(item) }
-            )
+            item {
+                MealPanel(
+                    mealType = "Ужин",
+                    mealIcon = R.drawable.dinner_icon,
+                    foods = ListFood.dinnerFoods,
+                    isExpanded = dinnerExpanded,
+                    onPanelClicked = { dinnerExpanded = !dinnerExpanded },
+                    onAddButtonClick = { navigateToEntry() },
+                    onDismiss = {item -> Delete.onDeleteDinner(item) }
+                )
+                Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
+            }
+
+            item {
+                MealPanel(
+                    mealType = "Перекус",
+                    mealIcon = R.drawable.snack_icon,
+                    foods = ListFood.snackFoods,
+                    isExpanded = snackExpanded,
+                    onPanelClicked = { snackExpanded = !snackExpanded },
+                    onAddButtonClick = { navigateToEntry() },
+                    onDismiss = {item -> Delete.onDeleteSnack(item) }
+                )
+            }
         }
     }
 }
