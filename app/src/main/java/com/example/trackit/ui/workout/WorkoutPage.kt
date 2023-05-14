@@ -2,6 +2,7 @@ package com.example.trackit.ui.workout
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -66,9 +67,11 @@ fun WorkoutPage(
         )
     }
 
-    Scaffold(floatingActionButton = {
-        FloatingButton(Screen.Workout.name, onClick = { navigateToEntry() })
-    }) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingButton(Screen.Workout.name, onClick = { navigateToEntry() })
+        }
+    ) {
         Column(
             modifier = modifier.padding(bottom = it.calculateBottomPadding()),
             horizontalAlignment = Alignment.CenterHorizontally
