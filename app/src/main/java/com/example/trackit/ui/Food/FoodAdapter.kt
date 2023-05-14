@@ -8,11 +8,18 @@ import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trackit.R
 
-class FoodAdapter(var foodList: MutableList<FoodData>,
-                  val context: Context,
-                  val onFoodItemClickListener: OnFoodItemClickListener) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
+class FoodAdapter(
+    var foodList: MutableList<FoodData>,
+    val context: Context,
+    val onFoodItemClickListener: OnFoodItemClickListener) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
     interface OnFoodItemClickListener {
         fun onFoodItemClick(food: FoodData)
+    }
+
+    private var filteredList: MutableList<FoodData> = mutableListOf()
+
+    init {
+        filteredList.addAll(foodList)
     }
 
     inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -35,8 +42,8 @@ class FoodAdapter(var foodList: MutableList<FoodData>,
         }
     }
 
-    fun setFilteredList(foodList: MutableList<FoodData>) {
-        this.foodList = foodList
+    fun setFilteredList(filteredList: MutableList<FoodData>) {
+        this.filteredList = filteredList
         notifyDataSetChanged()
     }
 
@@ -46,15 +53,11 @@ class FoodAdapter(var foodList: MutableList<FoodData>,
     }
 
     override fun getItemCount(): Int {
-        return foodList.size
+        return filteredList.size
     }
 
     override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        val food = foodList[position]
+        val food = filteredList[position]
         holder.bind(food)
-    }
-
-    fun getData(): MutableList<FoodData> {
-        return foodList
     }
 }

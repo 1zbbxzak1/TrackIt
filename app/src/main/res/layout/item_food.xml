@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nutrition_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,18 +12,12 @@
         android:id="@+id/add_cardview"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         app:cardCornerRadius="20dp"
-        android:elevation="15dp"
+        app:cardElevation="8dp"
         app:cardBackgroundColor="#EFEFEF">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:elevation="15dp">
 
             <Button
                 android:id="@+id/create_food"
@@ -37,17 +32,16 @@
                 android:textAllCaps="false"
                 android:textColor="#3B4446"
                 android:textSize="20sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                tools:ignore="RtlSymmetry" />
 
             <Button
                 android:id="@+id/addButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="335dp"
                 android:background="@drawable/add_product" />
-
-        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -55,7 +49,7 @@
         android:id="@+id/frame_74"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="55dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:padding="10dp"
@@ -154,6 +148,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="1dp"
+        android:background="@android:color/transparent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </LinearLayout>

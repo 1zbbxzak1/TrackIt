@@ -60,55 +60,17 @@ fun FoodScreen(
         }
     }
 
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { context ->
-            LayoutInflater.from(context).inflate(R.layout.item_food, null)
+    val filteredFoodList = remember {
+        derivedStateOf {
+            val query = searchQuery.value.text.lowercase(Locale.ROOT)
+            if (query.isNotEmpty()) {
+                foodList.filter { food ->
+                    food.name.lowercase(Locale.ROOT).contains(query)
+                }.toMutableList()
+            } else {
+                foodList.toMutableList()
+            }
         }
-    ) { view ->
-        recyclerView = view.findViewById(R.id.product_list)
-        recyclerView.setHasFixedSize(true)
-        val layoutManager = LinearLayoutManager(context)
-
-        foodAdapter = FoodAdapter(foodList, context, onFoodItemClickListener)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = foodAdapter
-
-//        // Функционал кнопки "Назад"
-//        val prev = view.findViewById<Button>(R.id.previous)
-//        prev.setOnClickListener { navigateBack() }
-
-        // Функционал поиска продуктов
-//        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return false
-//            }
-//
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                filterList(newText)
-//                return true
-//            }
-
-//            fun filterList(query: String?) {
-//                if (query != null) {
-//                    val filteredList = ArrayList<FoodData>()
-//                    for (i in NedoFoodList) {
-//                        if (i.name.lowercase(Locale.ROOT).contains(query)) {
-//                            filteredList.add(i)
-//                        }
-//                    }
-//
-//                    if (filteredList.isEmpty()) {
-//                        Toast.makeText(context, "Продукт не найден", Toast.LENGTH_SHORT).show()
-//                    } else {
-//                        foodAdapter.setFilteredList(filteredList)
-//                    }
-//                }
-//            }
-//        })
-
-        // добавление продукта в общий список
-        setupFoodList(context, view, foodList, foodAdapter)
     }
 
     Column(
@@ -140,14 +102,26 @@ fun FoodScreen(
                 }
             }
             Spacer(modifier = Modifier.width(10.dp))
-            Card(
-                modifier = Modifier,
-                shape = RoundedCornerShape(20.dp),
-                backgroundColor = Color(0xFFefefef),
-                elevation = 15.dp
-            ) {
-                SearchView(state = searchQuery)
+
+            SearchView(state = searchQuery)
+        }
+
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                LayoutInflater.from(context).inflate(R.layout.item_food, null)
             }
+        ) { view ->
+            recyclerView = view.findViewById(R.id.product_list)
+            recyclerView.setHasFixedSize(true)
+            val layoutManager = LinearLayoutManager(context)
+
+            foodAdapter = FoodAdapter(filteredFoodList.value, context, onFoodItemClickListener)
+            recyclerView.layoutManager = layoutManager
+            recyclerView.adapter = foodAdapter
+
+            // добавление продукта в общий список
+            setupFoodList(context, view, filteredFoodList.value, foodAdapter)
         }
     }
 }
