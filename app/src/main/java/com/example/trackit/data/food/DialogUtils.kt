@@ -16,7 +16,11 @@ import com.google.gson.reflect.TypeToken
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-fun showAddDialog(food: FoodData, context: Context) {
+fun showAddDialog(
+    food: FoodData,
+    context: Context,
+    navigateToFoodPage: () -> Unit
+) {
 
     val builder = Dialog(context)
     builder.setContentView(R.layout.add_food_to_main)
@@ -152,6 +156,7 @@ fun showAddDialog(food: FoodData, context: Context) {
                     }
                 }
                 builder.dismiss()
+                navigateToFoodPage()
             }
         }
     }
@@ -167,13 +172,20 @@ fun setupFoodList(
     context: Context,
     view: View,
     foodList: MutableList<FoodData>,
-    foodAdapter: FoodAdapter) {
+    foodAdapter: FoodAdapter
+) {
     val dialogAddButton = Dialog(context)
     dialogAddButton.setContentView(R.layout.dialog_add_food)
 
     // Кнопка для добавления продукта питания в общий список
     val addButton = view.findViewById<Button>(R.id.addButton)
     addButton.setOnClickListener {
+        dialogAddButton.window?.setBackgroundDrawableResource(android.R.color.transparent) // удаление стандартного фона
+        dialogAddButton.show()
+    }
+
+    val add_Button = view.findViewById<Button>(R.id.create_food)
+    add_Button.setOnClickListener {
         dialogAddButton.window?.setBackgroundDrawableResource(android.R.color.transparent) // удаление стандартного фона
         dialogAddButton.show()
     }
@@ -218,6 +230,20 @@ fun setupFoodList(
 
             // Закрываем диалоговое окно
             dialogAddButton.dismiss()
+
+            // Сбросить введенные значения
+            nameEditText.text.clear()
+            proteinEditText.text.clear()
+            fatEditText.text.clear()
+            carbsEditText.text.clear()
+            caloriesEditText.text.clear()
+
+            nameEditText.clearFocus()
+            proteinEditText.clearFocus()
+            fatEditText.clearFocus()
+            carbsEditText.clearFocus()
+            caloriesEditText.clearFocus()
+
         } else {
             Toast.makeText(context, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show()
         }

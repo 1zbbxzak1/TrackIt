@@ -1,45 +1,53 @@
-//package com.example.trackit.ui.statistics
+package com.example.trackit.ui.statistics
 //
-//import android.security.identity.CredentialDataResult.Entries
+//import android.annotation.SuppressLint
 //import androidx.compose.runtime.Composable
 //import androidx.compose.ui.Modifier
 //import androidx.compose.ui.tooling.preview.Preview
-//import com.example.trackit.ui.theme.TrackItTheme
-//import com.patrykandpatrick.vico.compose.chart.Chart
-//import com.patrykandpatrick.vico.core.axis.AxisPosition
-//import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
-//import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-//import com.patrykandpatrick.vico.core.entry.FloatEntry
-//import com.patrykandpatrick.vico.core.entry.entriesOf
-//import com.patrykandpatrick.vico.core.entry.entryModelOf
-//import com.patrykandpatrick.vico.core.marker.Marker
-//import java.security.KeyStore.Entry
-//import java.time.LocalDate
+//import androidx.compose.foundation.layout.*
+//import androidx.compose.material.*
+//import androidx.compose.ui.unit.dp
+//import com.example.trackit.ui.theme.Margins.horizontal
+//import com.example.trackit.ui.theme.Margins.vertical
+//import com.github.tehras.charts.line.LineChart
 //
+//@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 //@Composable
-//fun WeightChart(
-//    weightsWithDate: List<Pair<LocalDate, Float>>,
-//    modifier: Modifier = Modifier
-//){
-//    val bottomAxisValueFormatter =
-//        AxisValueFormatter<AxisPosition.Horizontal.Bottom> { x, _ -> weightsWithDate[x.toInt()].first.toString() }
-//
-//    //Chart(
-//    //    chart = ,
-//    //    model =
-//    //)
-//
+//fun LineChartScreen() {
+//    LineChartScreenContent()
 //}
 //
-//@Preview(showBackground = true, showSystemUi = true)
 //@Composable
-//fun WeightChartPreview(){
-//    TrackItTheme {
-//        val chartEntryModelProducer  = listOf(
-//            LocalDate.now().minusDays(1) to 2f,
-//            LocalDate.now() to 4f
-//        )
+//fun LineChartScreenContent() {
+//    val lineChartDataModel = LineChartDataModel()
 //
-//        //WeightChart(weights)
+//    Column(
+//        modifier = Modifier.padding(
+//            horizontal = horizontal,
+//            vertical = vertical
+//        )
+//    ) {
+//        LineChartRow(lineChartDataModel)
 //    }
 //}
+//
+//@Composable
+//fun LineChartRow(lineChartDataModel: LineChartDataModel) {
+//    Box(
+//        modifier = Modifier
+//            .height(150.dp)
+//            .fillMaxWidth()
+//            .offset(y = 350.dp)
+//    ) {
+//
+//        LineChart(
+//            linesChartData = listOf(lineChartDataModel.lineChartData),
+//            horizontalOffset = lineChartDataModel.horizontalOffset,
+//            pointDrawer = lineChartDataModel.pointDrawer
+//        )
+//    }
+//}
+//
+//@Preview
+//@Composable
+//fun LineChartPreview() = LineChartScreen()

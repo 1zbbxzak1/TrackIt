@@ -24,7 +24,7 @@ import com.example.trackit.ui.theme.TrackItTheme
 @SuppressLint("InflateParams", "SuspiciousIndentation")
 @Composable
 fun ProfilePage() {
-    val context = LocalContext.current // Получить контекст из LocalContextProvider
+    val context = LocalContext.current
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
@@ -130,7 +130,7 @@ fun ProfilePage() {
                  setTextColorForSelectedRadioButton(view, savedSelection, R.color.white)
              }
         }
-
+//    LineChartScreen()
 }
 
 // Сохранение введенного значения
@@ -181,6 +181,5 @@ fun setTextColorForSelectedRadioButton(view: View, selectedId: Int, color: Int) 
 @Composable
 fun PreviewHomePage(){
     TrackItTheme {
-
     }
 }
