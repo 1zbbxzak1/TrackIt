@@ -2,6 +2,7 @@ package com.example.trackit.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +33,8 @@ val EmptyCaption = TextStyle(
 val CalendarDayTextStyle = TextStyle(
     fontFamily = FontFamily.Default,
     fontWeight = FontWeight.Bold,
-    fontSize = 20.sp
+    fontSize = 20.sp,
+    platformStyle = PlatformTextStyle(includeFontPadding = false)
 )
 
 val DialogTextStyle = TextStyle(

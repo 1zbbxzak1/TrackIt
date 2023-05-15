@@ -1,7 +1,18 @@
 package com.example.trackit.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectableGroup
@@ -16,9 +27,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -29,7 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -51,20 +66,35 @@ fun BottomBar(
         mutableStateOf(false)
     }
 
-    if (barState) {
-        Column(Modifier.background(MaterialTheme.colors.background)) {
+    AnimatedVisibility(
+            visible = barState,
+            enter = slideInVertically(
+                initialOffsetY = { it },
+                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
+            ),
+            exit = ExitTransition.None
+//            exit = slideOutVertically (
+//                targetOffsetY = { it },
+//                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
+//            ),
+        ) {
+        Column(
+            modifier = Modifier
+                .background(Color.Transparent)
+        ) {
             ExpandableCalendar(
                 calendarExpanded,
-                {calendarExpanded = !calendarExpanded},
+                { calendarExpanded = !calendarExpanded },
                 onDateSelected = { onDateSelected(it) },
-                currentDate
+                currentDate,
+                modifier = Modifier.background(Color.Transparent)
             )
 
             // Нижняя панель навигации
             Surface(
-                    color = MaterialTheme.colors.primaryVariant,
-                    contentColor = contentColorFor(MaterialTheme.colors.primaryVariant),
-                    //shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                color = MaterialTheme.colors.primaryVariant,
+                contentColor = contentColorFor(MaterialTheme.colors.primaryVariant),
+                //shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
             ) {
                 Row(
                     Modifier
@@ -331,7 +361,8 @@ fun SearchView(state: MutableState<TextFieldValue>, modifier: Modifier = Modifie
                 Icon(
                     painterResource(id = R.drawable.search), tint = CaptionColor,
                     contentDescription = null, modifier = Modifier
-                        .size(18.dp).requiredSize(18.dp)
+                        .size(18.dp)
+                        .requiredSize(18.dp)
                 )
 
                 Box(

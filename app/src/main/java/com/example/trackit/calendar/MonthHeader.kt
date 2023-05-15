@@ -33,7 +33,9 @@ fun MonthHeader(
         color = MaterialTheme.colors.primaryVariant
     ) {
         Column(
-            modifier = modifier.clickable { onClick() }.background(Arsenic),
+            modifier = modifier
+                //.clickable { onClick() }
+                .background(Arsenic),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
