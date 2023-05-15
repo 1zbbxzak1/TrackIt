@@ -57,10 +57,10 @@ val preCreatedCategoryList = listOf(
         CardioExercise("Упражнение \"Ножницы\"", Duration.ZERO)
     ), R.drawable.abdominal),
     WorkoutCategory(7,"Кардио", mutableListOf(
-        CardioExercise("Бег", Duration.ZERO),
+        CardioExercise("Плавание", Duration.ZERO),
+        StrengthExercise("Бёрпи", 0, 0, 0),
         CardioExercise("Прыжки на скакалке", Duration.ZERO),
         CardioExercise("Велотренажер", Duration.ZERO),
-        StrengthExercise("Бёрпи", 0, 0, 0),
-        CardioExercise("Плавание", Duration.ZERO)
+        CardioExercise("Бег", Duration.ZERO),
     ), R.drawable.cardio)
 )

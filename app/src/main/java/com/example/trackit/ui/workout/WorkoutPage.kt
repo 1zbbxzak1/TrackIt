@@ -96,6 +96,7 @@ fun WorkoutPage(
             WorkoutBody(
                 selectedDate,
                 itemList = workoutUiState.itemList,
+                isLoading = workoutUiState.isLoading,
                 onDismiss = {item -> coroutineScope.launch {
                     viewModel.deleteItem(item)
                 }},
@@ -136,12 +137,13 @@ fun WorkoutPage(
 private fun WorkoutBody(
     selectedDate: LocalDate,
     itemList: List<WorkoutEntity>,
+    isLoading: Boolean,
     onDismiss: (WorkoutEntity) -> Unit,
     onCheckedChange: (WorkoutEntity) -> Unit,
     onEdit: (WorkoutEntity) -> Unit,
     modifier: Modifier = Modifier
 ){
-    WorkoutList(selectedDate, itemList, onDismiss, onCheckedChange, onEdit, modifier)
+    WorkoutList(selectedDate, itemList, isLoading, onDismiss, onCheckedChange, onEdit, modifier)
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -149,6 +151,7 @@ private fun WorkoutBody(
 private fun WorkoutList(
     selectedDate: LocalDate,
     itemList: List<WorkoutEntity>,
+    isLoading: Boolean,
     onDismiss: (WorkoutEntity) -> Unit,
     onCheckedChange: (WorkoutEntity) -> Unit,
     onEdit: (WorkoutEntity) -> Unit,
@@ -168,7 +171,7 @@ private fun WorkoutList(
             }
         }
 
-        if (itemList.isEmpty()){
+        if (itemList.isEmpty() && !isLoading){
             item(){
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,

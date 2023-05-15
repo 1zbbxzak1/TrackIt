@@ -17,14 +17,15 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
     val selectedDate = mutableStateOf(LocalDate.now())
 
 
-    private val _workoutUiState = MutableStateFlow(WorkoutUiState())
+    private val _workoutUiState = MutableStateFlow(WorkoutUiState(isLoading = true))
 
     val workoutUiState: StateFlow<WorkoutUiState> = _workoutUiState
 
     suspend fun updateItem(item: WorkoutEntity){
         repository.updateItem(item)
+        _workoutUiState.value = _workoutUiState.value.copy(isLoading = true)
         viewModelScope.launch {
-            _workoutUiState.value = repository.getItemsOnDate(selectedDate.value).map { WorkoutUiState(it) }.first()
+            _workoutUiState.value = repository.getItemsOnDate(selectedDate.value).map { WorkoutUiState(it) }.first().copy(isLoading = false)
         }
     }
 
@@ -43,4 +44,7 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
     }
 }
 
-data class WorkoutUiState(val itemList: List<WorkoutEntity> = listOf())
+data class WorkoutUiState(
+    val itemList: List<WorkoutEntity> = listOf(),
+    val isLoading: Boolean = false
+)
