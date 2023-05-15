@@ -363,8 +363,7 @@ private fun FoodDelete(
                             food = item,
                             modifier = Modifier.padding(
                                 start = 16.dp,
-                                end = 16.dp,
-                                top = if (item.id == 0) 16.dp else 0.dp
+                                end = 16.dp
                             ),
                             index = item.id
                         )
@@ -383,7 +382,7 @@ private fun FoodDelete(
 fun FoodCard(
     food: FoodData,
     modifier: Modifier,
-    index: Int
+    index: String
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),

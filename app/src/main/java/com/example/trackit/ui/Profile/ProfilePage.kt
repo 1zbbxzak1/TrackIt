@@ -7,6 +7,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -17,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavHostController
 import com.example.trackit.R
 import com.example.trackit.ui.theme.TrackItTheme
 
@@ -79,6 +80,15 @@ fun ProfilePage() {
 
                  override fun afterTextChanged(s: Editable) {}
              })
+
+             weight.setOnEditorActionListener { _, actionId, _ ->
+                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                     weight.clearFocus()
+                     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                     inputMethodManager.hideSoftInputFromWindow(weight.windowToken, 0)
+                 }
+                 false
+             }
 
              //
              //

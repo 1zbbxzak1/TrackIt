@@ -5,7 +5,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.trackit.ui.Nutrition.FoodData
+import java.util.*
 import kotlin.math.roundToInt
+
+fun generateUniqueID(): String {
+    return UUID.randomUUID().toString()
+}
 
 object Globals {
     var TotalProteins by mutableStateOf(0)

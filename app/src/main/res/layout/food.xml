@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="85dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:paddingBottom="3dp"
@@ -31,59 +31,59 @@
                 android:text="Name"
                 android:textColor="#3b4446"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"/>
 
             <TextView
                 android:id="@+id/protein_text"
-                android:layout_width="42dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="pr"
                 android:textAlignment="center"
                 android:textColor="#3b4446"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/fat_text"
-                android:layout_width="46dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="16dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="f"
                 android:textAlignment="center"
                 android:textColor="#3b4446"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/carbs_text"
-                android:layout_width="47dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="28dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="car"
                 android:textAlignment="center"
                 android:textColor="#3b4446"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/calories_text"
-                android:layout_width="50dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="cal"
                 android:textAlignment="center"
                 android:textColor="#3b4446"
                 android:textSize="16sp"
-                android:textStyle="normal" />
+                android:textStyle="normal"
+                android:layout_weight="1"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

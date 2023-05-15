@@ -73,9 +73,8 @@
                     <TextView
                         android:id="@+id/height_label"
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="1dp"
                         android:gravity="center_horizontal"
                         android:text="Рост"
                         android:fontFamily="sans-serif-medium"
@@ -85,7 +84,7 @@
                     <EditText
                         android:id="@+id/height_edit_text"
                         android:layout_width="35dp"
-                        android:layout_height="25dp"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="190dp"
                         android:background="@null"
                         android:hint="..."
@@ -95,7 +94,7 @@
                     <TextView
                         android:id="@+id/h_label"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="0dp"
                         android:text="см"
@@ -135,9 +134,8 @@
                     <TextView
                         android:id="@+id/age_label"
                         android:layout_width="wrap_content"
-                        android:layout_height="25dp"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="1dp"
                         android:gravity="center_horizontal"
                         android:text="Возраст"
                         android:fontFamily="sans-serif-medium"
@@ -148,7 +146,7 @@
                         android:id="@+id/age_edit_text"
                         android:background="@null"
                         android:layout_width="40dp"
-                        android:layout_height="25dp"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="180dp"
                         android:hint="..."
                         android:fontFamily="sans-serif-medium"
@@ -186,9 +184,8 @@
                 <TextView
                     android:id="@+id/weight_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="25dp"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="1dp"
                     android:gravity="center_horizontal"
                     android:text="Вес"
                     android:fontFamily="sans-serif-medium"
@@ -198,9 +195,9 @@
                 <EditText
                     android:id="@+id/weight_edit_text"
                     android:background="@null"
-                    android:layout_width="40dp"
-                    android:layout_height="25dp"
-                    android:layout_marginStart="200dp"
+                    android:layout_width="35dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="205dp"
                     android:hint="..."
                     android:fontFamily="sans-serif-medium"
                     android:inputType="numberDecimal" />
@@ -208,8 +205,8 @@
                 <TextView
                     android:id="@+id/w_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
                     android:text="кг"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/black"

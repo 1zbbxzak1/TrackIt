@@ -1,4 +1,4 @@
-package com.example.trackit.ui.Food
+package com.example.trackit.data.food
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -7,13 +7,13 @@ import android.view.View
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.trackit.R
-import com.example.trackit.data.food.Globals
-import com.example.trackit.data.food.ListFood
 import com.example.trackit.ui.*
 import com.example.trackit.ui.Nutrition.FoodAdapter
 import com.example.trackit.ui.Nutrition.FoodData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToInt
 
@@ -45,7 +45,6 @@ fun showAddDialog(
     caloriesTextView.text = food.calories.toString()
 
     val addButton = builder.findViewById<Button>(R.id.add_button_food)
-    var canAddFood = false // флаг, указывающий, можно ли добавить продукт
 
     val radioFood = builder.findViewById<RadioGroup>(R.id.radio_group_food)
     val breakfast = builder.findViewById<Button>(R.id.breakfast)
@@ -106,8 +105,7 @@ fun showAddDialog(
             return@setOnClickListener
         }
         val factor = gramsEntered / 100.0 // отношение введенного количества грамм к 100 г
-        val checkedId = radioFood.checkedRadioButtonId
-        when (checkedId) {
+        when (val checkedId = radioFood.checkedRadioButtonId) {
             -1 -> {
                 Toast.makeText(
                     context,
@@ -118,7 +116,7 @@ fun showAddDialog(
             }
             else -> {
                 val newFood = FoodData(
-                    id = food.id,
+                    id = generateUniqueID(),
                     name = food.name,
                     protein = round(food.protein * factor * 10.0) / 10.0,
                     fat = round(food.fat * factor * 10.0) / 10.0,
@@ -186,8 +184,8 @@ fun setupFoodList(
         dialogAddButton.show()
     }
 
-    val add_Button = view.findViewById<Button>(R.id.create_food)
-    add_Button.setOnClickListener {
+    val addButton1 = view.findViewById<Button>(R.id.create_food)
+    addButton1.setOnClickListener {
         dialogAddButton.window?.setBackgroundDrawableResource(android.R.color.transparent) // удаление стандартного фона
         dialogAddButton.show()
     }
@@ -219,7 +217,7 @@ fun setupFoodList(
 
         if (name.isNotEmpty() && protein.isNotEmpty() && fat.isNotEmpty() && carbs.isNotEmpty() && calories.isNotEmpty()) {
             // Создаем новый элемент
-            val newFood = FoodData(0, name, protein.toDouble(), fat.toDouble(), carbs.toDouble(), calories.toDouble(), 0)
+            val newFood = FoodData(generateUniqueID(), name, protein.toDouble(), fat.toDouble(), carbs.toDouble(), calories.toDouble(), 0)
 
             // Добавляем элемент в список
             foodList.add(newFood)
