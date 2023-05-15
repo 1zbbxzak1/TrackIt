@@ -1,5 +1,6 @@
 package com.example.trackit.ui.Nutrition
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trackit.R
 
 class FoodAdapter(
-    var foodList: MutableList<FoodData>,
+    foodList: MutableList<FoodData>,
     val context: Context,
     val onFoodItemClickListener: OnFoodItemClickListener) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
     interface OnFoodItemClickListener {
         fun onFoodItemClick(food: FoodData)
     }
 
-    private var filteredList: MutableList<FoodData> = mutableListOf()
-
-    init {
-        filteredList.addAll(foodList)
-    }
+    private var filteredList: MutableList<FoodData> = foodList.toMutableList()
 
     inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameFood: TextView = itemView.findViewById(R.id.name_food)
@@ -42,6 +39,7 @@ class FoodAdapter(
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setFilteredList(filteredList: MutableList<FoodData>) {
         this.filteredList = filteredList
         notifyDataSetChanged()

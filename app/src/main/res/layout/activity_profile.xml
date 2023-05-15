@@ -84,9 +84,9 @@
 
                     <EditText
                         android:id="@+id/height_edit_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="35dp"
                         android:layout_height="25dp"
-                        android:layout_marginStart="200dp"
+                        android:layout_marginStart="190dp"
                         android:background="@null"
                         android:hint="..."
                         android:fontFamily="sans-serif-medium"
@@ -147,9 +147,9 @@
                     <EditText
                         android:id="@+id/age_edit_text"
                         android:background="@null"
-                        android:layout_width="wrap_content"
+                        android:layout_width="40dp"
                         android:layout_height="25dp"
-                        android:layout_marginStart="185dp"
+                        android:layout_marginStart="180dp"
                         android:hint="..."
                         android:fontFamily="sans-serif-medium"
                         android:inputType="numberDecimal" />
@@ -198,9 +198,9 @@
                 <EditText
                     android:id="@+id/weight_edit_text"
                     android:background="@null"
-                    android:layout_width="wrap_content"
+                    android:layout_width="40dp"
                     android:layout_height="25dp"
-                    android:layout_marginStart="212dp"
+                    android:layout_marginStart="200dp"
                     android:hint="..."
                     android:fontFamily="sans-serif-medium"
                     android:inputType="numberDecimal" />
@@ -304,4 +304,16 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+<!--    <com.github.mikephil.charting.charts.LineChart-->
+<!--        android:id="@+id/weight_chart"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="250dp"-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:background="@color/white"-->
+<!--        />-->
+
+
     </LinearLayout>

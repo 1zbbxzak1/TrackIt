@@ -61,6 +61,10 @@ fun ProfilePage() {
                  override fun afterTextChanged(s: Editable) {}
              })
 
+             //
+             //
+             //
+
              val weight = view.findViewById<EditText>(R.id.weight_edit_text)
              val sharedPreferencesKeyW = "weight"
              val savedWeight = loadFromSharedPreferences(context, sharedPreferencesKeyW, "")
@@ -74,6 +78,10 @@ fun ProfilePage() {
 
                  override fun afterTextChanged(s: Editable) {}
              })
+
+             //
+             //
+             //
 
              val genderRadioGroup = view.findViewById<RadioGroup>(R.id.radio_group_gender)
              val fem = view.findViewById<RadioButton>(R.id.femaleRadioButton)

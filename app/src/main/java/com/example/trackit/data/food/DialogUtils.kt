@@ -226,7 +226,7 @@ fun setupFoodList(
             saveFoodItems()
 
             // Обновляем адаптер
-            foodAdapter.notifyDataSetChanged()
+            foodAdapter.setFilteredList(foodList)
 
             // Закрываем диалоговое окно
             dialogAddButton.dismiss()
