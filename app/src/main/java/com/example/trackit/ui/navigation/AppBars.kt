@@ -72,10 +72,11 @@ fun BottomBar(
                 initialOffsetY = { it },
                 animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
             ),
-            exit = slideOutVertically (
-                targetOffsetY = { it },
-                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
-            ),
+            exit = ExitTransition.None
+//            exit = slideOutVertically (
+//                targetOffsetY = { it },
+//                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
+//            ),
         ) {
         Column(
             modifier = Modifier

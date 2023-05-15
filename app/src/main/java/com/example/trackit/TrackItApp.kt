@@ -2,6 +2,7 @@ package com.example.trackit
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
@@ -93,7 +94,16 @@ fun TrackItApp(
 
             composable(
                 route = Screen.Workout.name,
+                enterTransition = {
+                    EnterTransition.None
+                },
                 exitTransition = {
+                    ExitTransition.None
+                },
+                popEnterTransition = {
+                    fadeIn()
+                },
+                popExitTransition = {
                     ExitTransition.None
                 }
             ) {
@@ -109,10 +119,25 @@ fun TrackItApp(
                 route = Screen.WorkoutCategory.name,
                 enterTransition = {
                     slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        AnimatedContentTransitionScope.SlideDirection.Left,
                         animationSpec = tween(400)
                     )
                 },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(400)
+                    )
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                },
+                popExitTransition = {
+                    fadeOut()
+                }
             ) {
                 WorkoutCategoryScreen(
                     onCategorySelect = { categoryId ->
@@ -127,7 +152,25 @@ fun TrackItApp(
             }
 
             composable(
-                route = Screen.WorkoutExercise.name
+                route = Screen.WorkoutExercise.name,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(400)
+                    )
+                },
+                exitTransition = {
+                    ExitTransition.None
+                },
+                popEnterTransition = {
+                    EnterTransition.None
+                },
+                popExitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                }
             ) {
                 val categoryId =
                     navController.previousBackStackEntry?.savedStateHandle?.get<Int>("categoryId")
@@ -140,7 +183,10 @@ fun TrackItApp(
             }
 
             composable(
-                route = Screen.Food.name
+                route = Screen.Food.name,
+                popEnterTransition = {
+                    fadeIn()
+                },
             ) {
                 FoodPage(
                     navigateToEntry = { navController.navigate(Screen.NutritionFood.name) },
@@ -149,7 +195,28 @@ fun TrackItApp(
             }
 
             composable(
-                route = Screen.NutritionFood.name
+                route = Screen.NutritionFood.name,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                },
+                exitTransition = {
+                    slideOutOfContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Left,
+                        animationSpec = tween(400)
+                    )
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                },
+                popExitTransition = {
+                    ExitTransition.None
+                }
             ) {
                 FoodScreen(
                     navigateBack = { navController.popBackStack() },
@@ -158,7 +225,7 @@ fun TrackItApp(
             }
         }
 
-        if (bottomBarState.value){
+        //if (bottomBarState.value){
             BottomBar(
                 selectedDate.value,
                 bottomBarState.value,
@@ -166,7 +233,7 @@ fun TrackItApp(
                 navController = navController,
                 currentScreen = currentScreen
             )
-        }
+        //}
     }
 }
 

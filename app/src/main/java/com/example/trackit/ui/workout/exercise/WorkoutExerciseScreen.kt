@@ -51,7 +51,8 @@ fun WorkoutExerciseScreen(
     val creationDialogState = remember { mutableStateOf(false) }
     val addDialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
-    var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
+    //var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
+    var selectedExercise by remember { mutableStateOf<Exercise>(CardioExercise("", Duration.ZERO)) }
 
     Column {
             ExerciseTopBar(selectedCategory.name,selectedCategory.icon, navigateBack)
@@ -183,7 +184,7 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            items(itemList) { item ->
+            items(itemList.reversed()) { item ->
                 WorkoutExerciseItem(item, onClick, onDelete)
             }
 
