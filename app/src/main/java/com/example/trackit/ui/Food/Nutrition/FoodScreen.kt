@@ -60,16 +60,14 @@ fun FoodScreen(
         }
     }
 
-    val filteredFoodList = remember {
-        derivedStateOf {
-            val query = searchQuery.value.text.lowercase(Locale.ROOT)
-            if (query.isNotEmpty()) {
-                foodList.filter { food ->
-                    food.name.lowercase(Locale.ROOT).contains(query)
-                }.toMutableList()
-            } else {
-                foodList.toMutableList()
-            }
+    val filteredFoodList = remember(searchQuery.value, foodList) {
+        val query = searchQuery.value.text.lowercase(Locale.ROOT)
+        if (query.isNotEmpty()) {
+            foodList.filter { food ->
+                food.name.lowercase(Locale.ROOT).contains(query)
+            }.toMutableList()
+        } else {
+            foodList
         }
     }
 
@@ -116,12 +114,12 @@ fun FoodScreen(
             recyclerView.setHasFixedSize(true)
             val layoutManager = LinearLayoutManager(context)
 
-            foodAdapter = FoodAdapter(filteredFoodList.value, context, onFoodItemClickListener)
+            foodAdapter = FoodAdapter(filteredFoodList, context, onFoodItemClickListener)
             recyclerView.layoutManager = layoutManager
             recyclerView.adapter = foodAdapter
 
             // добавление продукта в общий список
-            setupFoodList(context, view, filteredFoodList.value, foodAdapter)
+            setupFoodList(context, view, filteredFoodList, foodAdapter)
         }
     }
 }

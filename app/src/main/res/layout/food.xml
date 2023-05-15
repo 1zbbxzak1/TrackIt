@@ -77,7 +77,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="18dp"
+                android:layout_marginStart="14dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="cal"
                 android:textAlignment="center"

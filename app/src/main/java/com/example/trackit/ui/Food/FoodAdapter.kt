@@ -17,7 +17,11 @@ class FoodAdapter(
         fun onFoodItemClick(food: FoodData)
     }
 
-    private var filteredList: MutableList<FoodData> = foodList.toMutableList()
+    private var filteredList: MutableList<FoodData> = mutableListOf()
+
+    init {
+        filteredList.addAll(foodList)
+    }
 
     inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameFood: TextView = itemView.findViewById(R.id.name_food)
@@ -41,7 +45,7 @@ class FoodAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun setFilteredList(filteredList: MutableList<FoodData>) {
-        this.filteredList = filteredList
+        this.filteredList.addAll(filteredList)
         notifyDataSetChanged()
     }
 

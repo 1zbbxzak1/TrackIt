@@ -1,5 +1,6 @@
 package com.example.trackit.ui.Food
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.view.View
@@ -168,6 +169,7 @@ fun showAddDialog(
     builder.show()
 }
 
+@SuppressLint("NotifyDataSetChanged")
 fun setupFoodList(
     context: Context,
     view: View,
