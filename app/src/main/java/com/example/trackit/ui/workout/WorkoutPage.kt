@@ -2,6 +2,7 @@ package com.example.trackit.ui.workout
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.trackit.FloatingButton
 import com.example.trackit.R
 import com.example.trackit.data.Screen
@@ -36,6 +38,7 @@ import com.example.trackit.data.workout.StrengthExercise
 import com.example.trackit.data.workout.WorkoutCategory
 import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
+import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.*
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -66,9 +69,11 @@ fun WorkoutPage(
         )
     }
 
-    Scaffold(floatingActionButton = {
-        FloatingButton(Screen.Workout.name, onClick = { navigateToEntry() })
-    }) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingButton(Screen.Workout.name, onClick = { navigateToEntry() })
+        },
+    ) {
         Column(
             modifier = modifier.padding(bottom = it.calculateBottomPadding()),
             horizontalAlignment = Alignment.CenterHorizontally

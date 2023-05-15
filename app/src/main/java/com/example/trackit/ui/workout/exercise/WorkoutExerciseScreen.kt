@@ -34,7 +34,6 @@ import java.time.Duration
 import java.time.LocalDate
 import java.util.*
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutExerciseScreen(
@@ -52,13 +51,12 @@ fun WorkoutExerciseScreen(
     val creationDialogState = remember { mutableStateOf(false) }
     val addDialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
-    var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
+    //var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
+    var selectedExercise by remember { mutableStateOf<Exercise>(CardioExercise("", Duration.ZERO)) }
 
-    Scaffold(
-        topBar = { ExerciseTopBar(selectedCategory.name,selectedCategory.icon, navigateBack) },
-    ) {
+    Column {
+            ExerciseTopBar(selectedCategory.name,selectedCategory.icon, navigateBack)
 
-        Column() {
             Card(
                 onClick = { creationDialogState.value = true },
                 modifier = Modifier
@@ -106,27 +104,35 @@ fun WorkoutExerciseScreen(
             )
         }
 
-        if (creationDialogState.value) {
-            CreateNewExerciseDialog(
-                onAddExercise = {exercise ->
-                    coroutineScope.launch {
-                        viewModel.updateExercise(exercise)
-                    }
-                },
-                onDismiss = { creationDialogState.value = false }
-            )
-        } else if (addDialogState.value){
-            ExerciseDialog(
-                selectedExercise = selectedExercise,
-                onAddExercise = { exercise ->
-                    coroutineScope.launch {
-                        viewModel.insertWorkoutEntity(WorkoutEntity(0, exercise.name, exercise, selectedCategory, selectedDate, false))
-                    }
-                    navigateToWorkoutPage()
-                },
-                onDismiss = { addDialogState.value = false }
-            )
-        }
+    if (creationDialogState.value) {
+        CreateNewExerciseDialog(
+            onAddExercise = { exercise ->
+                coroutineScope.launch {
+                    viewModel.updateExercise(exercise)
+                }
+            },
+            onDismiss = { creationDialogState.value = false }
+        )
+    } else if (addDialogState.value) {
+        ExerciseDialog(
+            selectedExercise = selectedExercise,
+            onAddExercise = { exercise ->
+                coroutineScope.launch {
+                    viewModel.insertWorkoutEntity(
+                        WorkoutEntity(
+                            0,
+                            exercise.name,
+                            exercise,
+                            selectedCategory,
+                            selectedDate,
+                            false
+                        )
+                    )
+                }
+                navigateToWorkoutPage()
+            },
+            onDismiss = { addDialogState.value = false }
+        )
     }
 }
 
@@ -178,7 +184,7 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            items(itemList) { item ->
+            items(itemList.reversed()) { item ->
                 WorkoutExerciseItem(item, onClick, onDelete)
             }
 

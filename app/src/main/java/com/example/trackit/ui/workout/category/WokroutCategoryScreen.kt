@@ -1,6 +1,7 @@
 package com.example.trackit.ui.workout.category
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -31,7 +33,6 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutCategoryScreen(
     onCategorySelect: (Int) -> Unit,
@@ -44,8 +45,9 @@ fun WorkoutCategoryScreen(
     val dialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
 
-    Scaffold(topBar = { WorkoutEditTopBar(textState, navigateBack = navigateBack) }) {
-        Column() {
+    Box{
+        Column {
+            WorkoutEditTopBar(textState, navigateBack = navigateBack)
 
             Card(
                 onClick = { dialogState.value = true },
@@ -102,7 +104,6 @@ fun WorkoutCategoryScreen(
                 )
             }
         }
-
     }
 }
 
