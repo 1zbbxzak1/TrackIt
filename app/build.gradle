@@ -52,7 +52,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation "com.github.tehras:charts:0.2.4-alpha"
     implementation "com.google.accompanist:accompanist-swiperefresh:0.20.0"
     implementation 'androidx.databinding:databinding-runtime:4.1.3'
@@ -76,6 +75,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation 'androidx.compose.animation:animation:1.5.0-alpha04'
     implementation 'com.google.accompanist:accompanist-navigation-animation:0.31.2-alpha'
+    implementation 'com.himanshoe:charty:1.1.3-alpha05'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
