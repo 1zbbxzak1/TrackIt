@@ -15,6 +15,12 @@ class WorkoutItemsRepository(private val itemDao: WorkoutItemsDao) {
     suspend fun updateItem(item: WorkoutEntity) = itemDao.update(item)
 
     fun getItemsOnDate(date: LocalDate) = itemDao.getItemsOnDate(date)
+
+    fun getCompletedItemCountOnDate(date: LocalDate): Flow<Int> =
+        itemDao.getCompletedItemCountOnDate(date)
+
+    fun getLastTenDatesWithCompletedExercise(): Flow<List<LocalDate>> =
+        itemDao.getLastTenDatesWithCompletedExercise()
 }
 
 class WorkoutCategoryRepository(private val itemDao: WorkoutCategoryDao){
