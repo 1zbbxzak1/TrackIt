@@ -1,6 +1,6 @@
 package com.example.trackit.ui
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -23,7 +23,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -32,7 +31,6 @@ import com.example.trackit.data.food.Delete
 import com.example.trackit.data.food.Globals
 import com.example.trackit.data.food.ListFood
 import com.example.trackit.ui.Nutrition.FoodData
-import com.example.trackit.ui.theme.TrackItTheme
 import java.time.LocalDate
 import com.example.trackit.ui.theme.PermanentGeraniumLake
 
@@ -67,13 +65,15 @@ fun FoodPage(
             }
         }
 
-        Box() {
+        Box(
+            modifier = Modifier
+                .height(94.dp)
+                .offset(0.dp, (-7).dp)
+        ) {
             Surface(
                 color = Color(android.graphics.Color.parseColor("#99CD4E")),
                 shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp),
-                modifier = Modifier
-                    .height(110.dp)
-                    .offset(0.dp, (-16).dp)
+                modifier = Modifier.fillMaxSize()
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -88,7 +88,7 @@ fun FoodPage(
                             text = "Белки",
                             fontSize = 20.sp,
                             color = Color.White,
-                            modifier = Modifier.padding(start = 10.dp, top = 35.dp)
+                            modifier = Modifier.padding(start = 10.dp, top = 18.dp)
                         )
                         Text(
                             text = "${Globals.TotalProteins}",
@@ -109,7 +109,7 @@ fun FoodPage(
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
-                                .padding(top = 35.dp)
+                                .padding(top = 18.dp)
                                 .offset(x = (-7).dp)
                         )
                         Text(
@@ -130,7 +130,7 @@ fun FoodPage(
                             text = "Углеводы",
                             fontSize = 20.sp,
                             color = Color.White,
-                            modifier = Modifier.padding(top = 35.dp)
+                            modifier = Modifier.padding(top = 18.dp)
                         )
                         Text(
                             text = "${Globals.TotalCarbs}",
@@ -150,7 +150,7 @@ fun FoodPage(
                             text = "Ккал",
                             fontSize = 20.sp,
                             color = Color.White,
-                            modifier = Modifier.padding(top = 35.dp, end = 10.dp)
+                            modifier = Modifier.padding(top = 18.dp, end = 10.dp)
                         )
                         Text(
                             text = "${Globals.TotalCalories}",
@@ -167,10 +167,9 @@ fun FoodPage(
 
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 50.dp)
         ) {
             item {
+                Spacer(modifier = Modifier.padding(20.dp))
                 MealPanel(
                     mealType = "Завтрак",
                     mealIcon = R.drawable.breakfast_icon,
@@ -178,7 +177,7 @@ fun FoodPage(
                     isExpanded = breakfastExpanded,
                     onPanelClicked = { breakfastExpanded = !breakfastExpanded },
                     onAddButtonClick = { navigateToEntry() },
-                    onDismiss = {item -> Delete.onDeleteBreakfast(item) }
+                    onDismiss = { item -> Delete.onDeleteBreakfast(item) }
                 )
                 Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
             }
@@ -191,7 +190,7 @@ fun FoodPage(
                     isExpanded = lunchExpanded,
                     onPanelClicked = { lunchExpanded = !lunchExpanded },
                     onAddButtonClick = { navigateToEntry() },
-                    onDismiss = {item -> Delete.onDeleteLunch(item) }
+                    onDismiss = { item -> Delete.onDeleteLunch(item) }
                 )
                 Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
             }
@@ -204,7 +203,7 @@ fun FoodPage(
                     isExpanded = dinnerExpanded,
                     onPanelClicked = { dinnerExpanded = !dinnerExpanded },
                     onAddButtonClick = { navigateToEntry() },
-                    onDismiss = {item -> Delete.onDeleteDinner(item) }
+                    onDismiss = { item -> Delete.onDeleteDinner(item) }
                 )
                 Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
             }
@@ -217,8 +216,9 @@ fun FoodPage(
                     isExpanded = snackExpanded,
                     onPanelClicked = { snackExpanded = !snackExpanded },
                     onAddButtonClick = { navigateToEntry() },
-                    onDismiss = {item -> Delete.onDeleteSnack(item) }
+                    onDismiss = { item -> Delete.onDeleteSnack(item) }
                 )
+                Spacer(modifier = Modifier.padding(bottom = 40.dp))
             }
         }
     }
@@ -273,24 +273,27 @@ fun MealPanel(
                 }
             }
 
-            if (isExpanded) {
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 400.dp)
                 ) {
-                    if (foods.isEmpty()){
+                    if (foods.isEmpty()) {
                         Text(
                             text = "Добавьте продукт",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier.padding(start = 20.dp)
                         )
+                    } else {
+                        FoodCardList(foods = foods, onDelete = onDismiss)
                     }
-                    else {
-                        FoodDelete(foods = foods, onDelete = onDismiss)
-                    }
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(15.dp))
                 }
             }
         }
@@ -299,7 +302,7 @@ fun MealPanel(
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-private fun FoodDelete(
+private fun FoodCardList(
     foods: List<FoodData>,
     onDelete: (FoodData) -> Unit,
     modifier: Modifier = Modifier
@@ -450,13 +453,5 @@ fun Background(
             contentDescription = "Localized description",
             modifier = Modifier.scale(scale)
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewFoodPage(){
-    TrackItTheme {
-
     }
 }

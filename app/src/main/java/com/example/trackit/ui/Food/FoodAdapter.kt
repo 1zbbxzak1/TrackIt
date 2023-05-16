@@ -45,6 +45,7 @@ class FoodAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun setFilteredList(filteredList: MutableList<FoodData>) {
+        this.filteredList.clear()
         this.filteredList.addAll(filteredList)
         notifyDataSetChanged()
     }

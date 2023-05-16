@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="#efefef"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="15dp"
         android:background="@android:color/transparent">
 
         <LinearLayout
@@ -20,11 +20,11 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:background="@android:color/transparent"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/name_food"
-                android:layout_width="110dp"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:fontFamily="sans-serif-medium"

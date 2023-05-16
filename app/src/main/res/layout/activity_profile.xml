@@ -79,28 +79,37 @@
                         android:text="Рост"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/black"
+                        android:layout_weight="5"/>
 
                     <EditText
                         android:id="@+id/height_edit_text"
-                        android:layout_width="35dp"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="190dp"
                         android:background="@null"
                         android:hint="..."
+                        android:textAlignment="center"
                         android:fontFamily="sans-serif-medium"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/h_label"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginTop="0dp"
+                        android:layout_marginStart="5dp"
                         android:text="см"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:layout_weight="1"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -142,15 +151,23 @@
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/black"
+                        android:layout_weight="4"/>
+
                     <EditText
                         android:id="@+id/age_edit_text"
                         android:background="@null"
-                        android:layout_width="40dp"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="180dp"
                         android:hint="..."
                         android:fontFamily="sans-serif-medium"
-                        android:inputType="numberDecimal" />
+                        android:inputType="numberDecimal"
+                        android:layout_weight="2"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -192,15 +209,23 @@
                     android:textColor="@color/black"
                     android:textSize="20sp" />
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/black"
+                    android:layout_weight="5"/>
+
                 <EditText
                     android:id="@+id/weight_edit_text"
                     android:background="@null"
-                    android:layout_width="35dp"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="205dp"
                     android:hint="..."
                     android:fontFamily="sans-serif-medium"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/w_label"
@@ -210,7 +235,8 @@
                     android:text="кг"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_weight="1" />
 
             </LinearLayout>
         </LinearLayout>
@@ -226,18 +252,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:src="@drawable/gender" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:orientation="horizontal">
 
@@ -251,14 +277,23 @@
                         android:gravity="center_vertical"
                         android:text="Пол"
                         android:textColor="@color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/black"
+                        android:layout_weight="1"/>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/group_card"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="108dp"
                         android:layout_marginTop="3dp"
+                        android:layout_marginEnd="15dp"
+                        android:padding="5dp"
                         card_view:cardBackgroundColor="@android:color/transparent"
                         card_view:cardCornerRadius="10dp"
                         card_view:cardElevation="0dp">
@@ -267,22 +302,20 @@
                             android:id="@+id/radio_group_gender"
                             android:layout_width="182dp"
                             android:layout_height="35dp"
-                            android:orientation="horizontal"
-                            android:paddingLeft="0dp"
-                            android:paddingRight="0dp">
+                            android:orientation="horizontal">
 
                             <RadioButton
                                 android:id="@+id/maleRadioButton"
                                 android:layout_width="85dp"
                                 android:layout_height="27dp"
                                 android:layout_gravity="center"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginStart="5dp"
                                 android:button="@null"
                                 android:checked="true"
                                 android:fontFamily="sans-serif"
                                 android:text="Мужской"
                                 android:textAlignment="center"
-                                android:textColor="@color/black" />
+                                android:textColor="@color/black"/>
 
                             <RadioButton
                                 android:id="@+id/femaleRadioButton"
@@ -294,8 +327,7 @@
                                 android:fontFamily="sans-serif"
                                 android:text="Женский"
                                 android:textAlignment="center"
-                                android:textColor="@color/black" />
-
+                                android:textColor="@color/black"/>
                         </RadioGroup>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>

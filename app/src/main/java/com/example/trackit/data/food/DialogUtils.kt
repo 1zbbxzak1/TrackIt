@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.ContextCompat
 import com.example.trackit.R
@@ -22,12 +24,19 @@ fun showAddDialog(
     context: Context,
     navigateToFoodPage: () -> Unit
 ) {
-
     val builder = Dialog(context)
     builder.setContentView(R.layout.add_food_to_main)
     builder.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
     val gramsEditText = builder.findViewById<EditText>(R.id.gramm)
+    gramsEditText.setOnEditorActionListener { _, actionId, _ ->
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            gramsEditText.clearFocus()
+            val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(gramsEditText.windowToken, 0)
+        }
+        false
+    }
 
     val nameTextView = builder.findViewById<TextView>(R.id.foodName2)
     nameTextView.text = food.name
@@ -105,6 +114,7 @@ fun showAddDialog(
             return@setOnClickListener
         }
         val factor = gramsEntered / 100.0 // отношение введенного количества грамм к 100 г
+
         when (val checkedId = radioFood.checkedRadioButtonId) {
             -1 -> {
                 Toast.makeText(
