@@ -1,10 +1,10 @@
 package com.example.trackit.ui.statistics
 
+import StatChart
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.workout.WorkoutViewModel
-import com.himanshoe.charty.line.model.LineData
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -25,8 +25,8 @@ fun WorkoutStatistics(
 private fun generateWorkoutLineDataList(
     workoutViewModel: WorkoutViewModel,
     dates: List<LocalDate>
-): List<LineData> {
-    val lineDataList = mutableListOf<LineData>()
+): List<Pair<Float, String>> {
+    val lineDataList = mutableListOf<Pair<Float, String>>()
 
     for (date in dates) {
         val count = runBlocking {
@@ -34,7 +34,7 @@ private fun generateWorkoutLineDataList(
         }
         val formattedMonth = DateTimeFormatter.ofPattern("MM").format(date)
         val formattedDate = "${date.dayOfMonth}.${formattedMonth}"
-        val lineData = LineData(formattedDate, count.toFloat())
+        val lineData = Pair(count.toFloat(), formattedDate)
         lineDataList.add(lineData)
     }
 
