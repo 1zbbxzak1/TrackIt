@@ -78,9 +78,7 @@ fun ExpandableCalendar(
                             weekHeader = {
                                 Surface(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        //.clickable { onClick() }
-                                    ,
+                                        .fillMaxWidth(),
                                     shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 0.dp, bottomEnd = 0.dp),
                                     color = Arsenic
                                 ) {
@@ -168,7 +166,11 @@ private fun DayContent(
     val boxColor =
         if (isSelected && state.isCurrentDay) BrightGray
         else if (isSelected) AndroidGreen
-        else MaterialTheme.colors.primaryVariant
+        else Arsenic
+
+    val textColor = if (state.isCurrentDay) AndroidGreen
+        else if (isSelected) Arsenic
+        else Color.White
 
     Box(
         modifier = modifier
@@ -196,9 +198,7 @@ private fun DayContent(
                     Modifier
                         .alpha(if (state.isFromCurrentMonth || isSelected) 1.0f else 0.6f)
                         .offset(x = if ((date.dayOfMonth == 1 || date.dayOfMonth > 9) && date.dayOfMonth !in 20..31) (-1).dp else 0.dp, y = 0.dp),
-                    color = if (state.isCurrentDay) AndroidGreen
-                        else if (isSelected) MaterialTheme.colors.primaryVariant
-                        else Color.White,
+                    color = textColor,
                     style = CalendarDayTextStyle
                 )
             }
@@ -225,14 +225,6 @@ private fun getWeekFromDate(dateList: List<LocalDate>): Week {
     }
     return Week.now()
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//private fun CalendarPreview(){
-//    TrackItTheme {
-//        ExpandableCalendar(expanded = true, onClick = { /*TODO*/ }, onDateSelected = {})
-//    }
-//}
 
 @Preview(showBackground = true)
 @Composable

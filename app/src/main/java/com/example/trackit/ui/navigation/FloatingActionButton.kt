@@ -1,4 +1,4 @@
-package com.example.trackit
+package com.example.trackit.ui.navigation
 
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
