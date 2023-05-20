@@ -1,28 +1,27 @@
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import com.example.trackit.R
+import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.TrackItTheme
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import io.github.boguszpawlowski.composecalendar.kotlinxDateTime.now
-import kotlinx.datetime.LocalDate
 
 @Composable
 fun StatChart(
@@ -38,33 +37,33 @@ fun StatChart(
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
 
-                val chartData = prepareChartData(data)
+                val chartData = prepareChartData(data, context)
 
                 setData(chartData)
-                xAxis.apply {
-                    position = XAxis.XAxisPosition.BOTTOM
-                    axisLineColor = Arsenic.toArgb()
-                    setDrawGridLines(false)
-                    valueFormatter = object : ValueFormatter() {
-                        override fun getFormattedValue(value: Float): String {
-                            val index = value.toInt()
-                            if (index in data.indices) {
-                                return data[index].second
-                            }
-                            return ""
+
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                xAxis.axisLineColor = Color.WHITE
+                xAxis.setDrawGridLines(false)
+                xAxis.valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val index = value.toInt()
+                        if (index in data.indices) {
+                            return data[index].second
                         }
+                        return ""
                     }
-                    labelCount = data.count()
-                    granularity = 1f
                 }
 
-                val axisLeft = axisLeft
+                xAxis.textColor = Color.WHITE
+                xAxis.labelCount = data.count()
+                xAxis.granularity = 1f
 
-                axisLeft.axisLineColor = Arsenic.toArgb()
+                axisLeft.axisLineColor = Color.WHITE
                 axisLeft.setDrawGridLines(true)
                 axisLeft.valueFormatter = DefaultValueFormatter(0)
                 axisLeft.labelCount = data.count()
                 axisLeft.granularity = 1f
+                axisLeft.textColor = Color.WHITE
 
                 axisRight.isEnabled = false
                 description.isEnabled = false
@@ -77,27 +76,31 @@ fun StatChart(
                 setNoDataTextColor(Color.BLACK)
                 setNoDataTextTypeface(Typeface.DEFAULT)
                 setPadding(40, 40, 40, 40)
+                setBackgroundColor(Arsenic.toArgb())
             }
         })
     }
 }
 
-private fun prepareChartData(data: List<Pair<Float, String>>): LineData {
+private fun prepareChartData(data: List<Pair<Float, String>>, context: Context): LineData {
     val entries = data.mapIndexed { index, pair ->
         Entry(index.toFloat(), pair.first)
     }
-    val dataSet = LineDataSet(entries, "").apply {
-        color = Color.GREEN
-        valueTextColor = Color.BLACK
-        lineWidth = 1.5f
-        setDrawCircles(true)
-        circleRadius = 4f
-        circleHoleRadius = 2f
-        setCircleColor(Color.GREEN)
-        setDrawValues(false)
-        mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-    }
-    return LineData(listOf<ILineDataSet>(dataSet))
+    val dataLine = LineDataSet(entries, "")
+
+    dataLine.color = AndroidGreen.toArgb()
+    dataLine.valueTextColor = Color.BLACK
+    dataLine.lineWidth = 1f
+    dataLine.setDrawCircles(true)
+    dataLine.circleRadius = 5f
+    dataLine.circleHoleRadius = 3f
+    dataLine.setCircleColor(AndroidGreen.toArgb())
+    dataLine.setDrawValues(false)
+    dataLine.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+    dataLine.setDrawFilled(true)
+    dataLine.fillDrawable = ContextCompat.getDrawable(context, R.drawable.fade_green)
+
+    return LineData(listOf<ILineDataSet>(dataLine))
 }
 
 @Preview(showBackground = true, showSystemUi = true)
