@@ -14,7 +14,7 @@ class WeightViewModel(private val repository: WeightRepository): ViewModel() {
     private val _weightUiState = MutableStateFlow(WeightUiState())
 
     val weightUiState =
-        repository.getAllWeightStream().map { WeightUiState(it) }
+        repository.getAllWeight().map { WeightUiState(it) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000L),
@@ -32,8 +32,8 @@ class WeightViewModel(private val repository: WeightRepository): ViewModel() {
         }
     }
 
-    suspend fun getLastTenDatesWithWeight(): List<LocalDate> {
-        return repository.getLastTenDatesWithWeight().first()
+    suspend fun getLastTenDates(): List<LocalDate> {
+        return repository.getLastTenDates().first()
     }
 
     suspend fun getWeightByDate(date: LocalDate): Double {

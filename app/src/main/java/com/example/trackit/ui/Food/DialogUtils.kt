@@ -20,28 +20,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
-import com.example.trackit.data.Weight.WeightEntry
-import com.example.trackit.data.Weight.WeightViewModel
-import com.example.trackit.data.workout.WorkoutCategory
 import com.example.trackit.ui.*
 import com.example.trackit.ui.Nutrition.FoodAdapter
 import com.example.trackit.ui.Nutrition.FoodData
 import com.example.trackit.ui.theme.*
 import com.example.trackit.ui.workout.AddDeleteButton
-import com.example.trackit.ui.workout.DialogTextField
-import com.example.trackit.ui.workout.category.WorkoutCategoryViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.round
@@ -305,10 +296,8 @@ fun setupFoodList(
         val type = object : TypeToken<ArrayList<FoodData>>() {}.type
         val savedFoodList = gson.fromJson<ArrayList<FoodData>>(json, type)
 
-        // Clear the existing list before adding saved items
         foodList.clear()
 
-        // Add saved items to the list, skipping duplicates
         for (savedFood in savedFoodList) {
             if (!foodList.contains(savedFood)) {
                 foodList.add(savedFood)
@@ -391,7 +380,6 @@ fun Dialog(
     onValueChange: (String) -> Unit,
     label: String = "",
     caption: String = "",
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     placeHolder: String = "",
     shape: Shape = RoundedCornerShape(20.dp),

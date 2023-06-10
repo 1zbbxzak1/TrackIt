@@ -86,6 +86,10 @@ fun ProfilePage(
                     LayoutInflater.from(contxt).inflate(R.layout.activity_profile, null)
                 }
             ) { view ->
+
+                val weightTextView = view.findViewById<TextView>(R.id.weight_edit_text)
+                weightTextView.text = lastWeightState.value.toString()
+
                 val height = view.findViewById<EditText>(R.id.height_edit_text)
                 val sharedPreferencesKeyH = "height"
                 val savedHeight = loadFromSharedPreferences(context, sharedPreferencesKeyH, "")
@@ -148,10 +152,6 @@ fun ProfilePage(
 
                     override fun afterTextChanged(s: Editable) {}
                 })
-
-                val weightTextView = view.findViewById<TextView>(R.id.weight_edit_text)
-                weightTextView.text = lastWeightState.value.toString()
-
 
                 val genderRadioGroup = view.findViewById<RadioGroup>(R.id.radio_group_gender)
                 val fem = view.findViewById<RadioButton>(R.id.femaleRadioButton)

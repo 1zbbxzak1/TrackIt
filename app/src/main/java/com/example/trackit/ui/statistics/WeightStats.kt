@@ -83,7 +83,7 @@ private fun WeightListWithStats(
     val coroutineScope = rememberCoroutineScope()
 
     val dates = runBlocking {
-        weightViewModel.getLastTenDatesWithWeight()
+        weightViewModel.getLastTenDates()
     }.reversed()
 
     val weightData = dataList(weightViewModel, dates)
