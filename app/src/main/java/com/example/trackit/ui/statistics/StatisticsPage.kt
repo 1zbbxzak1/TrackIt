@@ -33,6 +33,7 @@ import com.example.trackit.ui.navigation.TopBarWithLabel
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.BrightGray
+import java.time.LocalDate
 
 @Composable
 fun StatisticsPage(
@@ -61,7 +62,7 @@ fun StatisticsPage(
 
         when(selectedButtonName.value){
             ButtonName.Food -> FoodStatistics(modifier = Modifier.padding(horizontal = 10.dp))
-            ButtonName.Weight -> WeightStatistics(modifier = Modifier.padding(horizontal = 10.dp))
+            ButtonName.Weight -> WeightStats(LocalDate.now())
             ButtonName.Workout -> WorkoutStatistics(modifier = Modifier.padding(horizontal = 10.dp))
         }
     }

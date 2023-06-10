@@ -25,7 +25,7 @@ import com.example.trackit.ui.theme.Arsenic
 
 @Composable
 fun WeightStatistics(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ){
     // TODO: загрузка данных (пары значение-дата)
     val weightData = listOf<Pair<String, String>>(Pair("65", "18:43, 05.06.2023"), Pair("66", "18:41, 05.06.2023"))

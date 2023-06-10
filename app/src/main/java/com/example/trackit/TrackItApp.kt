@@ -309,10 +309,13 @@ fun TrackItApp(
                     ExitTransition.None
                 }
             ) {
-                Statistics(
+//                Statistics(
+//                    navigateBack = { navController.popBackStack() },
+//                    selectedDate = selectedDate.value,
+//                    time = currTime.value
+//                )
+                StatisticsPage (
                     navigateBack = { navController.popBackStack() },
-                    selectedDate = selectedDate.value,
-                    time = currTime.value
                 )
             }
 
