@@ -1,5 +1,6 @@
 package com.example.trackit.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,22 +29,68 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.trackit.R
-import com.example.trackit.data.food.Delete
-import com.example.trackit.data.food.Globals
-import com.example.trackit.data.food.ListFood
+import com.example.trackit.data.food.getLogForDate
 import com.example.trackit.ui.Nutrition.FoodData
 import java.time.LocalDate
 import com.example.trackit.ui.theme.PermanentGeraniumLake
+import kotlin.math.roundToInt
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun FoodPage(
-    navigateToEntry: () -> Unit,
+    navigateToFoodScreen: () -> Unit,
     selectedDate: LocalDate = LocalDate.now()
 ) {
+    val context = LocalContext.current
+
     var breakfastExpanded by remember { mutableStateOf(false) }
     var lunchExpanded by remember { mutableStateOf(false) }
     var dinnerExpanded by remember { mutableStateOf(false) }
     var snackExpanded by remember { mutableStateOf(false) }
+
+    val log = getLogForDate(selectedDate)
+
+    LaunchedEffect(selectedDate) {
+        // Сбросить состояние панелей при изменении selectedDate
+        breakfastExpanded = false
+        lunchExpanded = false
+        dinnerExpanded = false
+        snackExpanded = false
+    }
+
+    val onDeleteBreakfast: (FoodData) -> Unit = { food ->
+        log.breakfastFoods.remove(food)
+        log.totalProteins -= food.protein.roundToInt()
+        log.totalFats -= food.fat.roundToInt()
+        log.totalCarbs -= food.carbs.roundToInt()
+        log.totalCalories -= food.calories.roundToInt()
+    }
+
+    val onDeleteLunch: (FoodData) -> Unit = { food ->
+        log.lunchFoods.remove(food)
+        log.totalProteins -= food.protein.roundToInt()
+        log.totalFats -= food.fat.roundToInt()
+        log.totalCarbs -= food.carbs.roundToInt()
+        log.totalCalories -= food.calories.roundToInt()
+    }
+
+    val onDeleteDinner: (FoodData) -> Unit = { food ->
+        log.dinnerFoods.remove(food)
+        log.totalProteins -= food.protein.roundToInt()
+        log.totalFats -= food.fat.roundToInt()
+        log.totalCarbs -= food.carbs.roundToInt()
+        log.totalCalories -= food.calories.roundToInt()
+    }
+
+    val onDeleteSnack: (FoodData) -> Unit = { food ->
+        log.snackFoods.remove(food)
+        log.totalProteins -= food.protein.roundToInt()
+        log.totalFats -= food.fat.roundToInt()
+        log.totalCarbs -= food.carbs.roundToInt()
+        log.totalCalories -= food.calories.roundToInt()
+    }
+
+
 
     Column {
         Surface(
@@ -91,7 +139,7 @@ fun FoodPage(
                             modifier = Modifier.padding(start = 10.dp, top = 18.dp)
                         )
                         Text(
-                            text = "${Globals.TotalProteins}",
+                            text = "${log.totalProteins}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -113,7 +161,7 @@ fun FoodPage(
                                 .offset(x = (-7).dp)
                         )
                         Text(
-                            text = "${Globals.TotalFats}",
+                            text = "${log.totalFats}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -133,7 +181,7 @@ fun FoodPage(
                             modifier = Modifier.padding(top = 18.dp)
                         )
                         Text(
-                            text = "${Globals.TotalCarbs}",
+                            text = "${log.totalCarbs}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -153,7 +201,7 @@ fun FoodPage(
                             modifier = Modifier.padding(top = 18.dp, end = 10.dp)
                         )
                         Text(
-                            text = "${Globals.TotalCalories}",
+                            text = "${log.totalCalories}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -173,11 +221,11 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Завтрак",
                     mealIcon = R.drawable.breakfast_icon,
-                    foods = ListFood.breakfastFoods,
+                    foods = log.breakfastFoods,
                     isExpanded = breakfastExpanded,
                     onPanelClicked = { breakfastExpanded = !breakfastExpanded },
-                    onAddButtonClick = { navigateToEntry() },
-                    onDismiss = { item -> Delete.onDeleteBreakfast(item) }
+                    onAddButtonClick = { navigateToFoodScreen() },
+                    onDismiss = { item -> onDeleteBreakfast(item) }
                 )
                 Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
             }
@@ -186,11 +234,11 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Обед",
                     mealIcon = R.drawable.lunch_icon,
-                    foods = ListFood.lunchFoods,
+                    foods = log.lunchFoods,
                     isExpanded = lunchExpanded,
                     onPanelClicked = { lunchExpanded = !lunchExpanded },
-                    onAddButtonClick = { navigateToEntry() },
-                    onDismiss = { item -> Delete.onDeleteLunch(item) }
+                    onAddButtonClick = { navigateToFoodScreen() },
+                    onDismiss = { item -> onDeleteLunch(item) }
                 )
                 Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
             }
@@ -199,11 +247,11 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Ужин",
                     mealIcon = R.drawable.dinner_icon,
-                    foods = ListFood.dinnerFoods,
+                    foods = log.dinnerFoods,
                     isExpanded = dinnerExpanded,
                     onPanelClicked = { dinnerExpanded = !dinnerExpanded },
-                    onAddButtonClick = { navigateToEntry() },
-                    onDismiss = { item -> Delete.onDeleteDinner(item) }
+                    onAddButtonClick = { navigateToFoodScreen() },
+                    onDismiss = { item -> onDeleteDinner(item) }
                 )
                 Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
             }
@@ -212,11 +260,11 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Перекус",
                     mealIcon = R.drawable.snack_icon,
-                    foods = ListFood.snackFoods,
+                    foods = log.snackFoods,
                     isExpanded = snackExpanded,
                     onPanelClicked = { snackExpanded = !snackExpanded },
-                    onAddButtonClick = { navigateToEntry() },
-                    onDismiss = { item -> Delete.onDeleteSnack(item) }
+                    onAddButtonClick = { navigateToFoodScreen() },
+                    onDismiss = { item -> onDeleteSnack(item) }
                 )
                 Spacer(modifier = Modifier.padding(bottom = 40.dp))
             }
@@ -385,7 +433,7 @@ private fun FoodCardList(
 fun FoodCard(
     food: FoodData,
     modifier: Modifier,
-    index: String
+    index: Long
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),

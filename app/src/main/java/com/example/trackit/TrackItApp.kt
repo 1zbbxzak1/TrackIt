@@ -5,34 +5,24 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgumentBuilder
-import androidx.navigation.NavType
-import androidx.navigation.Navigator
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.navArgument
 import com.example.trackit.data.Screen
+import com.example.trackit.data.Stats
 import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
+import com.example.trackit.ui.statistics.Statistics
 import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
@@ -81,6 +71,9 @@ fun TrackItApp(
         Screen.NutritionFood.name -> {
             bottomBarState.value = false
         }
+        Screen.Statistics.name -> {
+            bottomBarState.value = true
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -93,35 +86,63 @@ fun TrackItApp(
             composable(
                 route = Screen.Profile.name,
                 enterTransition = {
-                    when(initialState.destination.route){
-                        Screen.Food.name -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(200))
-                        Screen.Workout.name -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(200))
+                    when (initialState.destination.route) {
+                        Screen.Food.name -> slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            tween(200)
+                        )
+                        Screen.Workout.name -> slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            tween(200)
+                        )
+                        Screen.Statistics.name -> slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            tween(200)
+                        )
                         else -> null
                     }
                 },
                 exitTransition = {
-                    when (targetState.destination.route){
-                        Screen.Food.name -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(200))
-                        Screen.Workout.name -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(200))
+                    when (targetState.destination.route) {
+                        Screen.Food.name -> slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            tween(200)
+                        )
+                        Screen.Workout.name -> slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            tween(200)
+                        )
+                        Screen.Statistics.name -> slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            tween(200)
+                        )
                         else -> null
                     }
                 }
             ) {
-                ProfilePage()
+                ProfilePage(
+                    selectedDate.value,
+                    navigateToStats = { navController.navigate(Screen.Statistics.name) })
             }
 
             composable(
                 route = Screen.Workout.name,
                 enterTransition = {
-                    when (initialState.destination.route){
+                    when (initialState.destination.route) {
                         Screen.WorkoutExercise.name -> fadeIn()
-                        else -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(200))
+                        else -> slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            tween(200)
+                        )
                     }
                 },
                 exitTransition = {
-                    when (targetState.destination.route){
+                    when (targetState.destination.route) {
                         Screen.WorkoutCategory.name -> ExitTransition.None
-                        else -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(200))
+                        else -> slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            tween(200)
+                        )
                     }
                 },
                 popEnterTransition = {
@@ -209,15 +230,21 @@ fun TrackItApp(
             composable(
                 route = Screen.Food.name,
                 enterTransition = {
-                    when (initialState.destination.route){
+                    when (initialState.destination.route) {
                         Screen.NutritionFood.name -> fadeIn()
-                        else -> slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Right, tween(200))
+                        else -> slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Right,
+                            tween(200)
+                        )
                     }
                 },
                 exitTransition = {
-                    when (targetState.destination.route){
+                    when (targetState.destination.route) {
                         Screen.NutritionFood.name -> ExitTransition.None
-                        else -> slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Left, tween(200))
+                        else -> slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            tween(200)
+                        )
                     }
                 },
                 popEnterTransition = {
@@ -225,7 +252,7 @@ fun TrackItApp(
                 },
             ) {
                 FoodPage(
-                    navigateToEntry = { navController.navigate(Screen.NutritionFood.name) },
+                    navigateToFoodScreen = { navController.navigate(Screen.NutritionFood.name) },
                     selectedDate = selectedDate.value
                 )
             }
@@ -253,7 +280,35 @@ fun TrackItApp(
             ) {
                 FoodScreen(
                     navigateBack = { navController.popBackStack() },
-                    navigateToFoodPage = { navController.navigate(Screen.Food.name) }
+                    navigateToFoodPage = { navController.navigate(Screen.Food.name) },
+                    selectedDate = selectedDate.value
+                )
+            }
+
+            composable(
+                route = Screen.Statistics.name,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(400)
+                    )
+                },
+                exitTransition = {
+                    ExitTransition.None
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                },
+                popExitTransition = {
+                    ExitTransition.None
+                }
+            ) {
+                Statistics(
+                    navigateBack = { navController.popBackStack() },
+                    selectedDate = selectedDate.value
                 )
             }
         }

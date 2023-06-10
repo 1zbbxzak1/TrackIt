@@ -458,7 +458,7 @@ fun DialogTextField(
 }
 
 @Composable
-private fun AddDeleteButton(
+fun AddDeleteButton(
     text: String,
     onClick: () -> Unit,
     colors: ButtonColors,

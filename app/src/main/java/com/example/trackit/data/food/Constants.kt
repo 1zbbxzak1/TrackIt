@@ -1,58 +1,34 @@
+@file:Suppress("UNREACHABLE_CODE")
+
 package com.example.trackit.data.food
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.example.trackit.ui.Nutrition.FoodData
+import android.content.Context
+import androidx.preference.PreferenceManager
+import com.example.trackit.ui.Nutrition.DailyLog
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.time.LocalDate
 import java.util.*
-import kotlin.math.roundToInt
 
-fun generateUniqueID(): String {
-    return UUID.randomUUID().toString()
-}
-
-object Globals {
-    var TotalProteins by mutableStateOf(0)
-    var TotalFats by mutableStateOf(0)
-    var TotalCarbs by mutableStateOf(0)
-    var TotalCalories by mutableStateOf(0)
+fun generateUniqueID(): Long {
+    return UUID.randomUUID().mostSignificantBits and Long.MAX_VALUE
 }
 
 object ListFood {
-    var breakfastFoods = mutableStateListOf<FoodData>()
-    var lunchFoods = mutableStateListOf<FoodData>()
-    var dinnerFoods = mutableStateListOf<FoodData>()
-    var snackFoods = mutableStateListOf<FoodData>()
+    var logs = mutableListOf<DailyLog>()
 }
 
-internal object Delete {
-    val onDeleteBreakfast: (FoodData) -> Unit = { food ->
-        ListFood.breakfastFoods.remove(food)
-        Globals.TotalProteins -= food.protein.roundToInt()
-        Globals.TotalFats -= food.fat.roundToInt()
-        Globals.TotalCarbs -= food.carbs.roundToInt()
-        Globals.TotalCalories -= food.calories.roundToInt()
-    }
-    val onDeleteLunch: (FoodData) -> Unit = { food ->
-        ListFood.lunchFoods.remove(food)
-        Globals.TotalProteins -= food.protein.roundToInt()
-        Globals.TotalFats -= food.fat.roundToInt()
-        Globals.TotalCarbs -= food.carbs.roundToInt()
-        Globals.TotalCalories -= food.calories.roundToInt()
-    }
-    val onDeleteDinner: (FoodData) -> Unit = { food ->
-        ListFood.dinnerFoods.remove(food)
-        Globals.TotalProteins -= food.protein.roundToInt()
-        Globals.TotalFats -= food.fat.roundToInt()
-        Globals.TotalCarbs -= food.carbs.roundToInt()
-        Globals.TotalCalories -= food.calories.roundToInt()
-    }
-    val onDeleteSnack: (FoodData) -> Unit = { food ->
-        ListFood.snackFoods.remove(food)
-        Globals.TotalProteins -= food.protein.roundToInt()
-        Globals.TotalFats -= food.fat.roundToInt()
-        Globals.TotalCarbs -= food.carbs.roundToInt()
-        Globals.TotalCalories -= food.calories.roundToInt()
-    }
+fun getLogForDate(date: LocalDate): DailyLog {
+    val existingLog = ListFood.logs.find { it.date == date }
+    return existingLog ?: DailyLog(
+        date = date,
+        breakfastFoods = mutableListOf(),
+        lunchFoods = mutableListOf(),
+        dinnerFoods = mutableListOf(),
+        snackFoods = mutableListOf(),
+        totalProteins = 0,
+        totalFats = 0,
+        totalCarbs = 0,
+        totalCalories = 0
+    )
 }

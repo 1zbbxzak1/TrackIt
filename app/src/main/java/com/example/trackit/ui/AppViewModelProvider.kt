@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.trackit.TrackItApplication
 import com.example.trackit.ui.workout.WorkoutViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import com.example.trackit.data.Weight.WeightViewModel
 import com.example.trackit.ui.workout.category.WorkoutCategoryViewModel
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseViewModel
 
@@ -24,6 +25,9 @@ object AppViewModelProvider {
                 trackItApplication().container.workoutItemsRepository,
                 trackItApplication().container.workoutCategoryRepository
             )
+        }
+        initializer {
+            WeightViewModel(trackItApplication().container.weightRepository)
         }
     }
 }

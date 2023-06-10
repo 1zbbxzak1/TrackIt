@@ -12,144 +12,245 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
+import android.widget.TextView
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
-import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.data.Weight.WeightEntry
+import com.example.trackit.data.Weight.WeightViewModel
+import com.example.trackit.ui.statistics.WeightStats
+import com.example.trackit.ui.theme.Arsenic
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("InflateParams", "SuspiciousIndentation")
 @Composable
-fun ProfilePage() {
+fun ProfilePage(
+    selectedDate: LocalDate = LocalDate.now(),
+    navigateToStats: () -> Unit
+) {
     val context = LocalContext.current
+    val viewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { contxt ->
-            LayoutInflater.from(contxt).inflate(R.layout.activity_profile, null)
-        })
-         { view ->
+    val lastWeightState = remember { mutableStateOf(0.0) }
 
-             val height = view.findViewById<EditText>(R.id.height_edit_text)
-             val sharedPreferencesKeyH = "height"
-             val savedHeight = loadFromSharedPreferences(context, sharedPreferencesKeyH, "")
-             height.setText(savedHeight)
+    LaunchedEffect(Unit) {
+        lastWeightState.value = viewModel.getLast()
+    }
 
-             height.addTextChangedListener(object : TextWatcher {
-                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                     saveToSharedPreferences(context, sharedPreferencesKeyH, s.toString())
-                 }
-
-                 override fun afterTextChanged(s: Editable) {}
-             })
-
-             val age = view.findViewById<EditText>(R.id.age_edit_text)
-             val sharedPreferencesKeyA = "age"
-             val savedAge = loadFromSharedPreferences(context, sharedPreferencesKeyA, "")
-             age.setText(savedAge)
-
-             age.addTextChangedListener(object : TextWatcher {
-                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                     saveToSharedPreferences(context, sharedPreferencesKeyA, s.toString())
-                 }
-
-                 override fun afterTextChanged(s: Editable) {}
-             })
-
-             //
-             //
-             //
-
-             val weight = view.findViewById<EditText>(R.id.weight_edit_text)
-             val sharedPreferencesKeyW = "weight"
-             val savedWeight = loadFromSharedPreferences(context, sharedPreferencesKeyW, "")
-             weight.setText(savedWeight)
-
-             weight.addTextChangedListener(object : TextWatcher {
-                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                     saveToSharedPreferences(context, sharedPreferencesKeyW, s.toString())
-                 }
-
-                 override fun afterTextChanged(s: Editable) {}
-             })
-
-             weight.setOnEditorActionListener { _, actionId, _ ->
-                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                     weight.clearFocus()
-                     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                     inputMethodManager.hideSoftInputFromWindow(weight.windowToken, 0)
-                 }
-                 false
-             }
-
-             //
-             //
-             //
-
-             val genderRadioGroup = view.findViewById<RadioGroup>(R.id.radio_group_gender)
-             val fem = view.findViewById<RadioButton>(R.id.femaleRadioButton)
-             val male = view.findViewById<RadioButton>(R.id.maleRadioButton)
-
-             val sharedPreferencesGender = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-             val sharedPreferencesKeyG = "gender"
-             val savedGenderIndex = sharedPreferencesGender.getInt(sharedPreferencesKeyG, -1)
-
-             // Настройка выбранной радиокнопки на основе сохраненных данных
-             if (savedGenderIndex != -1) {
-                 setRadioButtonState(genderRadioGroup, savedGenderIndex)
-             }
-
-             // Настройка цвета фона радиогруппы
-             genderRadioGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.gray))
-
-             // Установка слушателей для радиокнопок
-             genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-                 when (checkedId) {
-                     R.id.maleRadioButton -> {
-                         setRadioButtonState(group, 0)
-                         fem.background = null
-                         saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 0)
-                     }
-                     R.id.femaleRadioButton -> {
-                         setRadioButtonState(group, 1)
-                         male.background = null
-                         saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 1)
-                     }
-                 }
-
-                 // Установить цвет текста выбранной радиокнопки и сохранить его
-                 val checkedRadioButton = view.findViewById<RadioButton>(checkedId)
-                 if (checkedRadioButton != null) {
-                     checkedRadioButton.setTextColor(ContextCompat.getColor(context, R.color.white))
-                     saveSelectedRadioButtonId(sharedPreferencesGender, checkedId)
-                 }
-
-                 // Снять флажки со всех остальных радиокнопок и установить для них черный цвет текста
-                 for (i in 0 until group.childCount) {
-                     val radioButton = group.getChildAt(i) as RadioButton
-                     if (radioButton.id != checkedId) {
-                         radioButton.setTextColor(ContextCompat.getColor(context, R.color.black))
-                         radioButton.isChecked = false
-                     }
-                 }
-             }
-
-             // Установить цвет текста выбранной радиокнопки, если она была сохранена
-             val savedSelection = sharedPreferencesGender.getInt("selectedRadioButtonId", -1)
-             if (savedSelection != -1) {
-                 genderRadioGroup.check(savedSelection)
-                 setTextColorForSelectedRadioButton(view, savedSelection, R.color.white)
-             }
+    LazyColumn {
+        item {
+            Surface(
+                color = MaterialTheme.colors.primaryVariant,
+                shape = RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp),
+                modifier = Modifier
+                    .height(70.dp)
+                    .zIndex(1f)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.profile_label),
+                        contentDescription = null,
+                        tint = androidx.compose.ui.graphics.Color.Unspecified
+                    )
+                }
+            }
         }
-//    LineChartScreen()
+
+        item {
+            AndroidView(
+                modifier = Modifier.fillMaxSize(),
+                factory = { contxt ->
+                    LayoutInflater.from(contxt).inflate(R.layout.activity_profile, null)
+                }
+            ) { view ->
+                val height = view.findViewById<EditText>(R.id.height_edit_text)
+                val sharedPreferencesKeyH = "height"
+                val savedHeight = loadFromSharedPreferences(context, sharedPreferencesKeyH, "")
+                height.setText(savedHeight)
+
+                height.setOnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        height.clearFocus()
+                        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        inputMethodManager.hideSoftInputFromWindow(height.windowToken, 0)
+                        true
+                    } else {
+                        false
+                    }
+                }
+
+                height.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        saveToSharedPreferences(context, sharedPreferencesKeyH, s.toString())
+                    }
+
+                    override fun afterTextChanged(s: Editable) {}
+                })
+
+                val age = view.findViewById<EditText>(R.id.age_edit_text)
+                val sharedPreferencesKeyA = "age"
+                val savedAge = loadFromSharedPreferences(context, sharedPreferencesKeyA, "")
+                age.setText(savedAge)
+
+                age.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        saveToSharedPreferences(context, sharedPreferencesKeyA, s.toString())
+                    }
+
+                    override fun afterTextChanged(s: Editable) {}
+                })
+
+                val weightTextView = view.findViewById<TextView>(R.id.weight_edit_text)
+                weightTextView.text = lastWeightState.value.toString()
+
+
+                val genderRadioGroup = view.findViewById<RadioGroup>(R.id.radio_group_gender)
+                val fem = view.findViewById<RadioButton>(R.id.femaleRadioButton)
+                val male = view.findViewById<RadioButton>(R.id.maleRadioButton)
+
+                val sharedPreferencesGender =
+                    context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
+                val sharedPreferencesKeyG = "gender"
+                val savedGenderIndex = sharedPreferencesGender.getInt(sharedPreferencesKeyG, -1)
+
+                // Настройка выбранной радиокнопки на основе сохраненных данных
+                if (savedGenderIndex != -1) {
+                    setRadioButtonState(genderRadioGroup, savedGenderIndex)
+                }
+
+                // Настройка цвета фона радиогруппы
+                genderRadioGroup.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+
+                // Установка слушателей для радиокнопок
+                genderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+                    when (checkedId) {
+                        R.id.maleRadioButton -> {
+                            setRadioButtonState(group, 0)
+                            fem.background = null
+                            saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 0)
+                        }
+                        R.id.femaleRadioButton -> {
+                            setRadioButtonState(group, 1)
+                            male.background = null
+                            saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 1)
+                        }
+                    }
+
+                    // Установить цвет текста выбранной радиокнопки и сохранить его
+                    val checkedRadioButton = view.findViewById<RadioButton>(checkedId)
+                    if (checkedRadioButton != null) {
+                        checkedRadioButton.setTextColor(
+                            ContextCompat.getColor(
+                                context,
+                                R.color.white
+                            )
+                        )
+                        saveSelectedRadioButtonId(sharedPreferencesGender, checkedId)
+                    }
+
+                    // Снять флажки со всех остальных радиокнопок и установить для них черный цвет текста
+                    for (i in 0 until group.childCount) {
+                        val radioButton = group.getChildAt(i) as RadioButton
+                        if (radioButton.id != checkedId) {
+                            radioButton.setTextColor(ContextCompat.getColor(context, R.color.black))
+                            radioButton.isChecked = false
+                        }
+                    }
+                }
+
+                // Установить цвет текста выбранной радиокнопки, если она была сохранена
+                val savedSelection = sharedPreferencesGender.getInt("selectedRadioButtonId", -1)
+                if (savedSelection != -1) {
+                    genderRadioGroup.check(savedSelection)
+                    setTextColorForSelectedRadioButton(view, savedSelection, R.color.white)
+                }
+            }
+        }
+
+        item {
+            Card(
+                onClick = { navigateToStats() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp, vertical = 20.dp)
+                    .height(70.dp),
+                shape = RoundedCornerShape(20.dp),
+                elevation = 8.dp,
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Статистика",
+                        modifier = Modifier.weight(1f),
+                        style = TextStyle(
+                            fontFamily = FontFamily.SansSerif,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 24.sp,
+                            color = Arsenic
+                        )
+                    )
+
+                    Icon(
+                        painterResource(id = R.drawable.insights),
+                        contentDescription = "Статистика",
+                        tint = Arsenic,
+                        modifier = Modifier.size(50.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 // Сохранение введенного значения
@@ -194,11 +295,4 @@ fun saveSelectedRadioButtonId(sharedPreferencesGender: SharedPreferences, checke
 fun setTextColorForSelectedRadioButton(view: View, selectedId: Int, color: Int) {
     val selectedRadioButton = view.findViewById<RadioButton>(selectedId)
     selectedRadioButton?.setTextColor(ContextCompat.getColor(view.context, color))
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewHomePage(){
-    TrackItTheme {
-    }
 }

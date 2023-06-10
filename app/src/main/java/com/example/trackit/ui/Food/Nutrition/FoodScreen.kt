@@ -15,9 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trackit.R
+import com.example.trackit.data.Screen
 import com.example.trackit.data.food.setupFoodList
 import com.example.trackit.data.food.showAddDialog
 import com.example.trackit.ui.Nutrition.FoodAdapter
@@ -26,6 +28,7 @@ import com.example.trackit.ui.navigation.SearchView
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.BrightGray
 import values.NedoFoodList
+import java.time.LocalDate
 import java.util.*
 
 
@@ -33,7 +36,8 @@ import java.util.*
 @Composable
 fun FoodScreen(
     navigateBack: () -> Unit,
-    navigateToFoodPage: () -> Unit
+    navigateToFoodPage: () -> Unit,
+    selectedDate: LocalDate = LocalDate.now()
 ) {
     val context = LocalContext.current
     val foodList = NedoFoodList
@@ -43,7 +47,7 @@ fun FoodScreen(
 
     val onFoodItemClickListener = object : FoodAdapter.OnFoodItemClickListener {
         override fun onFoodItemClick(food: FoodData) {
-            showAddDialog(food, context, navigateToFoodPage)
+            showAddDialog(food, context, navigateToFoodPage, selectedDate)
         }
     }
 
