@@ -67,20 +67,16 @@ fun BottomBar(
     }
 
     AnimatedVisibility(
-            visible = barState,
-            enter = slideInVertically(
-                initialOffsetY = { it },
-                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
-            ),
-            exit = ExitTransition.None
-//            exit = slideOutVertically (
-//                targetOffsetY = { it },
-//                animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
-//            ),
-        ) {
+        visible = barState,
+        enter = slideInVertically(
+            initialOffsetY = { it },
+            animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
+        ),
+        exit = ExitTransition.None,
+
+    ) {
         Column(
             modifier = Modifier
-                .background(Color.Transparent)
         ) {
             ExpandableCalendar(
                 calendarExpanded,
@@ -99,7 +95,7 @@ fun BottomBar(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .height(68.dp)
+                        .height(60.dp)
                         .selectableGroup(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -131,7 +127,7 @@ fun BottomBar(
                         },
                         onClick = {
                             calendarExpanded = false
-                            navController.navigate(Screen.Food.name)
+                            if (currentScreen != Screen.Food) navController.navigate(Screen.Food.name)
                         }
                     )
 
@@ -162,7 +158,7 @@ fun BottomBar(
                         },
                         onClick = {
                             calendarExpanded = false
-                            navController.navigate(Screen.Profile.name)
+                            if (currentScreen != Screen.Profile) navController.navigate(Screen.Profile.name)
                         }
                     )
 
@@ -193,7 +189,7 @@ fun BottomBar(
                         },
                         onClick = {
                             calendarExpanded = false
-                            navController.navigate(Screen.Workout.name)
+                            if (currentScreen != Screen.Workout) navController.navigate(Screen.Workout.name)
                         }
                     )
                 }

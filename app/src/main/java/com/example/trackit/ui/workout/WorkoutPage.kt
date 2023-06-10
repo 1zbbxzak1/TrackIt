@@ -1,8 +1,8 @@
 package com.example.trackit.ui.workout
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,16 +29,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import com.example.trackit.FloatingButton
+import com.example.trackit.ui.navigation.FloatingButton
 import com.example.trackit.R
+import com.example.trackit.R.drawable.workout_icon
 import com.example.trackit.data.Screen
 import com.example.trackit.data.workout.CardioExercise
 import com.example.trackit.data.workout.StrengthExercise
 import com.example.trackit.data.workout.WorkoutCategory
 import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
-import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.theme.*
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -283,6 +282,7 @@ private fun WorkoutItem(
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                val isAfterNow = item.date.isAfter(LocalDate.now())
 
                 CustomCheckBox(
                     checked = item.completed,
@@ -290,6 +290,7 @@ private fun WorkoutItem(
                         onCheckedChange(WorkoutEntity(item.id, item.name, item.exercise, item.category, item.date, it))
                     },
                     item.category.icon,
+                    isAfterNow,
                     modifier = Modifier.padding(start = 10.dp, end = 5.dp)
                 )
 
@@ -462,10 +463,16 @@ fun CustomCheckBox(
     checked: Boolean = false,
     onCheckedChange: (Boolean) -> Unit,
     icon: Int,
+    isAfterNow: Boolean,
     modifier: Modifier = Modifier
 ){
+    val context = LocalContext.current
+
     Button(
-        onClick = {onCheckedChange(!checked)},
+        onClick = {
+            if (!isAfterNow) onCheckedChange(!checked)
+            else Toast.makeText(context, "Невозможно выполнить будущие упражнения", Toast.LENGTH_SHORT).show()
+        },
         border = if (checked) BorderStroke(2.dp, AndroidGreen) else BorderStroke(2.dp, Arsenic),
         shape = RoundedCornerShape(30.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = if (checked) AndroidGreen else Color.White),

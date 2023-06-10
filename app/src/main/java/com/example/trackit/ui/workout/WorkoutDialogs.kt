@@ -1,5 +1,6 @@
 package com.example.trackit.ui.workout
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +47,7 @@ fun ExerciseDialog(
 
     when (selectedExercise){
         is StrengthExercise -> {
-            weightField = selectedExercise.weight.toString()
+            weightField = if (selectedExercise.weight != 0) selectedExercise.weight.toString() else ""
             repeatCountField = if (selectedExercise.repeatCount != 0) selectedExercise.repeatCount.toString() else ""
             approachCountField = if (selectedExercise.approachCount != 0) selectedExercise.approachCount.toString() else ""
         }
@@ -103,7 +105,7 @@ fun ExerciseDialog(
                                 DialogTextField(
                                     value = repeatCountField,
                                     onValueChange = { repeatCountField = it },
-                                    label = "Повторения",
+                                    label = "Повторения*",
                                     caption = "кол-во",
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number,
@@ -123,7 +125,7 @@ fun ExerciseDialog(
                                 DialogTextField(
                                     value = approachCountField,
                                     onValueChange = { approachCountField = it },
-                                    label = "Подходы",
+                                    label = "Подходы*",
                                     caption = "кол-во",
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Number,
@@ -139,6 +141,15 @@ fun ExerciseDialog(
                                         .padding(vertical = 7.dp)
                                         .height(48.dp)
                                 )
+
+                                Text(
+                                    text = "*  обязательные поля",
+                                    style = TextFieldLabelTextStyle,
+                                    textAlign = TextAlign.Start,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 10.dp)
+                                )
                             }
                         }
                         is CardioExercise -> {
@@ -152,7 +163,7 @@ fun ExerciseDialog(
                                 val focusManager = LocalFocusManager.current
 
                                 Spacer(modifier = Modifier.height(20.dp))
-                                
+
                                 // длительность (мин)
                                 DialogTextField(
                                     value = durationField,
@@ -189,43 +200,46 @@ fun ExerciseDialog(
 
                         Spacer(modifier = Modifier.width(5.dp))
 
+                        val enabled = when (selectedExercise){
+                            is StrengthExercise -> {
+                                selectedExercise.name.isNotBlank() &&
+                                        repeatCountField.isNotBlank() && repeatCountField.toInt() > 0
+                                        && approachCountField.isNotBlank() && approachCountField.toInt() > 0
+                            }
+                            is CardioExercise -> {
+                                selectedExercise.name.isNotBlank() &&
+                                        durationField.isNotBlank() && durationField.toInt() > 0
+                            }
+                        }
+
+                        val context = LocalContext.current
+
                         AddDeleteButton(
                             text = "Готово",
                             onClick = {
-                                onAddExercise(
-                                    when (selectedExercise) {
-                                        is CardioExercise -> CardioExercise(
-                                            selectedExercise.name,
-                                            Duration.ofMinutes(durationField.toLong())
-                                        )
-                                        is StrengthExercise -> StrengthExercise(
-                                            selectedExercise.name,
-                                            weightField.toInt(),
-                                            repeatCountField.toInt(),
-                                            approachCountField.toInt()
-                                        )
-                                    }
-                                )
-                                onDismiss()
+                                if (enabled){
+                                    onAddExercise(
+                                        when (selectedExercise) {
+                                            is CardioExercise -> CardioExercise(
+                                                selectedExercise.name,
+                                                Duration.ofMinutes(durationField.toLong())
+                                            )
+                                            is StrengthExercise -> StrengthExercise(
+                                                selectedExercise.name,
+                                                if (weightField.isBlank()) 0 else weightField.toInt(),
+                                                repeatCountField.toInt(),
+                                                approachCountField.toInt()
+                                            )
+                                        }
+                                    )
+                                    onDismiss()
+                                }
+                                else Toast.makeText(context, "Введите необходимые данные", Toast.LENGTH_SHORT).show()
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Arsenic,
-                                disabledBackgroundColor = Arsenic,
-                                disabledContentColor = Color.White,
-                                contentColor = AndroidGreen
+                                contentColor = if (enabled) AndroidGreen else Color.White
                             ),
-                            enabled = when (selectedExercise){
-                                is StrengthExercise -> {
-                                    selectedExercise.name.isNotBlank() &&
-                                            weightField.isNotBlank()
-                                            && repeatCountField.isNotBlank() && repeatCountField.toInt() > 0
-                                            && approachCountField.isNotBlank() && repeatCountField.toInt() > 0
-                                }
-                                is CardioExercise -> {
-                                    selectedExercise.name.isNotBlank() &&
-                                            durationField.isNotBlank() && durationField.toInt() > 0
-                                }
-                            },
                             modifier = Modifier.weight(1f))
                     }
                 }
@@ -294,30 +308,33 @@ fun CreateNewExerciseDialog(
 
                         Spacer(modifier = Modifier.width(5.dp))
 
+                        val enabled = exerciseName.isNotBlank()
+                        val context = LocalContext.current
+
                         AddDeleteButton(
                             text = "Готово",
                             onClick = {
-                                onAddExercise(
-                                    when (currentExercise) {
-                                        ExerciseType.Cardio -> CardioExercise(
-                                            exerciseName,
-                                            Duration.ZERO
-                                        )
-                                        ExerciseType.Strength -> StrengthExercise(
-                                            exerciseName,
-                                            0, 0, 0
-                                        )
-                                    }
-                                )
-                                onDismiss()
+                                if (enabled){
+                                    onAddExercise(
+                                        when (currentExercise) {
+                                            ExerciseType.Cardio -> CardioExercise(
+                                                exerciseName,
+                                                Duration.ZERO
+                                            )
+                                            ExerciseType.Strength -> StrengthExercise(
+                                                exerciseName,
+                                                0, 0, 0
+                                            )
+                                        }
+                                    )
+                                    onDismiss()
+                                }
+                                else Toast.makeText(context, "Введите название упражнения", Toast.LENGTH_SHORT).show()
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Arsenic,
-                                disabledBackgroundColor = Arsenic,
-                                disabledContentColor = Color.White,
-                                contentColor = AndroidGreen
+                                contentColor = if (enabled) AndroidGreen else Color.White
                             ),
-                            enabled = exerciseName.isNotBlank(),
                             modifier = Modifier.weight(1f))
                     }
                 }
@@ -372,19 +389,22 @@ fun AddCategoryDialog(
 
                         Spacer(modifier = Modifier.width(5.dp))
 
+                        val enabled = categoryName.isNotBlank()
+                        val context = LocalContext.current
+
                         AddDeleteButton(
                             text = "Готово",
                             onClick = {
-                                onAddCategory(categoryName)
-                                onDismiss()
+                                if (enabled){
+                                    onAddCategory(categoryName)
+                                    onDismiss()
+                                }
+                                else Toast.makeText(context, "Введите название категории", Toast.LENGTH_SHORT).show()
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Arsenic,
-                                disabledBackgroundColor = Arsenic,
-                                disabledContentColor = Color.White,
-                                contentColor = AndroidGreen
+                                contentColor = if (enabled) AndroidGreen else Color.White
                             ),
-                            enabled = categoryName.isNotBlank(),
                             modifier = Modifier.weight(1f)
                         )
                     }

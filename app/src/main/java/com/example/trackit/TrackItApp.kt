@@ -315,7 +315,6 @@ fun TrackItApp(
 
         Spacer(Modifier.weight(1f))
 
-        // Box() {
         BottomBar(
             selectedDate.value,
             bottomBarState.value,
@@ -323,7 +322,6 @@ fun TrackItApp(
             navController = navController,
             currentScreen = currentScreen
         )
-        //}
     }
 }
 
