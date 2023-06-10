@@ -234,7 +234,7 @@ private fun Weight(
         elevation = 4.dp
     ) {
         Row(
-            modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp),
+            modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(Modifier.width(10.dp))
@@ -263,7 +263,7 @@ private fun Weight(
 
             Text(
                 text = weight.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
-                modifier = Modifier,
+                modifier = Modifier.padding(end = 12.dp),
                 style = TextStyle(
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Normal,
