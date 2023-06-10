@@ -22,6 +22,7 @@ import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.statistics.Statistics
+import com.example.trackit.ui.statistics.StatisticsPage
 import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
@@ -74,7 +75,7 @@ fun TrackItApp(
             bottomBarState.value = false
         }
         Screen.Statistics.name -> {
-            bottomBarState.value = true
+            bottomBarState.value = false
         }
     }
 
@@ -312,6 +313,32 @@ fun TrackItApp(
                     navigateBack = { navController.popBackStack() },
                     selectedDate = selectedDate.value,
                     time = currTime.value
+                )
+            }
+
+            composable(
+                route = Screen.Statistics.name,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(400)
+                    )
+                },
+                exitTransition = {
+                    ExitTransition.None
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                },
+                popExitTransition = {
+                    ExitTransition.None
+                }
+            ) {
+                StatisticsPage(
+                    navigateBack = { navController.popBackStack() }
                 )
             }
         }

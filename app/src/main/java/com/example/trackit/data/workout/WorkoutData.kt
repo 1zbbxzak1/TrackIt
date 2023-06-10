@@ -18,6 +18,16 @@ data class WorkoutEntity(
     var completed: Boolean
 )
 
+data class CategoryCount(
+    val category: String,
+    val count: Int
+)
+
+data class ExerciseCount(
+    val exercise: String,
+    val count: Int
+)
+
 sealed class Exercise {
     abstract val name: String
 }
