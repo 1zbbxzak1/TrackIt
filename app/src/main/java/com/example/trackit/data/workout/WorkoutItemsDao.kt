@@ -33,6 +33,18 @@ interface WorkoutItemsDao {
 
     @Query("SELECT DISTINCT date FROM workout_items WHERE completed = 1 ORDER BY date DESC LIMIT 10")
     fun getLastTenDatesWithCompletedExercise(): Flow<List<LocalDate>>
+
+    @Query("SELECT DISTINCT date FROM workout_items WHERE completed = 1 ORDER BY date DESC")
+    fun getLastSeriesOfDaysWithCompletedWorkout(): Flow<List<LocalDate>>
+
+    @Query("SELECT AVG(exerciseCount) FROM (SELECT COUNT(*) as exerciseCount FROM workout_items WHERE completed = 1 GROUP BY date) as counts")
+    fun getAverageExercisesPerDay(): Flow<Float>
+
+    @Query("SELECT category, COUNT(*) as count FROM workout_items WHERE completed = 1 GROUP BY category ORDER BY count DESC LIMIT 1")
+    fun getMostPopularCategory(): Flow<CategoryCount>
+
+    @Query("SELECT exercise, COUNT(*) as count FROM workout_items WHERE completed = 1 GROUP BY exercise ORDER BY count DESC LIMIT 1")
+    fun getMostPopularExercise(): Flow<ExerciseCount>
 }
 
 @Dao

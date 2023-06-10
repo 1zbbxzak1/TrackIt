@@ -21,7 +21,7 @@ import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
-import com.example.trackit.ui.statistics.Statistics
+import com.example.trackit.ui.statistics.StatisticsPage
 import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
@@ -70,6 +70,9 @@ fun TrackItApp(
         Screen.NutritionFood.name -> {
             bottomBarState.value = false
         }
+        Screen.Statistics.name -> {
+            bottomBarState.value = false
+        }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -96,8 +99,11 @@ fun TrackItApp(
                     }
                 }
             ) {
-                //ProfilePage()
-                Statistics()
+                ProfilePage(
+                    navigateToStatistics = {
+                        navController.navigate(Screen.Statistics.name)
+                    }
+                )
             }
 
             composable(
@@ -244,6 +250,32 @@ fun TrackItApp(
                 FoodScreen(
                     navigateBack = { navController.popBackStack() },
                     navigateToFoodPage = { navController.navigate(Screen.Food.name) }
+                )
+            }
+
+            composable(
+                route = Screen.Statistics.name,
+                enterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Down,
+                        animationSpec = tween(400)
+                    )
+                },
+                exitTransition = {
+                    ExitTransition.None
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        AnimatedContentTransitionScope.SlideDirection.Right,
+                        animationSpec = tween(400)
+                    )
+                },
+                popExitTransition = {
+                    ExitTransition.None
+                }
+            ) {
+                StatisticsPage(
+                    navigateBack = { navController.popBackStack() }
                 )
             }
         }

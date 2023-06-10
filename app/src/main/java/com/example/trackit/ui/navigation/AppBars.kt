@@ -2,17 +2,10 @@ package com.example.trackit.ui.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectableGroup
@@ -27,13 +20,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -44,7 +34,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -203,9 +192,9 @@ fun BottomBar(
 }
 
 @Composable
-fun ExerciseTopBar(
+fun TopBarWithLabel(
     label: String,
-    @DrawableRes categoryIcon: Int,
+    @DrawableRes icon: Int,
     navigateBack: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
@@ -245,10 +234,13 @@ fun ExerciseTopBar(
         Text(
             text = label,
             textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Medium,
-            fontFamily = FontFamily.Default,
-            softWrap = false
+            softWrap = false,
+            style = TextStyle(
+                fontFamily = FontFamily.Default,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                color = Arsenic
+            )
         )
 
         Icon(painterResource(R.drawable.line),
@@ -267,9 +259,12 @@ fun ExerciseTopBar(
                 .size(54.dp)
         ) {
             Icon(
-                painterResource(id = categoryIcon),
+                painterResource(id = icon),
                 contentDescription = null,
-                modifier = Modifier.padding(12.dp),
+                modifier = Modifier
+                    .padding(12.dp)
+                    .size(40.dp)
+                    .requiredSize(40.dp),
                 tint = AndroidGreen
             )
         }

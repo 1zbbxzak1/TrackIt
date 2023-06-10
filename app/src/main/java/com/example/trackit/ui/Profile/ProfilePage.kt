@@ -25,7 +25,9 @@ import com.example.trackit.ui.theme.TrackItTheme
 
 @SuppressLint("InflateParams", "SuspiciousIndentation")
 @Composable
-fun ProfilePage() {
+fun ProfilePage(
+    navigateToStatistics: () -> Unit
+) {
     val context = LocalContext.current
 
     AndroidView(

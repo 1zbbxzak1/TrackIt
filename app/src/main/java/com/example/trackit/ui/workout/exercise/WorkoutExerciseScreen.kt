@@ -1,6 +1,5 @@
 package com.example.trackit.ui.workout.exercise
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,7 +24,7 @@ import com.example.trackit.data.workout.CardioExercise
 import com.example.trackit.data.workout.Exercise
 import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
-import com.example.trackit.ui.navigation.ExerciseTopBar
+import com.example.trackit.ui.navigation.TopBarWithLabel
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.workout.*
@@ -55,7 +54,7 @@ fun WorkoutExerciseScreen(
     var selectedExercise by remember { mutableStateOf<Exercise>(CardioExercise("", Duration.ZERO)) }
 
     Column {
-            ExerciseTopBar(selectedCategory.name,selectedCategory.icon, navigateBack)
+            TopBarWithLabel(selectedCategory.name,selectedCategory.icon, navigateBack)
 
             Card(
                 onClick = { creationDialogState.value = true },

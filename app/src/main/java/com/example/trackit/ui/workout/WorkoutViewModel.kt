@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -50,6 +51,33 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
     suspend fun getLastTenDatesWithCompletedExercise(): List<LocalDate> {
         return repository.getLastTenDatesWithCompletedExercise().first()
     }
+
+    suspend fun getLastSeriesOfDaysWithCompletedWorkout(): List<LocalDate> {
+        return repository.getLastSeriesOfDaysWithCompletedWorkout().firstOrNull()?.let { dates ->
+            val consecutiveDays = mutableListOf<LocalDate>()
+            var previousDate: LocalDate? = null
+
+            for (date in dates) {
+                if (previousDate == null || previousDate.minusDays(1) == date) {
+                    consecutiveDays.add(date)
+                } else {
+                    break
+                }
+                previousDate = date
+            }
+
+            consecutiveDays
+        } ?: emptyList()
+    }
+
+    suspend fun getAverageExercisesPerDay(): Float =
+        repository.getAverageExercisesPerDay().firstOrNull() ?: 0.0.toFloat()
+
+    suspend fun getMostPopularCategory(): String =
+        repository.getMostPopularCategory().firstOrNull()?.category?.split(":")?.firstOrNull() ?: ""
+
+    suspend fun getMostPopularExercise(): String =
+        repository.getMostPopularExercise().firstOrNull()?.exercise?.split(":")?.getOrNull(1) ?: ""
 }
 
 data class WorkoutUiState(

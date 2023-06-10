@@ -1,6 +1,8 @@
 package com.example.trackit.ui.statistics
 
-import StatChart
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,26 +20,51 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun WorkoutStatistics(
+    modifier: Modifier = Modifier,
     workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val dates = runBlocking {
         workoutViewModel.getLastTenDatesWithCompletedExercise()
     }.reversed()
 
+    val daySeries = runBlocking {
+        workoutViewModel.getLastSeriesOfDaysWithCompletedWorkout().count()
+    }
+
+    val averageExercises = runBlocking {
+        workoutViewModel.getAverageExercisesPerDay()
+    }
+
+    val popularCategory = runBlocking {
+        workoutViewModel.getMostPopularCategory()
+    }
+
+    val popularExercise = runBlocking {
+        workoutViewModel.getMostPopularExercise()
+    }
+
     val workoutData = generateWorkoutLineDataList(workoutViewModel, dates)
 
-    Card(
-        modifier = Modifier.padding(vertical = 50.dp, horizontal = 10.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = 6.dp,
-        backgroundColor = Arsenic
-    ) {
-        StatChart(
-            data = workoutData,
-            modifier = Modifier
-                .height(600.dp)
-                .padding(5.dp)
-        )
+    Column(modifier = modifier.fillMaxSize()) {
+        StatisticsCard(label = "Серия упражнений", data = daySeries.toString())
+
+        Spacer(Modifier.height(10.dp))
+
+        StatisticsCard(label = "Среднее количество упражнений ", data = "$averageExercises / день")
+
+        Spacer(Modifier.height(10.dp))
+
+        StatisticsCard(label = "Любимая категория", data = popularCategory.ifEmpty { "Нет данных" })
+
+        Spacer(Modifier.height(10.dp))
+
+        StatisticsCard(label = "Любимое упражнение", data = popularExercise.ifEmpty { "Нет данных" })
+
+        Spacer(Modifier.height(40.dp))
+
+        GraphCard(data = workoutData){modifier, data ->
+            LineGraph(modifier, data)
+        }
     }
 }
 

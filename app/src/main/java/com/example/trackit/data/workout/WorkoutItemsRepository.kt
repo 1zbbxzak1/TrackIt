@@ -1,6 +1,7 @@
 package com.example.trackit.data.workout
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 class WorkoutItemsRepository(private val itemDao: WorkoutItemsDao) {
@@ -21,6 +22,18 @@ class WorkoutItemsRepository(private val itemDao: WorkoutItemsDao) {
 
     fun getLastTenDatesWithCompletedExercise(): Flow<List<LocalDate>> =
         itemDao.getLastTenDatesWithCompletedExercise()
+
+    fun getLastSeriesOfDaysWithCompletedWorkout(): Flow<List<LocalDate>> =
+        itemDao.getLastSeriesOfDaysWithCompletedWorkout()
+
+    fun getAverageExercisesPerDay(): Flow<Float> =
+        itemDao.getAverageExercisesPerDay()
+
+    fun getMostPopularCategory(): Flow<CategoryCount> =
+        itemDao.getMostPopularCategory()
+
+    fun getMostPopularExercise(): Flow<ExerciseCount> =
+        itemDao.getMostPopularExercise()
 }
 
 class WorkoutCategoryRepository(private val itemDao: WorkoutCategoryDao){
