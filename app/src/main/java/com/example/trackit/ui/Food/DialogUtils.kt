@@ -41,6 +41,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.round
@@ -319,8 +320,7 @@ fun setupFoodList(
 @Composable
 fun AddWeightDialog(
     onAddWeight: (String) -> Unit,
-    onDismiss: () -> Unit,
-    selectedDate: LocalDate = LocalDate.now()
+    onDismiss: () -> Unit
 ) {
     var weight by remember { mutableStateOf("") }
 

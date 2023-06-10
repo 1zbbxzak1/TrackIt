@@ -13,15 +13,13 @@ class WeightViewModel(private val repository: WeightRepository): ViewModel() {
 
     private val _weightUiState = MutableStateFlow(WeightUiState())
 
-    val weightUiState: MutableStateFlow<WeightUiState> = _weightUiState
-
-    suspend fun updateWeight(item: WeightEntry){
-        repository.updateWeight(item)
-        _weightUiState.value = _weightUiState.value.copy()
-        viewModelScope.launch {
-            _weightUiState.value = repository.getWeights(selectedDate.value).map { WeightUiState(it) }.first().copy()
-        }
-    }
+    val weightUiState =
+        repository.getAllWeightStream().map { WeightUiState(it) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = WeightUiState()
+            )
 
     suspend fun insertWeight(item: WeightEntry){
         repository.insertWeight(item)
@@ -34,7 +32,7 @@ class WeightViewModel(private val repository: WeightRepository): ViewModel() {
         }
     }
 
-    suspend fun getLastNineDatesWithWeight(): List<LocalDate> {
+    suspend fun getLastTenDatesWithWeight(): List<LocalDate> {
         return repository.getLastTenDatesWithWeight().first()
     }
 
@@ -42,15 +40,9 @@ class WeightViewModel(private val repository: WeightRepository): ViewModel() {
         return repository.getWeightByDate(date).first()
     }
 
-    suspend fun getAllWeights(date: LocalDate): List<WeightEntry> {
-        return repository.getAllItemsStream()
-    }
-
     suspend fun getLast(): Double {
         return repository.getLastWeight().firstOrNull() ?: 0.0
     }
 }
 
-data class WeightUiState(
-    val itemList: List<WeightEntry> = listOf()
-)
+data class WeightUiState(val weightList: List<WeightEntry> = listOf())

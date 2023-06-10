@@ -19,14 +19,16 @@ import com.example.trackit.R
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.BrightGray
 import java.time.LocalDate
+import java.time.LocalTime
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun Statistics(
     navigateBack: () -> Unit,
-    selectedDate: LocalDate = LocalDate.now()
+    selectedDate: LocalDate = LocalDate.now(),
+    time: LocalTime = LocalTime.now()
 ) {
-    Column {
+    Column(Modifier.fillMaxHeight()) {
         Row(
             modifier = Modifier
                 .padding(start = 10.dp, end = 10.dp, top = 30.dp),
@@ -58,7 +60,7 @@ fun Statistics(
                 null,
                 Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 10.dp)
                     .weight(2f),
                 Arsenic
             )
@@ -79,7 +81,7 @@ fun Statistics(
                 null,
                 Modifier
                     .align(Alignment.CenterVertically)
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 10.dp)
                     .weight(2f),
                 Arsenic
             )
@@ -99,6 +101,8 @@ fun Statistics(
                 )
             }
         }
-        WeightStats(date = selectedDate)
+        Box {
+            WeightStats(selectedDate)
+        }
     }
 }

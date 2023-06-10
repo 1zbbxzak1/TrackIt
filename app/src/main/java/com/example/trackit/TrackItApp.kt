@@ -30,6 +30,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import java.time.LocalDate
+import java.time.LocalTime
 
 @OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnrememberedMutableState")
@@ -44,6 +45,8 @@ fun TrackItApp(
     val selectedDate = remember {
         mutableStateOf(LocalDate.now())
     }
+
+    val currTime = mutableStateOf(LocalTime.now())
 
     val currentScreen = Screen.valueOf(
         backStackEntry?.destination?.route ?: Screen.Profile.name
@@ -307,7 +310,8 @@ fun TrackItApp(
             ) {
                 Statistics(
                     navigateBack = { navController.popBackStack() },
-                    selectedDate = selectedDate.value
+                    selectedDate = selectedDate.value,
+                    time = currTime.value
                 )
             }
         }

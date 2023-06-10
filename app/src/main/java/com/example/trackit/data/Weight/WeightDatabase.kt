@@ -5,10 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.trackit.data.workout.LocalDateConverter
 
-@Database(entities = [WeightEntry::class], version = 1)
-@TypeConverters(LocalDateConverter::class)
+@Database(entities = [WeightEntry::class], version = 2)
+@TypeConverters(DateConverter::class, LocalTimeConverter::class)
 abstract class WeightDatabase : RoomDatabase() {
     abstract fun weightDao(): WeightDao
 
