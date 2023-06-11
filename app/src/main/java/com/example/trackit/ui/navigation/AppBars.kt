@@ -191,6 +191,7 @@ fun BottomBar(
 fun TopBarWithLabel(
     label: String,
     @DrawableRes icon: Int,
+    iconColor: Color = AndroidGreen,
     navigateBack: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
@@ -261,7 +262,7 @@ fun TopBarWithLabel(
                     .padding(12.dp)
                     .size(40.dp)
                     .requiredSize(40.dp),
-                tint = AndroidGreen
+                tint = iconColor
             )
         }
     }

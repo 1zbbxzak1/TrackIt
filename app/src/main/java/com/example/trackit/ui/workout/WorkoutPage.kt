@@ -60,7 +60,7 @@ fun WorkoutPage(
             WorkoutEntity(
                 0,
                 "",
-                CardioExercise("", Duration.ZERO),
+                CardioExercise(name = "", time = Duration.ZERO),
                 WorkoutCategory(0, "", mutableListOf()),
                 LocalDate.now(),
                 false
@@ -261,7 +261,7 @@ private fun WorkoutItem(
     onCheckedChange: (WorkoutEntity) -> Unit,
     onEdit: (WorkoutEntity) -> Unit,
     modifier: Modifier = Modifier,
-    icon: Int = R.drawable.workout_icon
+    icon: Int = workout_icon
 ){
     var expanded by remember {
         mutableStateOf(false)
@@ -306,8 +306,7 @@ private fun WorkoutItem(
                             .padding(horizontal = 10.dp),
                         shape = RoundedCornerShape(15.dp),
                         backgroundColor = Color.White,
-                        border = BorderStroke(1.dp, Arsenic),
-                        elevation = 0.dp
+                        elevation = 4.dp
                     ){
                         Row(
                             horizontalArrangement = Arrangement.Center,
@@ -354,10 +353,9 @@ private fun WorkoutItem(
                         .padding(horizontal = 6.dp, vertical = 8.dp)
                         .background(BrightGray)
                         .clickable { onEdit(item) },
-                    elevation = 2.dp,
+                    elevation = 4.dp,
                     shape = RoundedCornerShape(15.dp),
                     backgroundColor = Color.White,
-                    border = BorderStroke(1.dp, Arsenic)
                 ) {
                     Column(
                         Modifier

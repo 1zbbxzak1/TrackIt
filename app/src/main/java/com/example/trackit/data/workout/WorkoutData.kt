@@ -29,15 +29,20 @@ data class ExerciseCount(
 )
 
 sealed class Exercise {
+    abstract var id: Int
     abstract val name: String
 }
 
 data class CardioExercise(
+    @PrimaryKey(autoGenerate = true)
+    override var id: Int = 0,
     override val name: String,
     val time: Duration
 ) : Exercise()
 
 data class StrengthExercise(
+    @PrimaryKey(autoGenerate = true)
+    override var id: Int = 0,
     override val name: String,
     val weight: Int,
     val repeatCount: Int,
@@ -58,8 +63,8 @@ class ExerciseConverter {
     @TypeConverter
     fun fromExercise(exercise: Exercise): String {
         return when (exercise) {
-            is CardioExercise -> "cardio:${exercise.name}:${exercise.time.toString()}"
-            is StrengthExercise -> "strength:${exercise.name}:${exercise.weight}:${exercise.repeatCount}:${exercise.approachCount}"
+            is CardioExercise -> "cardio:${exercise.id}:${exercise.name}:${exercise.time.toString()}"
+            is StrengthExercise -> "strength:${exercise.id}:${exercise.name}:${exercise.weight}:${exercise.repeatCount}:${exercise.approachCount}"
         }
     }
 
@@ -68,16 +73,18 @@ class ExerciseConverter {
         val parts = value.split(":")
         return when (parts[0]) {
             "cardio" -> CardioExercise(
-                parts[1],
-                Duration.parse(parts[2])
+                parts[1].toInt(),
+                parts[2],
+                Duration.parse(parts[3])
             )
             "strength" -> StrengthExercise(
-                parts[1],
-                parts[2].toInt(),
+                parts[1].toInt(),
+                parts[2],
                 parts[3].toInt(),
-                parts[4].toInt()
+                parts[4].toInt(),
+                parts[5].toInt()
             )
-            else -> CardioExercise("", Duration.ZERO)
+            else -> CardioExercise(0, "", Duration.ZERO)
         }
     }
 

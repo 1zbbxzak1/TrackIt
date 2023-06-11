@@ -1,5 +1,6 @@
 package com.example.trackit.ui.workout.exercise
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,11 +37,11 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutExerciseScreen(
+    modifier: Modifier = Modifier,
     categoryId: Int?,
     navigateBack: () -> Unit,
     navigateToWorkoutPage: () -> Unit,
     selectedDate: LocalDate = LocalDate.now(),
-    modifier: Modifier = Modifier,
     viewModel: WorkoutExerciseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -50,11 +51,14 @@ fun WorkoutExerciseScreen(
     val creationDialogState = remember { mutableStateOf(false) }
     val addDialogState = remember { mutableStateOf(false) }
     val textState = remember { mutableStateOf(TextFieldValue("")) }
-    //var selectedExercise: Exercise = CardioExercise("", Duration.ZERO)
-    var selectedExercise by remember { mutableStateOf<Exercise>(CardioExercise("", Duration.ZERO)) }
+    var selectedExercise by remember { mutableStateOf<Exercise>(CardioExercise(name = "", time = Duration.ZERO)) }
 
     Column {
-            TopBarWithLabel(selectedCategory.name,selectedCategory.icon, navigateBack)
+            TopBarWithLabel(
+                label = selectedCategory.name,
+                icon = selectedCategory.icon,
+                navigateBack = navigateBack
+            )
 
             Card(
                 onClick = { creationDialogState.value = true },
@@ -145,6 +149,7 @@ private fun WorkoutExerciseBody(
     WorkoutExerciseList(itemList, onClick, textState, onDelete, modifier = modifier)
 }
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun WorkoutExerciseList(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
@@ -183,9 +188,48 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            items(itemList.reversed()) { item ->
-                WorkoutExerciseItem(item, onClick, onDelete)
-            }
+            items(itemList.reversed(), key = { item -> item.id }, itemContent = { item ->
+                val dismissThreshold = 0.25f
+                val currentFraction = remember { mutableStateOf(0f) }
+
+                var willDismissDirection: DismissDirection? by remember {
+                    mutableStateOf(null)
+                }
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        when(it){
+                            DismissValue.DismissedToStart -> {
+                                if (currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f) {
+                                    onDelete(item)
+                                }
+                                currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f
+                            }
+                            else -> false
+                        }
+                    }
+                )
+
+                willDismissDirection = when(dismissState.targetValue){
+                    DismissValue.Default -> null
+                    else ->DismissDirection.EndToStart
+                }
+
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    dismissThresholds = {
+                        FractionalThreshold(dismissThreshold)
+                    },
+                    modifier = Modifier
+                        .animateItemPlacement(),
+                    background = {
+                        SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
+                    },
+                    dismissContent = {
+                        WorkoutExerciseItem(item, onClick)
+                    }
+                )
+            })
 
             item(){
                 Spacer(modifier.height(100.dp))
@@ -198,7 +242,6 @@ private fun WorkoutExerciseList(
 @Composable
 private fun WorkoutExerciseItem(
     item: Exercise, onClick: (Exercise) -> Unit,
-    onDelete: (Exercise) -> Unit,
     modifier: Modifier = Modifier
 ){
     if (item.name.isNotBlank()){
@@ -221,11 +264,6 @@ private fun WorkoutExerciseItem(
                     fontSize = 20.sp,
                     color = Arsenic
                 ), modifier = Modifier.weight(10f))
-
-                IconButton(onClick = { onDelete(item) }) {
-                    Icon(Icons.Rounded.Delete, contentDescription = "Удалить упражнение",
-                        tint = Arsenic)
-                }
 
                 Icon(
                     Icons.Rounded.KeyboardArrowRight,

@@ -4,9 +4,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.trackit.data.workout.*
+import com.example.trackit.ui.workout.category.WorkoutCategoryUiState
+import com.example.trackit.ui.workout.category.WorkoutCategoryViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class WorkoutExerciseViewModel(
@@ -14,7 +19,7 @@ class WorkoutExerciseViewModel(
     private val categoryRepository: WorkoutCategoryRepository
     ) : ViewModel() {
 
-    var selectedId = mutableStateOf(-1)
+    val selectedId = mutableStateOf(-1)
 
     private val _selectedCategory = MutableStateFlow(WorkoutCategory(0, "", mutableListOf()))
     val selectedCategory: StateFlow<WorkoutCategory> = _selectedCategory
@@ -35,6 +40,7 @@ class WorkoutExerciseViewModel(
             if (_selectedCategory.value.exercises.isEmpty() || _selectedCategory.value.exercises[0].name.isBlank()){
                 _selectedCategory.value = WorkoutCategory(selectedId.value, _selectedCategory.value.name, mutableListOf(exercise))
             }else{
+                exercise.id = _selectedCategory.value.exercises.last().id + 1
                 _selectedCategory.value.exercises.add(exercise)
             }
             categoryRepository.updateItem(_selectedCategory.value)
@@ -64,6 +70,10 @@ class WorkoutExerciseViewModel(
 
     suspend fun insertWorkoutEntity(item: WorkoutEntity){
         workoutRepository.insertItem(item)
+    }
+
+    companion object {
+        private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 

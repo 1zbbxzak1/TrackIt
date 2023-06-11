@@ -1,5 +1,6 @@
 package com.example.trackit.ui.statistics
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,22 +46,16 @@ fun WorkoutStatistics(
 
     val workoutData = generateWorkoutLineDataList(workoutViewModel, dates)
 
-    Column(modifier = modifier.fillMaxSize()) {
-        StatisticsCard(label = "Серия упражнений", data = daySeries.toString())
+    Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        StatisticsCard(label = "Серия упражнений", data = "$daySeries")
 
-        Spacer(Modifier.height(10.dp))
-
-        StatisticsCard(label = "Среднее количество упражнений ", data = "$averageExercises / день")
-
-        Spacer(Modifier.height(10.dp))
+        StatisticsCard(label = "Среднее количество упражнений ", data = "${String.format("%.1f", averageExercises)} / день")
 
         StatisticsCard(label = "Любимая категория", data = popularCategory.ifEmpty { "Нет данных" })
 
-        Spacer(Modifier.height(10.dp))
-
         StatisticsCard(label = "Любимое упражнение", data = popularExercise.ifEmpty { "Нет данных" })
 
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(20.dp))
 
         GraphCard(data = workoutData){modifier, data ->
             LineGraph(modifier, data)

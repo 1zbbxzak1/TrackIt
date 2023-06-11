@@ -20,6 +20,7 @@ import com.example.trackit.R
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.CaptionColor
+import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -99,11 +100,14 @@ fun LineGraph(
                     animateXY(300, 300)
                     setDrawBorders(true)
                     setBorderColor(Arsenic.toArgb())
+                    setPadding(20, 160, 20, 160)
+                    setBackgroundColor(Arsenic.toArgb())
+
+                    // No data text
                     setNoDataText("Используйте приложение, чтобы появилась статистика")
                     setNoDataTextColor(CaptionColor.toArgb())
                     setNoDataTextTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
-                    setPadding(20, 160, 20, 160)
-                    setBackgroundColor(Arsenic.toArgb())
+                    getPaint(Chart.PAINT_INFO).textSize = 36f;
                 }
             })
     }

@@ -1,6 +1,7 @@
 package com.example.trackit.ui.statistics
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -26,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.trackit.R
@@ -45,6 +48,7 @@ fun StatisticsPage(
         TopBarWithLabel(
             label = "Статистика",
             icon = R.drawable.statistics_icon,
+            iconColor = Arsenic,
             navigateBack = navigateBack
         )
 
@@ -92,7 +96,9 @@ fun StatisticsCard(
                     color = Arsenic
                 )
             )
-            
+
+            Spacer(Modifier.width(5.dp))
+
             Spacer(modifier = Modifier.weight(1f))
 
             Card(
@@ -102,14 +108,18 @@ fun StatisticsCard(
                 elevation = 4.dp
             ) {
                 Text(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp, vertical = 5.dp),
                     text = data,
                     style = TextStyle(
                         fontFamily = FontFamily.Default,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         color = Arsenic
-                    )
+                    ),
+                    overflow = TextOverflow.Ellipsis,
+                    softWrap = true,
+                    maxLines = 1
                 )
             }
         }

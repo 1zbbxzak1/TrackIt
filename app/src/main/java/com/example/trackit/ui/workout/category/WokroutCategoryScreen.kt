@@ -1,6 +1,7 @@
 package com.example.trackit.ui.workout.category
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +15,6 @@ import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -29,6 +29,7 @@ import com.example.trackit.ui.navigation.WorkoutEditTopBar
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.workout.AddCategoryDialog
+import com.example.trackit.ui.workout.SwipeBackground
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -117,6 +118,7 @@ private fun WorkoutCategoryBody(
     WorkoutCategoryList(itemList = itemList, onClick, textState, onDelete, modifier = modifier)
 }
 
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun WorkoutCategoryList(
     itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
@@ -143,9 +145,48 @@ private fun WorkoutCategoryList(
             }
         }
 
-        items(filteredItems){item ->
-            WorkoutCategoryItem(item = item, onClick, onDelete)
-        }
+        items(filteredItems, key = { item -> item.id }, itemContent = {item ->
+            val dismissThreshold = 0.25f
+            val currentFraction = remember { mutableStateOf(0f) }
+
+            var willDismissDirection: DismissDirection? by remember {
+                mutableStateOf(null)
+            }
+            val dismissState = rememberDismissState(
+                confirmStateChange = {
+                    when(it){
+                        DismissValue.DismissedToStart -> {
+                            if (currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f) {
+                                onDelete(item)
+                            }
+                            currentFraction.value >= dismissThreshold && currentFraction.value < 1.0f
+                        }
+                        else -> false
+                    }
+                }
+            )
+
+            willDismissDirection = when(dismissState.targetValue){
+                DismissValue.Default -> null
+                else ->DismissDirection.EndToStart
+            }
+
+            SwipeToDismiss(
+                state = dismissState,
+                directions = setOf(DismissDirection.EndToStart),
+                dismissThresholds = {
+                    FractionalThreshold(dismissThreshold)
+                },
+                modifier = Modifier
+                    .animateItemPlacement(),
+                background = {
+                    SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
+                },
+                dismissContent = {
+                    WorkoutCategoryItem(item = item, onClick)
+                }
+            )
+        })
 
         item(){
             Spacer(modifier.height(100.dp))
@@ -157,7 +198,6 @@ private fun WorkoutCategoryList(
 @Composable
 private fun WorkoutCategoryItem(
     item: WorkoutCategory, onClick: (Int) -> Unit,
-    onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
 ){
     Card(
@@ -188,11 +228,6 @@ private fun WorkoutCategoryItem(
                     color = Arsenic
                 )
             )
-
-            IconButton(onClick = { onDelete(item) }) {
-                Icon(Icons.Rounded.Delete, contentDescription = "Удалить категорию",
-                    tint = Arsenic)
-            }
 
             Icon(
                 Icons.Rounded.KeyboardArrowRight,

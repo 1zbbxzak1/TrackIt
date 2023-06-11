@@ -223,7 +223,7 @@ fun TrackItApp(
                 val categoryId =
                     navController.previousBackStackEntry?.savedStateHandle?.get<Int>("categoryId")
                 WorkoutExerciseScreen(
-                    categoryId,
+                    categoryId = categoryId,
                     navigateBack = { navController.popBackStack() },
                     navigateToWorkoutPage = { navController.navigate(Screen.Workout.name) },
                     selectedDate = selectedDate.value

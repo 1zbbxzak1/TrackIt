@@ -77,7 +77,7 @@ class WorkoutViewModel(private val repository: WorkoutItemsRepository): ViewMode
         repository.getMostPopularCategory().firstOrNull()?.category?.split(":")?.firstOrNull() ?: ""
 
     suspend fun getMostPopularExercise(): String =
-        repository.getMostPopularExercise().firstOrNull()?.exercise?.split(":")?.getOrNull(1) ?: ""
+        repository.getMostPopularExercise().firstOrNull()?.exercise?.split(":")?.getOrNull(2) ?: ""
 }
 
 data class WorkoutUiState(

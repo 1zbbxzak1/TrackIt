@@ -221,14 +221,14 @@ fun ExerciseDialog(
                                     onAddExercise(
                                         when (selectedExercise) {
                                             is CardioExercise -> CardioExercise(
-                                                selectedExercise.name,
-                                                Duration.ofMinutes(durationField.toLong())
+                                                name = selectedExercise.name,
+                                                time = Duration.ofMinutes(durationField.toLong())
                                             )
                                             is StrengthExercise -> StrengthExercise(
-                                                selectedExercise.name,
-                                                if (weightField.isBlank()) 0 else weightField.toInt(),
-                                                repeatCountField.toInt(),
-                                                approachCountField.toInt()
+                                                name = selectedExercise.name,
+                                                weight = if (weightField.isBlank()) 0 else weightField.toInt(),
+                                                repeatCount = repeatCountField.toInt(),
+                                                approachCount = approachCountField.toInt()
                                             )
                                         }
                                     )
@@ -318,12 +318,12 @@ fun CreateNewExerciseDialog(
                                     onAddExercise(
                                         when (currentExercise) {
                                             ExerciseType.Cardio -> CardioExercise(
-                                                exerciseName,
-                                                Duration.ZERO
+                                                name = exerciseName,
+                                                time = Duration.ZERO
                                             )
                                             ExerciseType.Strength -> StrengthExercise(
-                                                exerciseName,
-                                                0, 0, 0
+                                                name = exerciseName,
+                                                weight = 0, repeatCount = 0, approachCount = 0
                                             )
                                         }
                                     )
