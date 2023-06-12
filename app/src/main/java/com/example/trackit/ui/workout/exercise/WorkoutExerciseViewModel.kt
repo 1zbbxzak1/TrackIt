@@ -40,7 +40,6 @@ class WorkoutExerciseViewModel(
             if (_selectedCategory.value.exercises.isEmpty() || _selectedCategory.value.exercises[0].name.isBlank()){
                 _selectedCategory.value = WorkoutCategory(selectedId.value, _selectedCategory.value.name, mutableListOf(exercise))
             }else{
-                exercise.id = _selectedCategory.value.exercises.last().id + 1
                 _selectedCategory.value.exercises.add(exercise)
             }
             categoryRepository.updateItem(_selectedCategory.value)

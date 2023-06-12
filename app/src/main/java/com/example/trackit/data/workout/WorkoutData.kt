@@ -1,9 +1,11 @@
 package com.example.trackit.data.workout
 
+import android.util.Log
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.example.trackit.R
+import com.example.trackit.data.food.generateUniqueID
 import java.time.Duration
 import java.time.LocalDate
 
@@ -29,24 +31,22 @@ data class ExerciseCount(
 )
 
 sealed class Exercise {
-    abstract var id: Int
+    abstract var id: Long
     abstract val name: String
 }
 
 data class CardioExercise(
-    @PrimaryKey(autoGenerate = true)
-    override var id: Int = 0,
     override val name: String,
-    val time: Duration
+    val time: Duration,
+    override var id: Long = generateUniqueID()
 ) : Exercise()
 
 data class StrengthExercise(
-    @PrimaryKey(autoGenerate = true)
-    override var id: Int = 0,
     override val name: String,
     val weight: Int,
     val repeatCount: Int,
-    val approachCount: Int
+    val approachCount: Int,
+    override var id: Long = generateUniqueID()
 ) : Exercise()
 
 @Entity(tableName = "workout_categories")
@@ -63,8 +63,8 @@ class ExerciseConverter {
     @TypeConverter
     fun fromExercise(exercise: Exercise): String {
         return when (exercise) {
-            is CardioExercise -> "cardio:${exercise.id}:${exercise.name}:${exercise.time.toString()}"
-            is StrengthExercise -> "strength:${exercise.id}:${exercise.name}:${exercise.weight}:${exercise.repeatCount}:${exercise.approachCount}"
+            is CardioExercise -> "cardio:${exercise.name}:${exercise.time.toString()}:${exercise.id}"
+            is StrengthExercise -> "strength:${exercise.name}:${exercise.weight}:${exercise.repeatCount}:${exercise.approachCount}:${exercise.id}"
         }
     }
 
@@ -72,19 +72,27 @@ class ExerciseConverter {
     fun toExercise(value: String): Exercise {
         val parts = value.split(":")
         return when (parts[0]) {
-            "cardio" -> CardioExercise(
-                parts[1].toInt(),
-                parts[2],
-                Duration.parse(parts[3])
-            )
-            "strength" -> StrengthExercise(
-                parts[1].toInt(),
-                parts[2],
-                parts[3].toInt(),
-                parts[4].toInt(),
-                parts[5].toInt()
-            )
-            else -> CardioExercise(0, "", Duration.ZERO)
+            "cardio" -> {
+                if (parts.size < 5){
+                    Log.d("??????", parts.toString())
+                }
+                CardioExercise(
+                    parts[1],
+                    Duration.parse(parts[2]),
+                    if (parts.size == 4) parts[3].toLong() else generateUniqueID(),
+                )
+            }
+            "strength" -> {
+                if (parts.size < 7) Log.d("??????", parts.toString())
+                StrengthExercise(
+                    parts[1],
+                    parts[2].toInt(),
+                    parts[3].toInt(),
+                    parts[4].toInt(),
+                    if (parts.size == 6) parts[5].toLong() else generateUniqueID(),
+                )
+            }
+            else -> CardioExercise("", Duration.ZERO)
         }
     }
 
