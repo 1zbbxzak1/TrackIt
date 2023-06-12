@@ -25,7 +25,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -485,4 +489,26 @@ fun CustomCheckBox(
                 .requiredSize(30.dp)
         )
     }
+}
+
+@Composable
+fun getHighlightedText(text: String, searchedText: String): AnnotatedString {
+    val startIndex = text.indexOf(searchedText, ignoreCase = true)
+    if (startIndex == -1) {
+        return AnnotatedString(text)
+    }
+    val endIndex = startIndex + searchedText.length
+    val annotatedString =  buildAnnotatedString {
+        val beforeMatch = text.substring(0, startIndex)
+        val match = text.substring(startIndex, endIndex)
+        val afterMatch = text.substring(endIndex)
+
+        append(beforeMatch)
+        withStyle(style = SpanStyle(color = AndroidGreen)) {
+            append(match)
+        }
+        append(afterMatch)
+    }
+
+    return annotatedString
 }

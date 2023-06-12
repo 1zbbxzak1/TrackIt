@@ -21,7 +21,6 @@ import com.example.trackit.ui.FoodPage
 import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
-import com.example.trackit.ui.statistics.Statistics
 import com.example.trackit.ui.statistics.StatisticsPage
 import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.WorkoutPage
@@ -188,11 +187,9 @@ fun TrackItApp(
                 }
             ) {
                 WorkoutCategoryScreen(
-                    onCategorySelect = { categoryId ->
-                        navController.currentBackStackEntry?.savedStateHandle?.set(
-                            "categoryId",
-                            categoryId
-                        )
+                    onCategorySelect = { categoryId, searchedText ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set("categoryId", categoryId)
+                        navController.currentBackStackEntry?.savedStateHandle?.set("searchedText", searchedText)
                         navController.navigate(Screen.WorkoutExercise.name)
                     },
                     navigateBack = { navController.popBackStack() }
@@ -220,12 +217,13 @@ fun TrackItApp(
                     )
                 }
             ) {
-                val categoryId =
-                    navController.previousBackStackEntry?.savedStateHandle?.get<Int>("categoryId")
+                val categoryId = navController.previousBackStackEntry?.savedStateHandle?.get<Int>("categoryId")
+                val searchedText = navController.previousBackStackEntry?.savedStateHandle?.get<String>("searchedText") ?: ""
                 WorkoutExerciseScreen(
                     categoryId = categoryId,
                     navigateBack = { navController.popBackStack() },
                     navigateToWorkoutPage = { navController.navigate(Screen.Workout.name) },
+                    searchedText = searchedText,
                     selectedDate = selectedDate.value
                 )
             }

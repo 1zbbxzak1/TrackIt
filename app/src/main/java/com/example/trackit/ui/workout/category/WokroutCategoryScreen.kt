@@ -1,8 +1,6 @@
 package com.example.trackit.ui.workout.category
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,13 +27,14 @@ import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.workout.AddCategoryDialog
 import com.example.trackit.ui.workout.SwipeBackground
+import com.example.trackit.ui.workout.getHighlightedText
 import kotlinx.coroutines.launch
 import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutCategoryScreen(
-    onCategorySelect: (Int) -> Unit,
+    onCategorySelect: (Int, String) -> Unit,
     navigateBack: () -> Unit,
     viewModel: WorkoutCategoryViewModel = viewModel(factory = AppViewModelProvider.Factory),
     modifier: Modifier = Modifier
@@ -110,7 +108,7 @@ fun WorkoutCategoryScreen(
 
 @Composable
 private fun WorkoutCategoryBody(
-    itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
+    itemList: List<WorkoutCategory>, onClick: (Int, String) -> Unit,
     textState: MutableState<TextFieldValue>,
     onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
@@ -121,7 +119,7 @@ private fun WorkoutCategoryBody(
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun WorkoutCategoryList(
-    itemList: List<WorkoutCategory>, onClick: (Int) -> Unit,
+    itemList: List<WorkoutCategory>, onClick: (Int, String) -> Unit,
     textState: MutableState<TextFieldValue>,
     onDelete: (WorkoutCategory) -> Unit,
     modifier: Modifier = Modifier
@@ -183,7 +181,7 @@ private fun WorkoutCategoryList(
                     SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
                 },
                 dismissContent = {
-                    WorkoutCategoryItem(item = item, onClick)
+                    WorkoutCategoryItem(item = item, onClick, searchedText)
                 }
             )
         })
@@ -197,11 +195,12 @@ private fun WorkoutCategoryList(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun WorkoutCategoryItem(
-    item: WorkoutCategory, onClick: (Int) -> Unit,
+    item: WorkoutCategory, onClick: (Int, String) -> Unit,
+    searchedText: String = "",
     modifier: Modifier = Modifier
 ){
     Card(
-        onClick = {onClick(item.id)},
+        onClick = {onClick(item.id, searchedText)},
         modifier = modifier
             .padding(horizontal = 10.dp)
             .fillMaxWidth()
@@ -220,7 +219,8 @@ private fun WorkoutCategoryItem(
 
             Spacer(Modifier.width(10.dp))
 
-            Text(text = item.name, modifier = Modifier.weight(1f),
+            val highlightedText = getHighlightedText(item.name, searchedText)
+            Text(text = highlightedText, modifier = Modifier.weight(1f),
                 style = TextStyle(
                     fontFamily = FontFamily.Default,
                     fontWeight = FontWeight.Medium,

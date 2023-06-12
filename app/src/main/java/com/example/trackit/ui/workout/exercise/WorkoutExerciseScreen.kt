@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -42,6 +42,7 @@ fun WorkoutExerciseScreen(
     navigateBack: () -> Unit,
     navigateToWorkoutPage: () -> Unit,
     selectedDate: LocalDate = LocalDate.now(),
+    searchedText: String = "",
     viewModel: WorkoutExerciseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -103,6 +104,7 @@ fun WorkoutExerciseScreen(
                         viewModel.deleteItem(it)
                     }
                 },
+                searchedText = searchedText,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -144,9 +146,10 @@ private fun WorkoutExerciseBody(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
     textState: MutableState<TextFieldValue>,
     onDelete: (Exercise) -> Unit,
+    searchedText: String = "",
     modifier: Modifier = Modifier
 ){
-    WorkoutExerciseList(itemList, onClick, textState, onDelete, modifier = modifier)
+    WorkoutExerciseList(itemList, onClick, textState, onDelete, searchedText, modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
@@ -155,6 +158,7 @@ private fun WorkoutExerciseList(
     itemList: List<Exercise>, onClick: (Exercise) -> Unit,
     textState: MutableState<TextFieldValue>,
     onDelete: (Exercise) -> Unit,
+    searchedText: String = "",
     modifier: Modifier = Modifier
 ){
     val state = rememberLazyListState()
@@ -166,19 +170,20 @@ private fun WorkoutExerciseList(
             modifier = modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(18.dp)
         ) {
-//            val searchedText = textState.value.text
-//            filteredItems = if (searchedText.isEmpty()){
-//                itemList
-//            } else {
-//                val resultList = ArrayList<Exercise>()
-//                for (item in itemList){
-//                    if (item.name.lowercase(Locale.getDefault())
-//                            .contains(searchedText.lowercase(Locale.getDefault()))){
-//                        resultList.add(item)
-//                    }
-//                }
-//                resultList
-//            }
+            filteredItems = if (searchedText.isEmpty()){
+                itemList
+            } else {
+                val resultList = ArrayList<Exercise>()
+                for (item in itemList){
+                    if (item.name.lowercase(Locale.getDefault())
+                            .contains(searchedText.lowercase(Locale.getDefault()))){
+                        resultList.add(item)
+                    }
+                }
+                resultList
+            }
+
+            if (filteredItems.isEmpty()) filteredItems = itemList
 
             item {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -188,7 +193,7 @@ private fun WorkoutExerciseList(
                 }
             }
 
-            items(itemList.reversed(), key = { item -> item.id }, itemContent = { item ->
+            items(filteredItems.reversed(), key = { item -> item.id }, itemContent = { item ->
                 val dismissThreshold = 0.25f
                 val currentFraction = remember { mutableStateOf(0f) }
 
@@ -226,7 +231,7 @@ private fun WorkoutExerciseList(
                         SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
                     },
                     dismissContent = {
-                        WorkoutExerciseItem(item, onClick)
+                        WorkoutExerciseItem(item, onClick, searchedText)
                     }
                 )
             })
@@ -238,32 +243,40 @@ private fun WorkoutExerciseList(
     }
 }
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun WorkoutExerciseItem(
-    item: Exercise, onClick: (Exercise) -> Unit,
+fun WorkoutExerciseItem(
+    item: Exercise,
+    onClick: (Exercise) -> Unit,
+    searchedText: String = "",
     modifier: Modifier = Modifier
-){
-    if (item.name.isNotBlank()){
+) {
+    if (item.name.isNotBlank()) {
         Card(
             onClick = { onClick(item) },
             shape = RoundedCornerShape(20.dp),
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
-                //.height(60.dp),
-            ,elevation = 2.dp
+            , elevation = 2.dp
         ) {
             Row(
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(text = item.name, style = TextStyle(
-                    fontFamily = FontFamily.Default,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 20.sp,
-                    color = Arsenic
-                ), modifier = Modifier.weight(10f))
+            ) {
+                val highlightedText = getHighlightedText(item.name, searchedText)
+                Text(
+                    text = highlightedText,
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 20.sp,
+                        color = Arsenic
+                    ),
+                    modifier = Modifier.weight(10f),
+                    overflow = TextOverflow.Ellipsis
+                )
 
                 Icon(
                     Icons.Rounded.KeyboardArrowRight,
