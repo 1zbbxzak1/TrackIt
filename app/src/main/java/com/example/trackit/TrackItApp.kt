@@ -79,7 +79,7 @@ fun TrackItApp(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         AnimatedNavHost(
             navController,
             startDestination = Screen.Profile.name,
