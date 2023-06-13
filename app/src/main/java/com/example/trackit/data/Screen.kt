@@ -5,7 +5,6 @@ enum class Screen {
     Workout,
     WorkoutCategory,
     WorkoutExercise,
-    WorkoutCategoryEntry,
     Food,
     NutritionFood,
     Statistics

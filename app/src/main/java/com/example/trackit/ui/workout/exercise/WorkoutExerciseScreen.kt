@@ -270,7 +270,7 @@ fun WorkoutExerciseItem(
                     text = highlightedText,
                     style = TextStyle(
                         fontFamily = FontFamily.Default,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         color = Arsenic
                     ),

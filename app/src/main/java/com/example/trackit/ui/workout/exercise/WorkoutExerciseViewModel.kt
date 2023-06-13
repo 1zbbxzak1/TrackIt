@@ -67,6 +67,16 @@ class WorkoutExerciseViewModel(
         }
     }
 
+    suspend fun getExerciseByCategoryId(categoryId: Int) : List<Exercise> {
+        var list: List<Exercise> = listOf()
+
+        viewModelScope.launch {
+            list = categoryRepository.getItemStream(categoryId).first()?.exercises ?: listOf()
+        }
+
+        return list
+    }
+
     suspend fun insertWorkoutEntity(item: WorkoutEntity){
         workoutRepository.insertItem(item)
     }

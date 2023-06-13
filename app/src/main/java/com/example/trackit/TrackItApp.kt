@@ -54,28 +54,9 @@ fun TrackItApp(
 
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
-    when (backStackEntry?.destination?.route){
-        Screen.Profile.name -> {
-            bottomBarState.value = true
-        }
-        Screen.Food.name -> {
-            bottomBarState.value = true
-        }
-        Screen.Workout.name -> {
-            bottomBarState.value = true
-        }
-        Screen.WorkoutCategory.name -> {
-            bottomBarState.value = false
-        }
-        Screen.WorkoutExercise.name -> {
-            bottomBarState.value = false
-        }
-        Screen.NutritionFood.name -> {
-            bottomBarState.value = false
-        }
-        Screen.Statistics.name -> {
-            bottomBarState.value = false
-        }
+    bottomBarState.value = when (backStackEntry?.destination?.route){
+        Screen.Profile.name, Screen.Food.name, Screen.Workout.name -> true
+        else -> false
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -84,7 +65,6 @@ fun TrackItApp(
             startDestination = Screen.Profile.name,
             modifier = Modifier.weight(100f)
         ) {
-
             composable(
                 route = Screen.Profile.name,
                 enterTransition = {
@@ -192,7 +172,9 @@ fun TrackItApp(
                         navController.currentBackStackEntry?.savedStateHandle?.set("searchedText", searchedText)
                         navController.navigate(Screen.WorkoutExercise.name)
                     },
-                    navigateBack = { navController.popBackStack() }
+                    navigateBack = { navController.popBackStack() },
+                    navigateToWorkoutPage = { navController.navigate(Screen.Workout.name) },
+                    selectedDate = selectedDate.value
                 )
             }
 
