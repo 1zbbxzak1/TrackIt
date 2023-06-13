@@ -112,6 +112,7 @@ fun TrackItApp(
                 enterTransition = {
                     when (initialState.destination.route) {
                         Screen.WorkoutExercise.name -> fadeIn()
+                        Screen.WorkoutCategory.name -> fadeIn()
                         else -> slideIntoContainer(
                             AnimatedContentTransitionScope.SlideDirection.Left,
                             tween(200)
@@ -151,10 +152,13 @@ fun TrackItApp(
                     )
                 },
                 exitTransition = {
-                    slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(400)
-                    )
+                    when (targetState.destination.route) {
+                        Screen.Workout.name -> ExitTransition.None
+                        else -> slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Left,
+                            animationSpec = tween(400)
+                        )
+                    }
                 },
                 popEnterTransition = {
                     slideIntoContainer(

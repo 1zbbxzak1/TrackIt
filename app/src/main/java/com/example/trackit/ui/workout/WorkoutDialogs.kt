@@ -56,6 +56,8 @@ fun ExerciseDialog(
         }
     }
 
+    val context = LocalContext.current
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(25.dp)
@@ -68,6 +70,18 @@ fun ExerciseDialog(
                     modifier = Modifier
                         .padding(10.dp)
                 ) {
+                    val enabled = when (selectedExercise){
+                        is StrengthExercise -> {
+                            selectedExercise.name.isNotBlank() &&
+                                    repeatCountField.isNotBlank() && repeatCountField.toInt() in 1..1000
+                                    && approachCountField.isNotBlank() && approachCountField.toInt() in 1..1000
+                        }
+                        is CardioExercise -> {
+                            selectedExercise.name.isNotBlank() &&
+                                    durationField.isNotBlank() && durationField.toInt() in 1..1440
+                        }
+                    }
+
                     when(selectedExercise){
                         is StrengthExercise -> {
                             Column(
@@ -113,7 +127,10 @@ fun ExerciseDialog(
                                     ),
                                     keyboardActions = KeyboardActions(
                                         onNext = {
-                                            focusManager.moveFocus(FocusDirection.Down)
+                                            if (repeatCountField.isNotBlank() && repeatCountField.toInt() in 1..1000)
+                                                focusManager.moveFocus(FocusDirection.Down)
+                                            else
+                                                Toast.makeText(context, "Введите количество повторений", Toast.LENGTH_SHORT).show()
                                         }
                                     ),
                                     modifier = Modifier
@@ -133,8 +150,18 @@ fun ExerciseDialog(
                                     ),
                                     keyboardActions = KeyboardActions(
                                         onDone = {
-                                            keyboardController?.hide()
-                                            focusManager.clearFocus()
+                                            if (enabled){
+                                                onAddExercise(
+                                                    StrengthExercise(
+                                                        name = selectedExercise.name,
+                                                        weight = if (weightField.isBlank()) 0 else weightField.toInt(),
+                                                        repeatCount = repeatCountField.toInt(),
+                                                        approachCount = approachCountField.toInt()
+                                                    )
+                                                )
+                                                onDismiss()
+                                            }
+                                            else Toast.makeText(context, "Введите необходимые данные", Toast.LENGTH_SHORT).show()
                                         }
                                     ),
                                     modifier = Modifier
@@ -159,9 +186,6 @@ fun ExerciseDialog(
                             ) {
                                 Text(text = "Кардио", style = DialogTextStyle)
 
-                                val keyboardController = LocalSoftwareKeyboardController.current
-                                val focusManager = LocalFocusManager.current
-
                                 Spacer(modifier = Modifier.height(20.dp))
 
                                 // длительность (мин)
@@ -176,8 +200,17 @@ fun ExerciseDialog(
                                     ),
                                     keyboardActions = KeyboardActions(
                                         onDone = {
-                                            keyboardController?.hide()
-                                            focusManager.clearFocus()
+                                            if (enabled){
+                                                onAddExercise(
+                                                    CardioExercise(
+                                                        name = selectedExercise.name,
+                                                        time = Duration.ofMinutes(durationField.toLong())
+                                                    )
+                                                )
+                                                onDismiss()
+                                            }
+                                            else
+                                                Toast.makeText(context, "Введите длительность тренировки", Toast.LENGTH_SHORT).show()
                                         }
                                     ),
                                     modifier = Modifier.height(60.dp)
@@ -199,20 +232,6 @@ fun ExerciseDialog(
                             modifier = Modifier.weight(1f))
 
                         Spacer(modifier = Modifier.width(5.dp))
-
-                        val enabled = when (selectedExercise){
-                            is StrengthExercise -> {
-                                selectedExercise.name.isNotBlank() &&
-                                        repeatCountField.isNotBlank() && repeatCountField.toInt() > 0
-                                        && approachCountField.isNotBlank() && approachCountField.toInt() > 0
-                            }
-                            is CardioExercise -> {
-                                selectedExercise.name.isNotBlank() &&
-                                        durationField.isNotBlank() && durationField.toInt() > 0
-                            }
-                        }
-
-                        val context = LocalContext.current
 
                         AddDeleteButton(
                             text = "Готово",
