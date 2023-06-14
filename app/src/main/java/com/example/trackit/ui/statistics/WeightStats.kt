@@ -203,7 +203,7 @@ private fun WeightListWithStats(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 8.dp, bottom = 6.dp, start = 5.dp, end = 5.dp)
+                            .padding(top = 2.dp, bottom = 9.dp, start = 5.dp, end = 5.dp)
                             .clip(RoundedCornerShape(5.dp))
                     ) {
                         Background(dismissState = dismissState) {
@@ -212,9 +212,8 @@ private fun WeightListWithStats(
                     }
                 },
                 dismissContent = {
-                    Column(modifier = modifier) {
+                    Column(modifier = Modifier.padding(bottom = 8.dp)) {
                         Weight(weight = item)
-                        Spacer(modifier = Modifier.height(6.dp))
                     }
                 }
             )
