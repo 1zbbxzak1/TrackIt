@@ -14,7 +14,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.FoodPage
@@ -22,7 +21,6 @@ import com.example.trackit.ui.Nutrition.Food.FoodScreen
 import com.example.trackit.ui.ProfilePage
 import com.example.trackit.ui.navigation.BottomBar
 import com.example.trackit.ui.statistics.StatisticsPage
-import com.example.trackit.ui.theme.TrackItTheme
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseScreen
@@ -37,6 +35,9 @@ import java.time.LocalTime
 @Composable
 fun TrackItApp(
     modifier: Modifier = Modifier,
+    gender: String?,
+    age: Int,
+    height: Int
 ){
     val navController = rememberAnimatedNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -45,8 +46,6 @@ fun TrackItApp(
     val selectedDate = remember {
         mutableStateOf(LocalDate.now())
     }
-
-    val currTime = mutableStateOf(LocalTime.now())
 
     val currentScreen = Screen.valueOf(
         backStackEntry?.destination?.route ?: Screen.Profile.name
@@ -104,7 +103,12 @@ fun TrackItApp(
             ) {
                 ProfilePage(
                     selectedDate.value,
-                    navigateToStats = { navController.navigate(Screen.Statistics.name) })
+                    time = LocalTime.now(),
+                    navigateToStats = { navController.navigate(Screen.Statistics.name) },
+                    gender,
+                    age,
+                    height
+                )
             }
 
             composable(
@@ -293,37 +297,6 @@ fun TrackItApp(
                     ExitTransition.None
                 }
             ) {
-//                Statistics(
-//                    navigateBack = { navController.popBackStack() },
-//                    selectedDate = selectedDate.value,
-//                    time = currTime.value
-//                )
-                StatisticsPage (
-                    navigateBack = { navController.popBackStack() },
-                )
-            }
-
-            composable(
-                route = Screen.Statistics.name,
-                enterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Down,
-                        animationSpec = tween(400)
-                    )
-                },
-                exitTransition = {
-                    ExitTransition.None
-                },
-                popEnterTransition = {
-                    slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(400)
-                    )
-                },
-                popExitTransition = {
-                    ExitTransition.None
-                }
-            ) {
                 StatisticsPage(
                     navigateBack = { navController.popBackStack() }
                 )
@@ -342,18 +315,18 @@ fun TrackItApp(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewTrackItApp(){
-    TrackItTheme {
-        TrackItApp()
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewTrackItAppDarkTheme(){
-    TrackItTheme(darkTheme = true) {
-        TrackItApp()
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun PreviewTrackItApp(){
+//    TrackItTheme {
+//        TrackItApp()
+//    }
+//}
+//
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun PreviewTrackItAppDarkTheme(){
+//    TrackItTheme(darkTheme = true) {
+//        TrackItApp()
+//    }
+//}

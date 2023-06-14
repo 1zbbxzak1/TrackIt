@@ -1,5 +1,7 @@
 package com.example.trackit.ui.welcome
 
+import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,9 +18,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,18 +32,28 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.trackit.Activity.MainActivity
 import com.example.trackit.R
+import com.example.trackit.data.Weight.WeightEntry
+import com.example.trackit.data.Weight.WeightViewModel
+import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.TrackItTheme
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
-    onCompleted: (WelcomeData) -> Unit = {} // Последняя кнопка вызывает onCompleted
+    weightViewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val context = LocalContext.current
     val currentPage = remember { mutableStateOf(WelcomePage.Gender) }
+
+    val coroutineScope = rememberCoroutineScope()
 
     val selectedGender = remember { mutableStateOf<Gender?>(null) }
     val selectedAge = remember { mutableStateOf(TextFieldValue("")) }
@@ -78,7 +88,26 @@ fun WelcomeScreen(
         }
         WelcomePage.Weight -> {
             onClick = {
-                onCompleted(getProfileData(selectedGender.value!!, selectedAge.value, selectedHeight.value, selectedWeight.value))
+                coroutineScope.launch {
+                    weightViewModel.insertWeight(
+                        WeightEntry(
+                            0,
+                            LocalTime.now(),
+                            LocalDate.now(),
+                            selectedWeight.value.text.toDouble()
+                        )
+                    )
+                }
+
+                navigateToMainActivity(
+                    context,
+                    getProfileData(
+                        selectedGender.value!!,
+                        selectedAge.value,
+                        selectedHeight.value,
+                        selectedWeight.value
+                    )
+                )
             }
             enabled = selectedWeight.value.text.isNotBlank() && selectedWeight.value.text.toInt() < 600
             toastText = "Введите ваш вес"
@@ -128,8 +157,28 @@ fun WelcomeScreen(
             WelcomePage.Weight -> PageWithTextField(
                 onSelected = { selectedWeight.value = it },
                 onKeyboardAction = {
-                    if (enabled)
-                        onCompleted(getProfileData(selectedGender.value!!, selectedAge.value, selectedHeight.value, selectedWeight.value))
+                    if (enabled) {
+                        coroutineScope.launch {
+                            weightViewModel.insertWeight(
+                                WeightEntry(
+                                    0,
+                                    LocalTime.now(),
+                                    LocalDate.now(),
+                                    selectedWeight.value.text.toDouble()
+                                )
+                            )
+                        }
+
+                        navigateToMainActivity(
+                            context,
+                            getProfileData(
+                                selectedGender.value!!,
+                                selectedAge.value,
+                                selectedHeight.value,
+                                selectedWeight.value
+                            )
+                        )
+                    }
                     else
                         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
                 },
@@ -253,6 +302,16 @@ data class WelcomeData(
     val height: Int,
     val weight: Int
 )
+
+// Функция для перехода на другое активити
+private fun navigateToMainActivity(context: Context, profileData: WelcomeData) {
+    val intent = Intent(context, MainActivity::class.java)
+    // Передача данных в MainActivity для дальнейшего использования в профиле
+    intent.putExtra("gender", profileData.gender.text)
+    intent.putExtra("age", profileData.age)
+    intent.putExtra("height", profileData.height)
+    context.startActivity(intent)
+}
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable

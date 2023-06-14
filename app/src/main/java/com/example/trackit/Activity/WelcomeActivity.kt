@@ -9,10 +9,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
-import com.example.trackit.TrackItApp
 import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.ui.welcome.WelcomeScreen
 
-class MainActivity : ComponentActivity() {
+class WelcomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
@@ -22,12 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    // Получение данных из WelcomeScreen
-                    val gender = intent.getStringExtra("gender")
-                    val age = intent.getIntExtra("age", 0)
-                    val height = intent.getIntExtra("height", 0)
-
-                    TrackItApp(Modifier.systemBarsPadding(), gender, age, height)
+                    WelcomeScreen(Modifier.systemBarsPadding())
                 }
             }
         }

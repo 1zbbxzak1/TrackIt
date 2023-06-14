@@ -2,22 +2,23 @@ package com.example.trackit.data.Weight
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.LocalTime
 
 
-class WeightRepository(private val itemDao: WeightDao) {
-    fun getAllWeight(): Flow<List<WeightEntry>> = itemDao.getAllWeight()
+class WeightRepository(private val weightDao: WeightDao) {
+    fun getAllWeight(): Flow<List<WeightEntry>> = weightDao.getAllWeight()
 
-    suspend fun insertWeight(item: WeightEntry) = itemDao.insertWeight(item)
+    suspend fun insertWeight(item: WeightEntry) = weightDao.insertWeight(item)
 
-    suspend fun deleteWeight(item: WeightEntry) = itemDao.deleteWeightById(item.id)
+    suspend fun deleteWeight(item: WeightEntry) = weightDao.deleteWeightById(item.id)
 
-    fun getWeights(date: LocalDate) = itemDao.getWeights(date)
+    fun getWeights(date: LocalDate) = weightDao.getWeights(date)
 
-    fun getLastTenDates(): Flow<List<LocalDate>> =
-        itemDao.getLastTenDates()
+    fun getLastTenDates(): Flow<List<DateTimeWrapper>> =
+        weightDao.getLastTenDates()
 
-    fun getWeightByDate(date: LocalDate): Flow<Double> =
-        itemDao.getWeightByDate(date)
+    fun getWeightByDate(date: LocalDate, time: LocalTime): Flow<Double> =
+        weightDao.getWeightByDate(date, time)
 
-    fun getLastWeight(): Flow<Double> = itemDao.getLastWeight()
+    fun getLastWeight(): Flow<String> = weightDao.getLastWeight()
 }

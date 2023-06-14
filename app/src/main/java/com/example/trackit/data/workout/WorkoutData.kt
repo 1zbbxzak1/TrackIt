@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.example.trackit.R
-import com.example.trackit.data.food.generateUniqueID
+import com.example.trackit.ui.Nutrition.generateUniqueID
 import java.time.Duration
 import java.time.LocalDate
 

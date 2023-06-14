@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +20,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -34,26 +35,53 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
 import com.example.trackit.data.Weight.WeightEntry
 import com.example.trackit.data.Weight.WeightViewModel
-import com.example.trackit.ui.statistics.WeightStats
+import com.example.trackit.data.food.AddWeightDialog
 import com.example.trackit.ui.theme.Arsenic
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("InflateParams", "SuspiciousIndentation")
 @Composable
 fun ProfilePage(
-    selectedDate: LocalDate = LocalDate.now(),
-    navigateToStats: () -> Unit
+    date: LocalDate = LocalDate.now(),
+    time: LocalTime = LocalTime.now(),
+    navigateToStats: () -> Unit,
+    genderT: String?,
+    ageT: Int,
+    heightT: Int
 ) {
     val context = LocalContext.current
     val viewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)
 
-    val lastWeightState = remember { mutableStateOf(0.0) }
+    val dialogState = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
+    var lastWeightState by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        lastWeightState.value = viewModel.getLast()
+        lastWeightState = viewModel.getLast()
+    }
+
+    if (dialogState.value) {
+        AddWeightDialog(
+            onAddWeight = { weight ->
+                coroutineScope.launch {
+                    viewModel.insertWeight(
+                        WeightEntry(
+                            0,
+                            time,
+                            date,
+                            weight.toDouble()
+                        )
+                    )
+                    lastWeightState = viewModel.getLast()
+                }
+                dialogState.value = false
+            },
+            onDismiss = { dialogState.value = false }
+        )
     }
 
     LazyColumn {
@@ -73,7 +101,7 @@ fun ProfilePage(
                     Icon(
                         painterResource(id = R.drawable.profile_label),
                         contentDescription = null,
-                        tint = androidx.compose.ui.graphics.Color.Unspecified
+                        tint = Color.Unspecified
                     )
                 }
             }
@@ -87,13 +115,16 @@ fun ProfilePage(
                 }
             ) { view ->
 
-                val weightTextView = view.findViewById<TextView>(R.id.weight_edit_text)
-                weightTextView.text = lastWeightState.value.toString()
+                val weightTextView = view.findViewById<Button>(R.id.weight_edit_text)
+                weightTextView.setOnClickListener {
+                    dialogState.value = true
+                }
+                weightTextView.text = lastWeightState
 
                 val height = view.findViewById<EditText>(R.id.height_edit_text)
                 val sharedPreferencesKeyH = "height"
                 val savedHeight = loadFromSharedPreferences(context, sharedPreferencesKeyH, "")
-                height.setText(savedHeight)
+                height.setText(savedHeight.ifEmpty { heightT.toString() })
 
                 height.setOnEditorActionListener { _, actionId, _ ->
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -130,7 +161,7 @@ fun ProfilePage(
                 val age = view.findViewById<EditText>(R.id.age_edit_text)
                 val sharedPreferencesKeyA = "age"
                 val savedAge = loadFromSharedPreferences(context, sharedPreferencesKeyA, "")
-                age.setText(savedAge)
+                age.setText(savedAge.ifEmpty { ageT.toString() })
 
                 age.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
@@ -160,11 +191,29 @@ fun ProfilePage(
                 val sharedPreferencesGender =
                     context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
                 val sharedPreferencesKeyG = "gender"
+
                 val savedGenderIndex = sharedPreferencesGender.getInt(sharedPreferencesKeyG, -1)
 
                 // Настройка выбранной радиокнопки на основе сохраненных данных
                 if (savedGenderIndex != -1) {
                     setRadioButtonState(genderRadioGroup, savedGenderIndex)
+                    if (savedGenderIndex == 0) setTextColorForSelectedRadioButton(view, R.id.maleRadioButton, R.color.white)
+                    else setTextColorForSelectedRadioButton(view, R.id.femaleRadioButton, R.color.white)
+                } else {
+                    when (genderT) {
+                        "Мужчина" -> {
+                            genderRadioGroup.check(R.id.maleRadioButton)
+                            setTextColorForSelectedRadioButton(view, R.id.maleRadioButton, R.color.white)
+                            setRadioButtonState(genderRadioGroup, 0)
+                            saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 0)
+                        }
+                        "Женщина" -> {
+                            genderRadioGroup.check(R.id.femaleRadioButton)
+                            setTextColorForSelectedRadioButton(view, R.id.femaleRadioButton, R.color.white)
+                            setRadioButtonState(genderRadioGroup, 1)
+                            saveGenderPreference(sharedPreferencesGender, sharedPreferencesKeyG, 1)
+                        }
+                    }
                 }
 
                 // Настройка цвета фона радиогруппы
@@ -185,15 +234,10 @@ fun ProfilePage(
                         }
                     }
 
-                    // Установить цвет текста выбранной радиокнопки и сохранить его
+                    // Установить цвет текста выбранной радиокнопки и сохранить ее
                     val checkedRadioButton = view.findViewById<RadioButton>(checkedId)
                     if (checkedRadioButton != null) {
-                        checkedRadioButton.setTextColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.white
-                            )
-                        )
+                        checkedRadioButton.setTextColor(ContextCompat.getColor(context, R.color.white))
                         saveSelectedRadioButtonId(sharedPreferencesGender, checkedId)
                     }
 
@@ -271,7 +315,7 @@ fun loadFromSharedPreferences(context: Context, key: String, defaultValue: Strin
 private fun saveGenderPreference(sharedPreferences: SharedPreferences, key: String, index: Int) {
     with(sharedPreferences.edit()) {
         putInt(key, index)
-        apply()
+        commit()
     }
 }
 

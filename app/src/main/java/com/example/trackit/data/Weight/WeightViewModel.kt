@@ -6,10 +6,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 
 class WeightViewModel(private val repository: WeightRepository): ViewModel() {
 
-    val selectedDate = mutableStateOf(LocalDate.now())
+    private val selectedDate = mutableStateOf(LocalDate.now())
 
     private val _weightUiState = MutableStateFlow(WeightUiState())
 
@@ -32,16 +33,16 @@ class WeightViewModel(private val repository: WeightRepository): ViewModel() {
         }
     }
 
-    suspend fun getLastTenDates(): List<LocalDate> {
+    suspend fun getLastTenDates(): List<DateTimeWrapper> {
         return repository.getLastTenDates().first()
     }
 
-    suspend fun getWeightByDate(date: LocalDate): Double {
-        return repository.getWeightByDate(date).first()
+    suspend fun getWeightByDate(date: LocalDate, time: LocalTime): Double {
+        return repository.getWeightByDate(date, time).first()
     }
 
-    suspend fun getLast(): Double {
-        return repository.getLastWeight().firstOrNull() ?: 0.0
+    suspend fun getLast(): String {
+        return repository.getLastWeight().firstOrNull() ?: ""
     }
 }
 
