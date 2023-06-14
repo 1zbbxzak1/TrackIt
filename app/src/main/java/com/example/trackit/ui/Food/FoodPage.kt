@@ -21,76 +21,66 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
-import com.example.trackit.data.food.getLogForDate
-import com.example.trackit.ui.Nutrition.FoodData
+import com.example.trackit.data.food.*
+import com.example.trackit.ui.Nutrition.*
 import java.time.LocalDate
 import com.example.trackit.ui.theme.PermanentGeraniumLake
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.math.roundToInt
 
-@SuppressLint("MutableCollectionMutableState")
+@SuppressLint("MutableCollectionMutableState", "CoroutineCreationDuringComposition")
 @Composable
 fun FoodPage(
     navigateToFoodScreen: () -> Unit,
-    selectedDate: LocalDate = LocalDate.now()
+    selectedDate: LocalDate = LocalDate.now(),
+    breakfastV: BreakfastViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    lunchV: LunchViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    dinnerV: DinnerViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    snackV: SnackViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    totalV: TotalViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val context = LocalContext.current
+    breakfastV.updateSelectedDate(selectedDate)
+    lunchV.updateSelectedDate(selectedDate)
+    dinnerV.updateSelectedDate(selectedDate)
+    snackV.updateSelectedDate(selectedDate)
 
     var breakfastExpanded by remember { mutableStateOf(false) }
     var lunchExpanded by remember { mutableStateOf(false) }
     var dinnerExpanded by remember { mutableStateOf(false) }
     var snackExpanded by remember { mutableStateOf(false) }
 
-    val log = getLogForDate(selectedDate)
+    val coroutineScope = rememberCoroutineScope()
+
+    val breakfastUiState by breakfastV.mealUiState.collectAsState()
+    val lunchUiState by lunchV.mealUiState.collectAsState()
+    val dinnerUiState by dinnerV.mealUiState.collectAsState()
+    val snackUiState by snackV.mealUiState.collectAsState()
+
+    var totalProteins by remember { mutableStateOf(0) }
+    var totalFats by remember { mutableStateOf(0) }
+    var totalCarbs by remember { mutableStateOf(0) }
+    var totalCalories by remember { mutableStateOf(0) }
 
     LaunchedEffect(selectedDate) {
-        // Сбросить состояние панелей при изменении selectedDate
         breakfastExpanded = false
         lunchExpanded = false
         dinnerExpanded = false
         snackExpanded = false
+
+        totalProteins = totalV.getProteins(selectedDate)
+        totalFats = totalV.getFats(selectedDate)
+        totalCarbs = totalV.getCarbs(selectedDate)
+        totalCalories = totalV.getCalories(selectedDate)
     }
-
-    val onDeleteBreakfast: (FoodData) -> Unit = { food ->
-        log.breakfastFoods.remove(food)
-        log.totalProteins -= food.protein.roundToInt()
-        log.totalFats -= food.fat.roundToInt()
-        log.totalCarbs -= food.carbs.roundToInt()
-        log.totalCalories -= food.calories.roundToInt()
-    }
-
-    val onDeleteLunch: (FoodData) -> Unit = { food ->
-        log.lunchFoods.remove(food)
-        log.totalProteins -= food.protein.roundToInt()
-        log.totalFats -= food.fat.roundToInt()
-        log.totalCarbs -= food.carbs.roundToInt()
-        log.totalCalories -= food.calories.roundToInt()
-    }
-
-    val onDeleteDinner: (FoodData) -> Unit = { food ->
-        log.dinnerFoods.remove(food)
-        log.totalProteins -= food.protein.roundToInt()
-        log.totalFats -= food.fat.roundToInt()
-        log.totalCarbs -= food.carbs.roundToInt()
-        log.totalCalories -= food.calories.roundToInt()
-    }
-
-    val onDeleteSnack: (FoodData) -> Unit = { food ->
-        log.snackFoods.remove(food)
-        log.totalProteins -= food.protein.roundToInt()
-        log.totalFats -= food.fat.roundToInt()
-        log.totalCarbs -= food.carbs.roundToInt()
-        log.totalCalories -= food.calories.roundToInt()
-    }
-
-
 
     Column {
         Surface(
@@ -139,7 +129,7 @@ fun FoodPage(
                             modifier = Modifier.padding(start = 10.dp, top = 18.dp)
                         )
                         Text(
-                            text = "${log.totalProteins}",
+                            text = "${totalProteins}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -161,7 +151,7 @@ fun FoodPage(
                                 .offset(x = (-7).dp)
                         )
                         Text(
-                            text = "${log.totalFats}",
+                            text = "${totalFats}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -181,7 +171,7 @@ fun FoodPage(
                             modifier = Modifier.padding(top = 18.dp)
                         )
                         Text(
-                            text = "${log.totalCarbs}",
+                            text = "${totalCarbs}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -201,7 +191,7 @@ fun FoodPage(
                             modifier = Modifier.padding(top = 18.dp, end = 10.dp)
                         )
                         Text(
-                            text = "${log.totalCalories}",
+                            text = "${totalCalories}",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -221,11 +211,27 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Завтрак",
                     mealIcon = R.drawable.breakfast_icon,
-                    foods = log.breakfastFoods,
+                    foods = breakfastUiState.breakfastList,
                     isExpanded = breakfastExpanded,
                     onPanelClicked = { breakfastExpanded = !breakfastExpanded },
                     onAddButtonClick = { navigateToFoodScreen() },
-                    onDismiss = { item -> onDeleteBreakfast(item) }
+                    onDismiss = { item ->
+                        coroutineScope.launch {
+                            breakfastV.deleteFood(item as Breakfast)
+                            totalV.delNutrients(
+                                selectedDate,
+                                item.food.protein.roundToInt(),
+                                item.food.fat.roundToInt(),
+                                item.food.carbs.roundToInt(),
+                                item.food.calories.roundToInt()
+                            )
+
+                            totalProteins = runBlocking { totalV.getProteins(selectedDate) }
+                            totalFats = runBlocking { totalV.getFats(selectedDate) }
+                            totalCarbs = runBlocking { totalV.getCarbs(selectedDate) }
+                            totalCalories = runBlocking { totalV.getCalories(selectedDate) }
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(if (breakfastExpanded) 16.dp else 0.dp))
             }
@@ -234,11 +240,27 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Обед",
                     mealIcon = R.drawable.lunch_icon,
-                    foods = log.lunchFoods,
+                    foods = lunchUiState.lunchList,
                     isExpanded = lunchExpanded,
                     onPanelClicked = { lunchExpanded = !lunchExpanded },
                     onAddButtonClick = { navigateToFoodScreen() },
-                    onDismiss = { item -> onDeleteLunch(item) }
+                    onDismiss = { item ->
+                        coroutineScope.launch {
+                            lunchV.deleteFood(item as Lunch)
+                            totalV.delNutrients(
+                                selectedDate,
+                                item.food.protein.roundToInt(),
+                                item.food.fat.roundToInt(),
+                                item.food.carbs.roundToInt(),
+                                item.food.calories.roundToInt()
+                            )
+
+                            totalProteins = runBlocking { totalV.getProteins(selectedDate) }
+                            totalFats = runBlocking { totalV.getFats(selectedDate) }
+                            totalCarbs = runBlocking { totalV.getCarbs(selectedDate) }
+                            totalCalories = runBlocking { totalV.getCalories(selectedDate) }
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(if (lunchExpanded) 16.dp else 0.dp))
             }
@@ -247,11 +269,27 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Ужин",
                     mealIcon = R.drawable.dinner_icon,
-                    foods = log.dinnerFoods,
+                    foods = dinnerUiState.dinnerList,
                     isExpanded = dinnerExpanded,
                     onPanelClicked = { dinnerExpanded = !dinnerExpanded },
                     onAddButtonClick = { navigateToFoodScreen() },
-                    onDismiss = { item -> onDeleteDinner(item) }
+                    onDismiss = { item ->
+                        coroutineScope.launch {
+                            dinnerV.deleteFood(item as Dinner)
+                            totalV.delNutrients(
+                                selectedDate,
+                                item.food.protein.roundToInt(),
+                                item.food.fat.roundToInt(),
+                                item.food.carbs.roundToInt(),
+                                item.food.calories.roundToInt()
+                            )
+
+                            totalProteins = runBlocking { totalV.getProteins(selectedDate) }
+                            totalFats = runBlocking { totalV.getFats(selectedDate) }
+                            totalCarbs = runBlocking { totalV.getCarbs(selectedDate) }
+                            totalCalories = runBlocking { totalV.getCalories(selectedDate) }
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(if (dinnerExpanded) 16.dp else 0.dp))
             }
@@ -260,11 +298,27 @@ fun FoodPage(
                 MealPanel(
                     mealType = "Перекус",
                     mealIcon = R.drawable.snack_icon,
-                    foods = log.snackFoods,
+                    foods = snackUiState.snackList,
                     isExpanded = snackExpanded,
                     onPanelClicked = { snackExpanded = !snackExpanded },
                     onAddButtonClick = { navigateToFoodScreen() },
-                    onDismiss = { item -> onDeleteSnack(item) }
+                    onDismiss = { item ->
+                        coroutineScope.launch {
+                            snackV.deleteFood(item as Snack)
+                            totalV.delNutrients(
+                                selectedDate,
+                                item.food.protein.roundToInt(),
+                                item.food.fat.roundToInt(),
+                                item.food.carbs.roundToInt(),
+                                item.food.calories.roundToInt()
+                            )
+
+                            totalProteins = runBlocking { totalV.getProteins(selectedDate) }
+                            totalFats = runBlocking { totalV.getFats(selectedDate) }
+                            totalCarbs = runBlocking { totalV.getCarbs(selectedDate) }
+                            totalCalories = runBlocking { totalV.getCalories(selectedDate) }
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.padding(bottom = 40.dp))
             }
@@ -276,11 +330,11 @@ fun FoodPage(
 fun MealPanel(
     mealType: String,
     mealIcon: Int,
-    foods: List<FoodData>,
+    foods: List<Meal>,
     isExpanded: Boolean,
     onPanelClicked: () -> Unit,
     onAddButtonClick: () -> Unit,
-    onDismiss: (FoodData) -> Unit
+    onDismiss: (Meal) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -351,8 +405,8 @@ fun MealPanel(
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun FoodCardList(
-    foods: List<FoodData>,
-    onDelete: (FoodData) -> Unit,
+    foods: List<Meal>,
+    onDelete: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -431,7 +485,7 @@ private fun FoodCardList(
 
 @Composable
 fun FoodCard(
-    food: FoodData,
+    food: Meal,
     modifier: Modifier,
     index: Long
 ) {
@@ -443,13 +497,13 @@ fun FoodCard(
         Column(modifier = Modifier.padding(14.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = food.name,
+                    text = food.food.name,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
-                    text = "${food.gramsEntered} гр",
+                    text = "${food.food.gramsEntered} гр",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color(android.graphics.Color.parseColor("#99cd4e"))
@@ -459,10 +513,10 @@ fun FoodCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "${food.protein}", fontSize = 16.sp, modifier = Modifier.padding(start = 10.dp))
-                Text(text = "${food.fat}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
-                Text(text = "${food.carbs}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
-                Text(text = "${food.calories}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
+                Text(text = "${food.food.protein}", fontSize = 16.sp, modifier = Modifier.padding(start = 10.dp))
+                Text(text = "${food.food.fat}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
+                Text(text = "${food.food.carbs}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
+                Text(text = "${food.food.calories}", fontSize = 16.sp, modifier = Modifier.padding(start = 0.dp))
             }
         }
     }

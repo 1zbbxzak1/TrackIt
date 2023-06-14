@@ -26,12 +26,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import com.example.trackit.R
 import com.example.trackit.ui.*
-import com.example.trackit.ui.Nutrition.FoodAdapter
-import com.example.trackit.ui.Nutrition.FoodData
+import com.example.trackit.ui.Nutrition.*
 import com.example.trackit.ui.theme.*
 import com.example.trackit.ui.workout.AddDeleteButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
@@ -42,9 +44,15 @@ fun showAddDialog(
     food: FoodData,
     context: Context,
     navigateToFoodPage: () -> Unit,
-    selectedDate: LocalDate = LocalDate.now()
+    selectedDate: LocalDate,
+    breakfastV: BreakfastViewModel,
+    lunchV: LunchViewModel,
+    dinnerV: DinnerViewModel,
+    snackV: SnackViewModel,
+    totalV: TotalViewModel
 ) {
-    val log = getLogForDate(selectedDate)
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
+
     val builder = Dialog(context)
     builder.setContentView(R.layout.add_food_to_main)
     builder.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -146,47 +154,114 @@ fun showAddDialog(
                 return@setOnClickListener
             }
             else -> {
-                val newFood = FoodData(
+                val newFoodB: Meal = Breakfast(
                     id = generateUniqueID(),
-                    name = food.name,
-                    protein = round(food.protein * factor * 10.0) / 10.0,
-                    fat = round(food.fat * factor * 10.0) / 10.0,
-                    carbs = round(food.carbs * factor * 10.0) / 10.0,
-                    calories = round(food.calories * factor * 10.0) / 10.0,
-                    gramsEntered = gramsEntered
+                    date = selectedDate,
+                    foodBreakfast = FoodData(
+                        name = food.name,
+                        protein = round(food.protein * factor * 10.0) / 10.0,
+                        fat = round(food.fat * factor * 10.0) / 10.0,
+                        carbs = round(food.carbs * factor * 10.0) / 10.0,
+                        calories = round(food.calories * factor * 10.0) / 10.0,
+                        gramsEntered = gramsEntered
+                    )
                 )
+
+                val newFoodL: Meal = Lunch(
+                    id = generateUniqueID(),
+                    date = selectedDate,
+                    foodLunch = FoodData(
+                        name = food.name,
+                        protein = round(food.protein * factor * 10.0) / 10.0,
+                        fat = round(food.fat * factor * 10.0) / 10.0,
+                        carbs = round(food.carbs * factor * 10.0) / 10.0,
+                        calories = round(food.calories * factor * 10.0) / 10.0,
+                        gramsEntered = gramsEntered
+                    )
+                )
+
+                val newFoodD: Meal = Dinner(
+                    id = generateUniqueID(),
+                    date = selectedDate,
+                    foodDinner = FoodData(
+                        name = food.name,
+                        protein = round(food.protein * factor * 10.0) / 10.0,
+                        fat = round(food.fat * factor * 10.0) / 10.0,
+                        carbs = round(food.carbs * factor * 10.0) / 10.0,
+                        calories = round(food.calories * factor * 10.0) / 10.0,
+                        gramsEntered = gramsEntered
+                    )
+                )
+
+                val newFoodS: Meal = Snack(
+                    id = generateUniqueID(),
+                    date = selectedDate,
+                    foodSnack = FoodData(
+                        name = food.name,
+                        protein = round(food.protein * factor * 10.0) / 10.0,
+                        fat = round(food.fat * factor * 10.0) / 10.0,
+                        carbs = round(food.carbs * factor * 10.0) / 10.0,
+                        calories = round(food.calories * factor * 10.0) / 10.0,
+                        gramsEntered = gramsEntered
+                    )
+                )
+
                 when (checkedId) {
                     R.id.breakfast -> {
-                        ListFood.logs.add(log)
-                        log.breakfastFoods.add(newFood)
-                        log.totalProteins += newFood.protein.roundToInt()
-                        log.totalFats += newFood.fat.roundToInt()
-                        log.totalCarbs += newFood.carbs.roundToInt()
-                        log.totalCalories += newFood.calories.roundToInt()
+                        coroutineScope.launch {
+                            breakfastV.insertFood(newFoodB as Breakfast)
+                            totalV.upOrInNut(
+                                Total(
+                                    selectedDate,
+                                    newFoodB.food.protein.roundToInt(),
+                                    newFoodB.food.fat.roundToInt(),
+                                    newFoodB.food.carbs.roundToInt(),
+                                    newFoodB.food.calories.roundToInt()
+                                )
+                            )
+                        }
                     }
                     R.id.lunch -> {
-                        ListFood.logs.add(log)
-                        log.lunchFoods.add(newFood)
-                        log.totalProteins += newFood.protein.roundToInt()
-                        log.totalFats += newFood.fat.roundToInt()
-                        log.totalCarbs += newFood.carbs.roundToInt()
-                        log.totalCalories += newFood.calories.roundToInt()
+                        coroutineScope.launch {
+                            lunchV.insertFood(newFoodL as Lunch)
+                            totalV.upOrInNut(
+                                Total(
+                                    selectedDate,
+                                    newFoodL.food.protein.roundToInt(),
+                                    newFoodL.food.fat.roundToInt(),
+                                    newFoodL.food.carbs.roundToInt(),
+                                    newFoodL.food.calories.roundToInt()
+                                )
+                            )
+                        }
                     }
                     R.id.dinner -> {
-                        ListFood.logs.add(log)
-                        log.dinnerFoods.add(newFood)
-                        log.totalProteins += newFood.protein.roundToInt()
-                        log.totalFats += newFood.fat.roundToInt()
-                        log.totalCarbs += newFood.carbs.roundToInt()
-                        log.totalCalories += newFood.calories.roundToInt()
+                        coroutineScope.launch {
+                            dinnerV.insertFood(newFoodD as Dinner)
+                            totalV.upOrInNut(
+                                Total(
+                                    selectedDate,
+                                    newFoodD.food.protein.roundToInt(),
+                                    newFoodD.food.fat.roundToInt(),
+                                    newFoodD.food.carbs.roundToInt(),
+                                    newFoodD.food.calories.roundToInt()
+                                )
+                            )
+                        }
                     }
                     R.id.snack -> {
-                        ListFood.logs.add(log)
-                        log.snackFoods.add(newFood)
-                        log.totalProteins += newFood.protein.roundToInt()
-                        log.totalFats += newFood.fat.roundToInt()
-                        log.totalCarbs += newFood.carbs.roundToInt()
-                        log.totalCalories += newFood.calories.roundToInt()
+                        coroutineScope.launch {
+                            snackV.insertFood(newFoodS as Snack)
+                            totalV.upOrInNut(
+                                Total(
+                                    selectedDate,
+                                    newFoodS.food.protein.roundToInt(),
+                                    newFoodS.food.fat.roundToInt(),
+                                    newFoodS.food.carbs.roundToInt(),
+                                    newFoodS.food.calories.roundToInt()
+                                )
+                            )
+                        }
                     }
                 }
                 builder.dismiss()
@@ -404,7 +479,8 @@ fun Dialog(
             modifier = Modifier.fillMaxSize()
         ) {
             Text(
-                text = label, style = TextFieldLabelTextStyle,
+                text = label,
+                style = TextFieldLabelTextStyle,
                 modifier = Modifier.padding(start = 20.dp)
             )
             Column(

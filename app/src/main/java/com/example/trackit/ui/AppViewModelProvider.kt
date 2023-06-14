@@ -7,6 +7,7 @@ import com.example.trackit.TrackItApplication
 import com.example.trackit.ui.workout.WorkoutViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import com.example.trackit.data.Weight.WeightViewModel
+import com.example.trackit.data.food.*
 import com.example.trackit.ui.workout.category.WorkoutCategoryViewModel
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseViewModel
 
@@ -26,8 +27,29 @@ object AppViewModelProvider {
                 trackItApplication().container.workoutCategoryRepository
             )
         }
+
         initializer {
             WeightViewModel(trackItApplication().container.weightRepository)
+        }
+
+        initializer {
+            BreakfastViewModel(trackItApplication().container.foodRepository)
+        }
+
+        initializer {
+            LunchViewModel(trackItApplication().container.foodRepository)
+        }
+
+        initializer {
+            DinnerViewModel(trackItApplication().container.foodRepository)
+        }
+
+        initializer {
+            SnackViewModel(trackItApplication().container.foodRepository)
+        }
+
+        initializer {
+            TotalViewModel(trackItApplication().container.totalRepository)
         }
     }
 }

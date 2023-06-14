@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -16,21 +18,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.trackit.data.Weight.WeightViewModel
+import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic
+import com.example.trackit.ui.theme.CaptionColor
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 
 @Composable
-fun StatsChartForW(
+fun StatsChartForWeight(
     data: List<Pair<Float, String>>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    weightViewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState by weightViewModel.weightUiState.collectAsState()
+
     Box {
         AndroidView(modifier = modifier,
             factory = { context ->
@@ -42,7 +50,7 @@ fun StatsChartForW(
 
                     val chartData = prepareChartData(data, context)
 
-                    setData(chartData)
+                    setData(if (chartData.entryCount > 0.0) chartData else null)
 
                     xAxis.position = XAxis.XAxisPosition.BOTTOM
                     xAxis.setDrawAxisLine(true)
@@ -68,42 +76,43 @@ fun StatsChartForW(
                     animateXY(300, 300)
                     setDrawBorders(true)
                     setBorderColor(Arsenic.toArgb())
-                    setNoDataText("No data available")
-                    setNoDataTextColor(Color.BLACK)
-                    setNoDataTextTypeface(Typeface.DEFAULT)
+                    setNoDataText("")
+                    setNoDataTextColor(CaptionColor.toArgb())
+                    setNoDataTextTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD))
                     setPadding(40, 40, 40, 40)
                     setBackgroundColor(Arsenic.toArgb())
                 }
             })
 
-        Text(
-            text = "Последние 10 замеров",
-            color = White,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Normal,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 12.dp)
-        )
+        if (uiState.weightList.isNotEmpty()) {
+            Text(
+                text = "Последние 10 замеров",
+                color = White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 12.dp)
+            )
+        }
     }
 }
 
 private fun prepareChartData(data: List<Pair<Float, String>>, context: Context): LineData {
-    val entries = data.mapIndexed { index, pair ->
-        Entry(index.toFloat(), pair.first)
+    val entries = data.mapIndexed { index, pair -> Entry(index.toFloat(), pair.first) }
+
+    val dataLine = LineDataSet(entries, "").apply {
+        color = AndroidGreen.toArgb()
+        valueTextColor = Color.BLACK
+        lineWidth = 2f
+        setDrawCircles(true)
+        circleRadius = 5f
+        circleHoleRadius = 3f
+        setCircleColor(AndroidGreen.toArgb())
+        setDrawValues(false)
+        mode = LineDataSet.Mode.LINEAR
+        setDrawFilled(false)
     }
-    val dataLine = LineDataSet(entries, "")
 
-    dataLine.color = AndroidGreen.toArgb()
-    dataLine.valueTextColor = Color.BLACK
-    dataLine.lineWidth = 2f
-    dataLine.setDrawCircles(true)
-    dataLine.circleRadius = 5f
-    dataLine.circleHoleRadius = 3f
-    dataLine.setCircleColor(AndroidGreen.toArgb())
-    dataLine.setDrawValues(false)
-    dataLine.mode = LineDataSet.Mode.LINEAR
-    dataLine.setDrawFilled(false)
-
-    return LineData(listOf<ILineDataSet>(dataLine))
+    return LineData(listOf(dataLine))
 }

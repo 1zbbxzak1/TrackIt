@@ -15,15 +15,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trackit.R
-import com.example.trackit.data.Screen
-import com.example.trackit.data.food.setupFoodList
-import com.example.trackit.data.food.showAddDialog
+import com.example.trackit.data.food.*
+import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.Nutrition.FoodAdapter
 import com.example.trackit.ui.Nutrition.FoodData
+import com.example.trackit.ui.Nutrition.Lunch
 import com.example.trackit.ui.navigation.SearchView
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.BrightGray
@@ -37,17 +37,24 @@ import java.util.*
 fun FoodScreen(
     navigateBack: () -> Unit,
     navigateToFoodPage: () -> Unit,
-    selectedDate: LocalDate = LocalDate.now()
+    selectedDate: LocalDate = LocalDate.now(),
+    breakfast: BreakfastViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    lunch: LunchViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    dinner: DinnerViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    snack: SnackViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    total: TotalViewModel = viewModel(factory = AppViewModelProvider.Factory)
+
 ) {
     val context = LocalContext.current
     val foodList = NedoFoodList
+
     val searchQuery = remember { mutableStateOf(TextFieldValue("")) }
     var recyclerView: RecyclerView
     var foodAdapter: FoodAdapter
 
     val onFoodItemClickListener = object : FoodAdapter.OnFoodItemClickListener {
         override fun onFoodItemClick(food: FoodData) {
-            showAddDialog(food, context, navigateToFoodPage, selectedDate)
+            showAddDialog(food, context, navigateToFoodPage, selectedDate, breakfast, lunch, dinner, snack, total)
         }
     }
 

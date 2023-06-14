@@ -1,7 +1,9 @@
 package com.example.trackit.ui.statistics
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,77 +11,36 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.trackit.R
+import com.example.trackit.data.Weight.DateTimeWrapper
 import com.example.trackit.data.Weight.WeightEntry
 import com.example.trackit.data.Weight.WeightViewModel
-import com.example.trackit.data.food.AddWeightDialog
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.Background
 import com.example.trackit.ui.theme.Arsenic
+import com.example.trackit.ui.theme.CaptionColor
+import com.example.trackit.ui.theme.WeightEmpty
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.time.LocalDate
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun WeightStats(
-    selectedDate: LocalDate = LocalDate.now(),
+fun WeightStatistics(
     weightViewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uiState by weightViewModel.weightUiState.collectAsState()
-    val textState = remember { mutableStateOf(TextFieldValue("")) }
-    val coroutineScope = rememberCoroutineScope()
-
-    Box {
-        Column(modifier = Modifier.padding(vertical = 30.dp, horizontal = 10.dp)) {
-            WeightBodyWithStats(
-                weightList = uiState.weightList,
-                state = textState,
-                onDismiss = { weightEntry ->
-                    coroutineScope.launch {
-                        weightViewModel.deleteWeight(weightEntry)
-                    }
-                },
-                modifier = Modifier.padding(top = 8.dp),
-                selectedDate = selectedDate
-            )
-        }
-    }
-}
-
-@Composable
-private fun WeightBodyWithStats(
-    selectedDate: LocalDate = LocalDate.now(),
-    weightList: List<WeightEntry>,
-    state: MutableState<TextFieldValue>,
-    onDismiss: (WeightEntry) -> Unit,
-    modifier: Modifier = Modifier
-){
-    WeightListWithStats(weightList, state, onDismiss, modifier, selectedDate)
-}
-
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
-@Composable
-private fun WeightListWithStats(
-    weightList: List<WeightEntry>,
-    state: MutableState<TextFieldValue>,
-    onDismiss: (WeightEntry) -> Unit,
-    modifier: Modifier = Modifier,
-    date: LocalDate = LocalDate.now(),
-    time: LocalTime = LocalTime.now(),
-    weightViewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
-    val dialogState = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
     val dates = runBlocking {
@@ -88,81 +49,115 @@ private fun WeightListWithStats(
 
     val weightData = dataList(weightViewModel, dates)
 
-    val sortedWeightList =
-        weightList.sortedByDescending { it.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) }
+    Column(modifier = Modifier
+        .padding(horizontal = 10.dp)
+        .fillMaxSize()) {
 
-    LazyColumn(modifier = modifier) {
-        item {
-            Card(
-                modifier = Modifier
-                    .height(320.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                elevation = 8.dp,
-                backgroundColor = Arsenic
-            ) {
-                StatsChartForW(
-                    data = weightData,
-                    modifier = Modifier
-                        .height(300.dp)
-                        .padding(5.dp)
-                )
-            }
-
-            Spacer(Modifier.height(20.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Card(
-                    onClick = { dialogState.value = true },
-                    modifier = Modifier
-                        .width(173.dp)
-                        .height(45.dp),
-                    shape = RoundedCornerShape(30.dp),
-                    elevation = 8.dp,
-                    backgroundColor = Arsenic
+        Card(
+            modifier = Modifier
+                .height(320.dp)
+                .fillMaxSize(),
+            shape = RoundedCornerShape(20.dp),
+            elevation = 8.dp,
+            backgroundColor = Arsenic
+        ) {
+            if (uiState.weightList.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Добавить вес",
-                            style = TextStyle(
-                                fontFamily = FontFamily.SansSerif,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 20.sp,
-                                color = White
-                            )
+                    Text(
+                        text = "Используйте приложение,\nчтобы появилась статистика",
+                        modifier = Modifier,
+                        textAlign = TextAlign.Center,
+                        softWrap = false,
+                        style = TextStyle(
+                            fontFamily = FontFamily.Default,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 20.sp,
+                            color = CaptionColor
                         )
-                    }
+                    )
                 }
             }
-
-            if (dialogState.value) {
-                AddWeightDialog(
-                    onAddWeight = { weight ->
-                        coroutineScope.launch {
-                            weightViewModel.insertWeight(
-                                WeightEntry(
-                                    0,
-                                    time,
-                                    date,
-                                    weight.toDouble()
-                                )
-                            )
-                        }
-                        dialogState.value = false
-                    },
-                    onDismiss = { dialogState.value = false }
+            else {
+                StatsChartForWeight(
+                    data = weightData,
+                    modifier = Modifier.height(300.dp)
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        if (uiState.weightList.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Добавьте вес в профиле\nдля построения списка",
+                        modifier = Modifier,
+                        textAlign = TextAlign.Center,
+                        softWrap = false,
+                        style = TextStyle(
+                            fontFamily = FontFamily.Default,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 20.sp,
+                            color = WeightEmpty
+                        )
+                    )
+                    Icon(
+                        painterResource(id = R.drawable.emptylist),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .size(182.dp),
+                        tint = WeightEmpty
+                    )
+                }
+            }
+        } else {
+            WeightBodyWithStats(
+                weightList = uiState.weightList,
+                onDismiss = { weightEntry ->
+                    coroutineScope.launch {
+                        weightViewModel.deleteWeight(weightEntry)
+                    }
+                },
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun WeightBodyWithStats(
+    weightList: List<WeightEntry>,
+    onDismiss: (WeightEntry) -> Unit,
+    modifier: Modifier = Modifier
+){
+    WeightListWithStats(weightList, onDismiss, modifier)
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@Composable
+private fun WeightListWithStats(
+    weightList: List<WeightEntry>,
+    onDismiss: (WeightEntry) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val sortedWeightList = weightList.sortedWith(
+        compareByDescending<WeightEntry> { it.date.year }
+            .thenByDescending { it.date.monthValue }
+            .thenByDescending { it.date.dayOfMonth }
+    )
+
+    LazyColumn(modifier = modifier) {
         items(items = sortedWeightList, key = { item -> item.id }, itemContent = { item ->
             val threshold = 0.25f
             val fraction = remember { mutableStateOf(0f) }
@@ -205,8 +200,15 @@ private fun WeightListWithStats(
                 },
                 modifier = Modifier.animateItemPlacement(),
                 background = {
-                    Background(dismissState = dismissState) {
-                        fraction.value = it
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(top = 8.dp, bottom = 6.dp, start = 5.dp, end = 5.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                    ) {
+                        Background(dismissState = dismissState) {
+                            fraction.value = it
+                        }
                     }
                 },
                 dismissContent = {
@@ -227,7 +229,7 @@ private fun Weight(
 ){
     Card(
         modifier = modifier
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 5.dp)
             .fillMaxWidth()
             .height(40.dp),
         shape = RoundedCornerShape(5.dp),
@@ -277,9 +279,11 @@ private fun Weight(
 
 private fun dataList(
     weightViewModel: WeightViewModel,
-    dates: List<LocalDate>
-): List<Pair<Float, String>> = dates.map { date ->
-    val weight = runBlocking { weightViewModel.getWeightByDate(date) }
-    val fDate = date.format(DateTimeFormatter.ofPattern("dd.MM"))
-    weight.toFloat() to fDate
+    dates: List<DateTimeWrapper>,
+): List<Pair<Float, String>> = runBlocking {
+    dates.map { dateTimeWrapper ->
+        val weight = weightViewModel.getWeightByDate(dateTimeWrapper.date, dateTimeWrapper.time)
+        val fDate = dateTimeWrapper.date.format(DateTimeFormatter.ofPattern("dd.MM"))
+        weight.toFloat() to fDate
+    }
 }

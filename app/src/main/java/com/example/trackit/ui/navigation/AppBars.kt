@@ -224,7 +224,7 @@ fun TopBarWithLabel(
             null,
             Modifier
                 .align(Alignment.CenterVertically)
-                .padding(horizontal = 4.dp)
+                .padding(horizontal = 10.dp)
                 .weight(1f),
             Arsenic)
 
@@ -234,17 +234,18 @@ fun TopBarWithLabel(
             softWrap = false,
             style = TextStyle(
                 fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Medium,
                 fontSize = 24.sp,
                 color = Arsenic
-            )
+            ),
+            modifier = Modifier.offset(y = (-4).dp)
         )
 
         Icon(painterResource(R.drawable.line),
             null,
             Modifier
                 .align(Alignment.CenterVertically)
-                .padding(horizontal = 4.dp)
+                .padding(horizontal = 10.dp)
                 .weight(1f),
             Arsenic)
 

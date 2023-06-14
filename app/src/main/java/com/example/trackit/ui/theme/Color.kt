@@ -14,6 +14,7 @@ val BrightGray = Color(parseColor("#EFEFEF"))
 val PermanentGeraniumLake = Color(parseColor("#D92B2B"))
 val EmptyColor = Color(parseColor("#D7DCDD"))
 val CaptionColor = Color(parseColor("#AEB6B8"))
+val WeightEmpty = Color(parseColor("#D7DCDD"))
 
 val Red200 = Color(0xfff297a2)
 val Red300 = Color(0xffea6d7e)
