@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/some_id"
     android:layout_width="293dp"
-    android:layout_height="385dp"
+    android:layout_height="325dp"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/new_food"
     android:elevation="4dp"
@@ -195,75 +195,6 @@
 
         </LinearLayout>
     </RelativeLayout>
-
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="273dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/time_food"
-        app:cardCornerRadius="50dp"
-        android:layout_gravity="center">
-
-        <RadioGroup
-            android:id="@+id/radio_group_food"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/time_food"
-            android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/breakfast"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="25dp"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:fontFamily="sans-serif"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:text="З"/>
-
-        <RadioButton
-            android:id="@+id/lunch"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:fontFamily="sans-serif"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:text="О"/>
-
-        <RadioButton
-            android:id="@+id/dinner"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:fontFamily="sans-serif"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:text="У" />
-
-        <RadioButton
-            android:id="@+id/snack"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:fontFamily="sans-serif"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:text="П" />
-
-        </RadioGroup>
-
-    </androidx.cardview.widget.CardView>
-
 
     <RelativeLayout
         android:layout_width="171dp"

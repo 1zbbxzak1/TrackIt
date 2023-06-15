@@ -44,6 +44,7 @@ fun showAddDialog(
     food: FoodData,
     context: Context,
     navigateToFoodPage: () -> Unit,
+    mealType: String?,
     selectedDate: LocalDate,
     breakfastV: BreakfastViewModel,
     lunchV: LunchViewModel,
@@ -84,190 +85,127 @@ fun showAddDialog(
 
     val addButton = builder.findViewById<Button>(R.id.add_button_food)
 
-    val radioFood = builder.findViewById<RadioGroup>(R.id.radio_group_food)
-    val breakfast = builder.findViewById<Button>(R.id.breakfast)
-    val lunch = builder.findViewById<Button>(R.id.lunch)
-    val dinner = builder.findViewById<Button>(R.id.dinner)
-    val snack = builder.findViewById<Button>(R.id.snack)
-
-    radioFood.setOnCheckedChangeListener { group, checkedId ->
-        when (checkedId) {
-            R.id.breakfast -> {
-                setRadioButtonState(group, 0)
-                lunch.background = null
-                dinner.background = null
-                snack.background = null
-            }
-            R.id.lunch -> {
-                setRadioButtonState(group, 1)
-                breakfast.background = null
-                dinner.background = null
-                snack.background = null
-            }
-
-            R.id.dinner -> {
-                setRadioButtonState(group, 2)
-                breakfast.background = null
-                lunch.background = null
-                snack.background = null
-            }
-
-            R.id.snack -> {
-                setRadioButtonState(group, 3)
-                breakfast.background = null
-                lunch.background = null
-                dinner.background = null
-            }
-        }
-
-        // Установить цвет текста выбранной радиокнопки и сохранить его
-        val checkedRadioButton = builder.findViewById<RadioButton>(checkedId)
-        if (checkedRadioButton != null) {
-            checkedRadioButton.setTextColor(ContextCompat.getColor(context, R.color.white))
-        }
-
-        // Снять флажки со всех остальных радиокнопок и установить для них черный цвет текста
-        for (i in 0 until group.childCount) {
-            val radioButton = group.getChildAt(i) as RadioButton
-            if (radioButton.id != checkedId) {
-                radioButton.setTextColor(ContextCompat.getColor(context, R.color.black))
-                radioButton.isChecked = false
-            }
-        }
-    }
-
     addButton.setOnClickListener {
         val gramsEntered = gramsEditText.text.toString().toIntOrNull() ?: 0
         if (gramsEntered <= 0) {
-            Toast.makeText(context, "Пожалуйста, введите количество грамм", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Пожалуйста, введите количество грамм", Toast.LENGTH_SHORT)
+                .show()
             return@setOnClickListener
         }
         val factor = gramsEntered / 100.0 // отношение введенного количества грамм к 100 г
 
-        when (val checkedId = radioFood.checkedRadioButtonId) {
-            -1 -> {
-                Toast.makeText(
-                    context,
-                    "Пожалуйста, выберите категорию для добавления продукта",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }
-            else -> {
-                val newFoodB: Meal = Breakfast(
-                    id = generateUniqueID(),
-                    date = selectedDate,
-                    foodBreakfast = FoodData(
-                        name = food.name,
-                        protein = round(food.protein * factor * 10.0) / 10.0,
-                        fat = round(food.fat * factor * 10.0) / 10.0,
-                        carbs = round(food.carbs * factor * 10.0) / 10.0,
-                        calories = round(food.calories * factor * 10.0) / 10.0,
-                        gramsEntered = gramsEntered
-                    )
-                )
+        val newFoodB: Meal = Breakfast(
+            id = generateUniqueID(),
+            date = selectedDate,
+            foodBreakfast = FoodData(
+                name = food.name,
+                protein = round(food.protein * factor * 10.0) / 10.0,
+                fat = round(food.fat * factor * 10.0) / 10.0,
+                carbs = round(food.carbs * factor * 10.0) / 10.0,
+                calories = round(food.calories * factor * 10.0) / 10.0,
+                gramsEntered = gramsEntered
+            )
+        )
 
-                val newFoodL: Meal = Lunch(
-                    id = generateUniqueID(),
-                    date = selectedDate,
-                    foodLunch = FoodData(
-                        name = food.name,
-                        protein = round(food.protein * factor * 10.0) / 10.0,
-                        fat = round(food.fat * factor * 10.0) / 10.0,
-                        carbs = round(food.carbs * factor * 10.0) / 10.0,
-                        calories = round(food.calories * factor * 10.0) / 10.0,
-                        gramsEntered = gramsEntered
-                    )
-                )
+        val newFoodL: Meal = Lunch(
+            id = generateUniqueID(),
+            date = selectedDate,
+            foodLunch = FoodData(
+                name = food.name,
+                protein = round(food.protein * factor * 10.0) / 10.0,
+                fat = round(food.fat * factor * 10.0) / 10.0,
+                carbs = round(food.carbs * factor * 10.0) / 10.0,
+                calories = round(food.calories * factor * 10.0) / 10.0,
+                gramsEntered = gramsEntered
+            )
+        )
 
-                val newFoodD: Meal = Dinner(
-                    id = generateUniqueID(),
-                    date = selectedDate,
-                    foodDinner = FoodData(
-                        name = food.name,
-                        protein = round(food.protein * factor * 10.0) / 10.0,
-                        fat = round(food.fat * factor * 10.0) / 10.0,
-                        carbs = round(food.carbs * factor * 10.0) / 10.0,
-                        calories = round(food.calories * factor * 10.0) / 10.0,
-                        gramsEntered = gramsEntered
-                    )
-                )
+        val newFoodD: Meal = Dinner(
+            id = generateUniqueID(),
+            date = selectedDate,
+            foodDinner = FoodData(
+                name = food.name,
+                protein = round(food.protein * factor * 10.0) / 10.0,
+                fat = round(food.fat * factor * 10.0) / 10.0,
+                carbs = round(food.carbs * factor * 10.0) / 10.0,
+                calories = round(food.calories * factor * 10.0) / 10.0,
+                gramsEntered = gramsEntered
+            )
+        )
 
-                val newFoodS: Meal = Snack(
-                    id = generateUniqueID(),
-                    date = selectedDate,
-                    foodSnack = FoodData(
-                        name = food.name,
-                        protein = round(food.protein * factor * 10.0) / 10.0,
-                        fat = round(food.fat * factor * 10.0) / 10.0,
-                        carbs = round(food.carbs * factor * 10.0) / 10.0,
-                        calories = round(food.calories * factor * 10.0) / 10.0,
-                        gramsEntered = gramsEntered
-                    )
-                )
+        val newFoodS: Meal = Snack(
+            id = generateUniqueID(),
+            date = selectedDate,
+            foodSnack = FoodData(
+                name = food.name,
+                protein = round(food.protein * factor * 10.0) / 10.0,
+                fat = round(food.fat * factor * 10.0) / 10.0,
+                carbs = round(food.carbs * factor * 10.0) / 10.0,
+                calories = round(food.calories * factor * 10.0) / 10.0,
+                gramsEntered = gramsEntered
+            )
+        )
 
-                when (checkedId) {
-                    R.id.breakfast -> {
-                        coroutineScope.launch {
-                            breakfastV.insertFood(newFoodB as Breakfast)
-                            totalV.upOrInNut(
-                                Total(
-                                    selectedDate,
-                                    newFoodB.food.protein.roundToInt(),
-                                    newFoodB.food.fat.roundToInt(),
-                                    newFoodB.food.carbs.roundToInt(),
-                                    newFoodB.food.calories.roundToInt()
-                                )
-                            )
-                        }
-                    }
-                    R.id.lunch -> {
-                        coroutineScope.launch {
-                            lunchV.insertFood(newFoodL as Lunch)
-                            totalV.upOrInNut(
-                                Total(
-                                    selectedDate,
-                                    newFoodL.food.protein.roundToInt(),
-                                    newFoodL.food.fat.roundToInt(),
-                                    newFoodL.food.carbs.roundToInt(),
-                                    newFoodL.food.calories.roundToInt()
-                                )
-                            )
-                        }
-                    }
-                    R.id.dinner -> {
-                        coroutineScope.launch {
-                            dinnerV.insertFood(newFoodD as Dinner)
-                            totalV.upOrInNut(
-                                Total(
-                                    selectedDate,
-                                    newFoodD.food.protein.roundToInt(),
-                                    newFoodD.food.fat.roundToInt(),
-                                    newFoodD.food.carbs.roundToInt(),
-                                    newFoodD.food.calories.roundToInt()
-                                )
-                            )
-                        }
-                    }
-                    R.id.snack -> {
-                        coroutineScope.launch {
-                            snackV.insertFood(newFoodS as Snack)
-                            totalV.upOrInNut(
-                                Total(
-                                    selectedDate,
-                                    newFoodS.food.protein.roundToInt(),
-                                    newFoodS.food.fat.roundToInt(),
-                                    newFoodS.food.carbs.roundToInt(),
-                                    newFoodS.food.calories.roundToInt()
-                                )
-                            )
-                        }
-                    }
+        when (mealType) {
+            "Завтрак" -> {
+                coroutineScope.launch {
+                    breakfastV.insertFood(newFoodB as Breakfast)
+                    totalV.upOrInNut(
+                        Total(
+                            selectedDate,
+                            newFoodB.food.protein.roundToInt(),
+                            newFoodB.food.fat.roundToInt(),
+                            newFoodB.food.carbs.roundToInt(),
+                            newFoodB.food.calories.roundToInt()
+                        )
+                    )
                 }
-                builder.dismiss()
-                navigateToFoodPage()
+            }
+            "Обед" -> {
+                coroutineScope.launch {
+                    lunchV.insertFood(newFoodL as Lunch)
+                    totalV.upOrInNut(
+                        Total(
+                            selectedDate,
+                            newFoodL.food.protein.roundToInt(),
+                            newFoodL.food.fat.roundToInt(),
+                            newFoodL.food.carbs.roundToInt(),
+                            newFoodL.food.calories.roundToInt()
+                        )
+                    )
+                }
+            }
+            "Ужин" -> {
+                coroutineScope.launch {
+                    dinnerV.insertFood(newFoodD as Dinner)
+                    totalV.upOrInNut(
+                        Total(
+                            selectedDate,
+                            newFoodD.food.protein.roundToInt(),
+                            newFoodD.food.fat.roundToInt(),
+                            newFoodD.food.carbs.roundToInt(),
+                            newFoodD.food.calories.roundToInt()
+                        )
+                    )
+                }
+            }
+            "Перекус" -> {
+                coroutineScope.launch {
+                    snackV.insertFood(newFoodS as Snack)
+                    totalV.upOrInNut(
+                        Total(
+                            selectedDate,
+                            newFoodS.food.protein.roundToInt(),
+                            newFoodS.food.fat.roundToInt(),
+                            newFoodS.food.carbs.roundToInt(),
+                            newFoodS.food.calories.roundToInt()
+                        )
+                    )
+                }
             }
         }
+        builder.dismiss()
+        navigateToFoodPage()
     }
 
     val cancelButton = builder.findViewById<Button>(R.id.cancel_button2)
@@ -281,8 +219,7 @@ fun showAddDialog(
 fun setupFoodList(
     context: Context,
     view: View,
-    foodList: MutableList<FoodData>,
-    foodAdapter: FoodAdapter
+    foodList: MutableList<FoodData>
 ) {
     val dialogAddButton = Dialog(context)
     dialogAddButton.setContentView(R.layout.dialog_add_food)
@@ -334,9 +271,6 @@ fun setupFoodList(
 
             // Сохраняем данные
             saveFoodItems()
-
-            // Обновляем адаптер
-            foodAdapter.setFilteredList(foodList)
 
             // Закрываем диалоговое окно
             dialogAddButton.dismiss()

@@ -23,7 +23,6 @@ import com.example.trackit.data.food.*
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.Nutrition.FoodAdapter
 import com.example.trackit.ui.Nutrition.FoodData
-import com.example.trackit.ui.Nutrition.Lunch
 import com.example.trackit.ui.navigation.SearchView
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.BrightGray
@@ -38,6 +37,7 @@ fun FoodScreen(
     navigateBack: () -> Unit,
     navigateToFoodPage: () -> Unit,
     selectedDate: LocalDate = LocalDate.now(),
+    mealType: String?,
     breakfast: BreakfastViewModel = viewModel(factory = AppViewModelProvider.Factory),
     lunch: LunchViewModel = viewModel(factory = AppViewModelProvider.Factory),
     dinner: DinnerViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -54,7 +54,7 @@ fun FoodScreen(
 
     val onFoodItemClickListener = object : FoodAdapter.OnFoodItemClickListener {
         override fun onFoodItemClick(food: FoodData) {
-            showAddDialog(food, context, navigateToFoodPage, selectedDate, breakfast, lunch, dinner, snack, total)
+            showAddDialog(food, context, navigateToFoodPage, mealType, selectedDate, breakfast, lunch, dinner, snack, total)
         }
     }
 
@@ -116,8 +116,10 @@ fun FoodScreen(
             recyclerView.layoutManager = layoutManager
             recyclerView.adapter = foodAdapter
 
+            foodAdapter.setFilteredList(filteredFoodList, searchQuery.value.text)
+
             // добавление продукта в общий список
-            setupFoodList(context, view, filteredFoodList, foodAdapter)
+            setupFoodList(context, view, foodList)
         }
     }
 }

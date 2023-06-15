@@ -243,7 +243,10 @@ fun TrackItApp(
                 },
             ) {
                 FoodPage(
-                    navigateToFoodScreen = { navController.navigate(Screen.NutritionFood.name) },
+                    navigateToFoodScreen = { mealType ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set("mealType", mealType)
+                        navController.navigate(Screen.NutritionFood.name)
+                    },
                     selectedDate = selectedDate.value
                 )
             }
@@ -269,7 +272,9 @@ fun TrackItApp(
                     ExitTransition.None
                 }
             ) {
+                val mealType = navController.previousBackStackEntry?.savedStateHandle?.get<String>("mealType")
                 FoodScreen(
+                    mealType = mealType,
                     navigateBack = { navController.popBackStack() },
                     navigateToFoodPage = { navController.navigate(Screen.Food.name) },
                     selectedDate = selectedDate.value

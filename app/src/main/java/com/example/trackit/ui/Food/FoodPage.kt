@@ -1,6 +1,5 @@
 package com.example.trackit.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -37,10 +36,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.roundToInt
 
-@SuppressLint("MutableCollectionMutableState", "CoroutineCreationDuringComposition")
 @Composable
 fun FoodPage(
-    navigateToFoodScreen: () -> Unit,
+    navigateToFoodScreen: (String) -> Unit,
     selectedDate: LocalDate = LocalDate.now(),
     breakfastV: BreakfastViewModel = viewModel(factory = AppViewModelProvider.Factory),
     lunchV: LunchViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -214,7 +212,7 @@ fun FoodPage(
                     foods = breakfastUiState.breakfastList,
                     isExpanded = breakfastExpanded,
                     onPanelClicked = { breakfastExpanded = !breakfastExpanded },
-                    onAddButtonClick = { navigateToFoodScreen() },
+                    onAddButtonClick = { navigateToFoodScreen("Завтрак") },
                     onDismiss = { item ->
                         coroutineScope.launch {
                             breakfastV.deleteFood(item as Breakfast)
@@ -243,7 +241,7 @@ fun FoodPage(
                     foods = lunchUiState.lunchList,
                     isExpanded = lunchExpanded,
                     onPanelClicked = { lunchExpanded = !lunchExpanded },
-                    onAddButtonClick = { navigateToFoodScreen() },
+                    onAddButtonClick = { navigateToFoodScreen("Обед") },
                     onDismiss = { item ->
                         coroutineScope.launch {
                             lunchV.deleteFood(item as Lunch)
@@ -272,7 +270,7 @@ fun FoodPage(
                     foods = dinnerUiState.dinnerList,
                     isExpanded = dinnerExpanded,
                     onPanelClicked = { dinnerExpanded = !dinnerExpanded },
-                    onAddButtonClick = { navigateToFoodScreen() },
+                    onAddButtonClick = { navigateToFoodScreen("Ужин") },
                     onDismiss = { item ->
                         coroutineScope.launch {
                             dinnerV.deleteFood(item as Dinner)
@@ -301,7 +299,7 @@ fun FoodPage(
                     foods = snackUiState.snackList,
                     isExpanded = snackExpanded,
                     onPanelClicked = { snackExpanded = !snackExpanded },
-                    onAddButtonClick = { navigateToFoodScreen() },
+                    onAddButtonClick = { navigateToFoodScreen("Перекус") },
                     onDismiss = { item ->
                         coroutineScope.launch {
                             snackV.deleteFood(item as Snack)
@@ -398,6 +396,18 @@ fun MealPanel(
                     Spacer(modifier = Modifier.height(15.dp))
                 }
             }
+        }
+
+        Box(
+            modifier = Modifier.fillMaxSize().offset(y = 32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = if (isExpanded) R.drawable.arrow_up else R.drawable.arrow_down),
+                contentDescription = null,
+                tint = Color(android.graphics.Color.parseColor("#3B4446")),
+                modifier = Modifier.size(23.dp)
+            )
         }
     }
 }

@@ -2,12 +2,18 @@ package com.example.trackit.ui.Nutrition
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trackit.R
+import com.example.trackit.ui.theme.AndroidGreen
 
 class FoodAdapter(
     foodList: MutableList<FoodData>,
@@ -18,6 +24,7 @@ class FoodAdapter(
     }
 
     private var filteredList: MutableList<FoodData> = mutableListOf()
+    private var searchQuery: String = ""
 
     init {
         filteredList.addAll(foodList)
@@ -37,6 +44,30 @@ class FoodAdapter(
             carbs.text = food.carbs.toString()
             calories.text = food.calories.toString()
 
+            val AndroidGreen = Color.parseColor("#99CD4E")
+
+            // Проверяем, совпадает ли поисковый запрос с именем еды
+            val highlightedText = if (searchQuery.isNotEmpty()) {
+                val startIndex = food.name.indexOf(searchQuery, ignoreCase = true)
+                if (startIndex != -1) {
+                    val endIndex = startIndex + searchQuery.length
+                    val spannableString = SpannableString(food.name)
+                    spannableString.setSpan(
+                        ForegroundColorSpan(AndroidGreen),
+                        startIndex,
+                        endIndex,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    spannableString
+                } else {
+                    food.name
+                }
+            } else {
+                food.name
+            }
+
+            nameFood.text = highlightedText
+
             itemView.setOnClickListener {
                 onFoodItemClickListener.onFoodItemClick(food)
             }
@@ -44,9 +75,10 @@ class FoodAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setFilteredList(filteredList: MutableList<FoodData>) {
+    fun setFilteredList(filteredList: MutableList<FoodData>, searchQuery: String) {
         this.filteredList.clear()
         this.filteredList.addAll(filteredList)
+        this.searchQuery = searchQuery
         notifyDataSetChanged()
     }
 
