@@ -1,5 +1,6 @@
 package com.example.trackit.ui.navigation
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
@@ -59,6 +60,8 @@ fun BottomBar(
         mutableStateOf(false)
     }
 
+    val activity = (LocalContext.current as? Activity)
+
     var showToast by remember { mutableStateOf(false) }
 
     var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
@@ -80,6 +83,10 @@ fun BottomBar(
         BackHandler(backPressState == BackPress.Idle) {
             backPressState = BackPress.InitialTouch
             showToast = true
+        }
+
+        BackHandler(backPressState == BackPress.InitialTouch) {
+            activity?.finish()
         }
     }
 
