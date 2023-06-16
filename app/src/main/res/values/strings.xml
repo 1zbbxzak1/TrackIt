@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">TrackIt</string>
+    <string name="profile_page">Профиль</string>
+    <string name="food_page">Питание</string>
+    <string name="workout_page">Тренировки</string>
+    <string name="empty_workout_page">Добавьте упражнения  из категорий для старта</string>
+    <plurals name="repeats">
+        <item quantity="one">%d повторение</item>
+        <item quantity="few">%d повторения</item>
+        <item quantity="other">%d повторений</item>
+    </plurals>
+    <plurals name="approaches">
+        <item quantity="one">%d подход</item>
+        <item quantity="few">%d подхода</item>
+        <item quantity="other">%d подходов</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d минута</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
 </resources>
