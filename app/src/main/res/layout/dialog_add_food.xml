@@ -114,22 +114,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginTop="14dp"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="85dp"
             android:layout_height="48dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/pfc2"
+            android:background="@drawable/pfc"
             android:elevation="4dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="1dp"
                 android:fontFamily="sans-serif"
                 android:textStyle="normal"
@@ -142,7 +142,7 @@
                 android:id="@+id/protein_add"
                 android:layout_width="58dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
                 android:backgroundTint="@android:color/transparent"
                 android:textAllCaps="false"
@@ -169,15 +169,14 @@
             android:layout_width="85dp"
             android:layout_height="48dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/pfc2"
+            android:background="@drawable/pfc"
             android:elevation="4dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="1dp"
                 android:fontFamily="sans-serif"
                 android:textStyle="normal"
@@ -190,7 +189,7 @@
                 android:id="@+id/fat_add"
                 android:layout_width="58dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
                 android:textSize="16sp"
                 android:textAllCaps="false"
@@ -217,8 +216,7 @@
             android:layout_width="85dp"
             android:layout_height="48dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/pfc2"
+            android:background="@drawable/pfc"
             android:elevation="4dp"
             android:orientation="horizontal">
 
@@ -265,14 +263,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="67dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="134dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
             android:background="@drawable/back_button"
             android:elevation="4dp">
 
@@ -294,7 +292,6 @@
             android:layout_width="134dp"
             android:layout_height="40dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="15dp"
             android:background="@drawable/back_button"
             android:elevation="4dp">
 
