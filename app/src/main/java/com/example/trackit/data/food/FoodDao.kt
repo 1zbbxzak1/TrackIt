@@ -126,9 +126,9 @@ interface TotalDao {
                 "SELECT foodDinner AS food FROM dinner " +
                 "UNION ALL " +
                 "SELECT foodSnack AS food FROM snack " +
-                ") " +
+                ") AS food " +
                 "GROUP BY food " +
-                "ORDER BY count DESC " +
+                "ORDER BY food ASC, count DESC " +
                 "LIMIT 1"
     )
     fun getPop(): Flow<FoodCount>
