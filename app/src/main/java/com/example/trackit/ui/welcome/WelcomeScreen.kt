@@ -1,5 +1,6 @@
 package com.example.trackit.ui.welcome
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -80,15 +81,15 @@ fun WelcomeScreen(
             onClick = {
                 currentPage.value = getNextPage(currentPage.value)
             }
-            enabled = selectedAge.value.text.isNotBlank() && selectedAge.value.text.toInt() < 123
-            toastText = "Введите ваш возраст"
+            enabled = selectedAge.value.text.isNotBlank() && selectedAge.value.text.toIntOrNull() != null && selectedAge.value.text.toIntOrNull()!! < 123
+            toastText = if (selectedAge.value.text.toIntOrNull() != null) "Введите ваш возраст" else "Введите целое значение"
         }
         WelcomePage.Height -> {
             onClick = {
                 currentPage.value = getNextPage(currentPage.value)
             }
-            enabled = selectedHeight.value.text.isNotBlank() && selectedHeight.value.text.toInt() < 300
-            toastText = "Введите ваш рост"
+            enabled = selectedHeight.value.text.isNotBlank() && selectedHeight.value.text.toIntOrNull() != null && selectedHeight.value.text.toIntOrNull()!! < 300
+            toastText = if (selectedHeight.value.text.toIntOrNull() != null) "Введите ваш рост" else "Введите целое значение"
         }
         WelcomePage.Weight -> {
             onClick = {
