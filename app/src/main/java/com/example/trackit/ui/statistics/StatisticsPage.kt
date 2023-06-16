@@ -1,5 +1,8 @@
 package com.example.trackit.ui.statistics
 
+import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -72,6 +76,8 @@ fun StatisticsCard(
     label: String,
     data: String
 ){
+    val context = LocalContext.current
+
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(15.dp),
@@ -95,8 +101,12 @@ fun StatisticsCard(
 
             Spacer(modifier = Modifier.weight(1f))
 
+            val toastLength = if(data.length > 30) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+
             Card(
-                modifier = Modifier,
+                modifier = Modifier
+                    .clickable(remember { MutableInteractionSource() },null)
+                        { if(data.length > 15) Toast.makeText(context, data, toastLength).show() },
                 backgroundColor = Color.White,
                 shape = RoundedCornerShape(10.dp),
                 elevation = 4.dp

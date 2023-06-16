@@ -217,21 +217,27 @@ private fun WorkoutCategoryList(
                 else ->DismissDirection.EndToStart
             }
 
-            SwipeToDismiss(
-                state = dismissState,
-                directions = setOf(DismissDirection.EndToStart),
-                dismissThresholds = {
-                    FractionalThreshold(dismissThreshold)
-                },
-                modifier = Modifier
-                    .animateItemPlacement(),
-                background = {
-                    SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
-                },
-                dismissContent = {
-                    WorkoutCategoryItem(item = item, onClick, onExerciseClick, searchedText)
-                }
-            )
+            if (searchedText.isBlank()){
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    dismissThresholds = {
+                        FractionalThreshold(dismissThreshold)
+                    },
+                    modifier = Modifier
+                        .animateItemPlacement(),
+                    background = {
+                        SwipeBackground(dismissState = dismissState) { currentFraction.value = it }
+                    },
+                    dismissContent = {
+                        WorkoutCategoryItem(item = item, onClick, onExerciseClick, searchedText)
+                    }
+                )
+            }
+            else {
+                WorkoutCategoryItem(item = item, onClick, onExerciseClick, searchedText)
+            }
+
         })
 
         item(){

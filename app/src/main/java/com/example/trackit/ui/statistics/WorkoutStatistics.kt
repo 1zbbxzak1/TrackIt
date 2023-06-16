@@ -18,6 +18,7 @@ import com.example.trackit.ui.workout.WorkoutViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun WorkoutStatistics(
@@ -49,7 +50,8 @@ fun WorkoutStatistics(
     Column(modifier = modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         StatisticsCard(label = "Серия упражнений", data = "$daySeries")
 
-        StatisticsCard(label = "Среднее количество упражнений ", data = "${String.format("%.1f", averageExercises)} / день")
+        StatisticsCard(label = "Среднее количество упражнений ",
+            data = "${String.format(Locale.ENGLISH, "%.1f", averageExercises)} / день")
 
         StatisticsCard(label = "Любимая категория", data = popularCategory.ifEmpty { "Нет данных" })
 
@@ -69,7 +71,7 @@ private fun generateWorkoutLineDataList(
 ): List<Pair<Float, String>> {
     val lineDataList = mutableListOf<Pair<Float, String>>()
 
-    for (date in dates) {
+    dates.forEach {date ->
         val count = runBlocking {
             workoutViewModel.getCompletedItemCountOnDate(date)
         }

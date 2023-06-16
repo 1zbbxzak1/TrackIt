@@ -102,12 +102,8 @@ fun TrackItApp(
                 }
             ) {
                 ProfilePage(
-                    selectedDate.value,
-                    time = LocalTime.now(),
                     navigateToStats = { navController.navigate(Screen.Statistics.name) },
-                    gender,
-                    age,
-                    height
+                    genderT = gender, ageT = age, heightT = height
                 )
             }
 

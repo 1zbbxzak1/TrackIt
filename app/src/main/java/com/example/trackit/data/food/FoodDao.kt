@@ -66,7 +66,7 @@ interface TotalDao {
     @Query("SELECT * FROM total WHERE date = :date")
     fun getTotal(date: LocalDate): Total?
 
-    @Query("SELECT DISTINCT date FROM total ORDER BY date DESC LIMIT 9")
+    @Query("SELECT DISTINCT date FROM total WHERE calories > 0 ORDER BY date DESC LIMIT 10")
     fun getLastTenDates(): Flow<List<LocalDate>>
 
     @Query("SELECT AVG(calories) FROM total")

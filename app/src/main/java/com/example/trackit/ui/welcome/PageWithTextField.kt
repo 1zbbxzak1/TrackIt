@@ -25,11 +25,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -79,6 +81,7 @@ fun PageWithTextField(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WelcomeTextField(
     modifier: Modifier = Modifier,
@@ -93,6 +96,7 @@ fun WelcomeTextField(
         backgroundColor = Transparent,
     )
 
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
     CompositionLocalProvider(
@@ -107,7 +111,12 @@ fun WelcomeTextField(
             singleLine = true,
             cursorBrush = SolidColor(Arsenic),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = imeAction),
-            keyboardActions = KeyboardActions(onNext = {onKeyboardAction()}, onDone = {onKeyboardAction()})
+            keyboardActions = KeyboardActions(
+                onNext = {onKeyboardAction()},
+                onDone = {
+                    onKeyboardAction()
+                }
+            )
         ){innerTextField ->
             Card(
                 modifier = modifier.height(80.dp),

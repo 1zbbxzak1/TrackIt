@@ -49,6 +49,7 @@ abstract class WorkoutCategoryDatabase : RoomDatabase(){
                             // Insert pre-created objects into the database
                             GlobalScope.launch {
                                 preCreatedCategoryList.forEach{ category ->
+                                    category.exercises.reverse()
                                     getDatabase(context).itemDao().insert(category)
                                 }
                             }

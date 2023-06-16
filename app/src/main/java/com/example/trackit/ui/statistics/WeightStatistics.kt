@@ -81,7 +81,7 @@ fun WeightStatistics(
                 }
             }
             else {
-                StatsChartForWeight(
+                WeightStatisticsChart(
                     data = weightData,
                     modifier = Modifier.height(300.dp)
                 )

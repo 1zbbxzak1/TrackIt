@@ -234,11 +234,11 @@ fun TopBarWithLabel(
             softWrap = false,
             style = TextStyle(
                 fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 color = Arsenic
             ),
-            modifier = Modifier.offset(y = (-4).dp)
+            modifier = Modifier.offset(y = (-1).dp)
         )
 
         Icon(painterResource(R.drawable.line),

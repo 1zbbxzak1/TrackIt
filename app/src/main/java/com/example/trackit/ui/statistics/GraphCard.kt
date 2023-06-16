@@ -5,15 +5,22 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.trackit.R
@@ -42,12 +49,33 @@ fun GraphCard(
         elevation = 6.dp,
         backgroundColor = Arsenic
     ) {
-        graph(
-            Modifier
-                .height(600.dp)
-                .padding(5.dp),
-            data.ifEmpty { listOf() }
-        )
+        if (data.isEmpty()){
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Используйте приложение,\nчтобы появилась статистика",
+                    modifier = Modifier,
+                    textAlign = TextAlign.Center,
+                    softWrap = false,
+                    style = TextStyle(
+                        fontFamily = FontFamily.Default,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 20.sp,
+                        color = CaptionColor
+                    )
+                )
+            }
+        }
+        else {
+            graph(
+                Modifier
+                    .height(600.dp)
+                    .padding(5.dp),
+                data.ifEmpty { listOf() }
+            )
+        }
     }
 }
 

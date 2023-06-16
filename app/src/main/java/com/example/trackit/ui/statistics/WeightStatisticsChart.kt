@@ -32,7 +32,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 
 @Composable
-fun StatsChartForWeight(
+fun WeightStatisticsChart(
     data: List<Pair<Float, String>>,
     modifier: Modifier = Modifier,
     weightViewModel: WeightViewModel = viewModel(factory = AppViewModelProvider.Factory)

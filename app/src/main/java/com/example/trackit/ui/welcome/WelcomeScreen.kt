@@ -20,9 +20,11 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -45,6 +47,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
@@ -52,6 +55,7 @@ fun WelcomeScreen(
 ){
     val context = LocalContext.current
     val currentPage = remember { mutableStateOf(WelcomePage.Gender) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -109,7 +113,7 @@ fun WelcomeScreen(
                     )
                 )
             }
-            enabled = selectedWeight.value.text.isNotBlank() && selectedWeight.value.text.toInt() < 600
+            enabled = selectedWeight.value.text.isNotBlank() && selectedWeight.value.text.toDoubleOrNull()!! < 600
             toastText = "Введите ваш вес"
         }
     }
@@ -134,8 +138,9 @@ fun WelcomeScreen(
             WelcomePage.Age -> PageWithTextField(
                 onSelected = { selectedAge.value = it },
                 onKeyboardAction = {
-                    if (enabled)
+                    if (enabled){
                         currentPage.value = getNextPage(currentPage.value)
+                    }
                     else
                         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
                 },
@@ -145,8 +150,9 @@ fun WelcomeScreen(
             WelcomePage.Height -> PageWithTextField(
                 onSelected = { selectedHeight.value = it },
                 onKeyboardAction = {
-                    if (enabled)
+                    if (enabled){
                         currentPage.value = getNextPage(currentPage.value)
+                    }
                     else
                         Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show()
                 },
@@ -158,6 +164,8 @@ fun WelcomeScreen(
                 onSelected = { selectedWeight.value = it },
                 onKeyboardAction = {
                     if (enabled) {
+                        keyboardController?.hide()
+
                         coroutineScope.launch {
                             weightViewModel.insertWeight(
                                 WeightEntry(
@@ -207,7 +215,7 @@ private fun getProfileData(
     ageTextFieldValue: TextFieldValue,
     heightTextFieldValue: TextFieldValue,
     weightTextFieldValue: TextFieldValue
-) : WelcomeData = WelcomeData(gender, ageTextFieldValue.text.toInt(), heightTextFieldValue.text.toInt(), weightTextFieldValue.text.toInt())
+) : WelcomeData = WelcomeData(gender, ageTextFieldValue.text.toInt(), heightTextFieldValue.text.toInt(), weightTextFieldValue.text.toDouble())
 
 private fun getNextPage(currentPage: WelcomePage) : WelcomePage{
     val values = WelcomePage.values()
@@ -300,7 +308,7 @@ data class WelcomeData(
     val gender: Gender,
     val age: Int,
     val height: Int,
-    val weight: Int
+    val weight: Double
 )
 
 // Функция для перехода на другое активити
