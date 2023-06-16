@@ -1,4 +1,4 @@
-package com.example.trackit.data.Weight
+package com.example.trackit.data.weight
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

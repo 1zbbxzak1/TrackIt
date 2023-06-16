@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.trackit.data.DateConverter
 import com.example.trackit.data.FoodTypeConverters
-import com.example.trackit.ui.Nutrition.*
 
 
 @Database(

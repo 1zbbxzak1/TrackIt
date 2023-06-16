@@ -1,8 +1,8 @@
 package com.example.trackit.data
 
 import android.content.Context
-import com.example.trackit.data.Weight.WeightDatabase
-import com.example.trackit.data.Weight.WeightRepository
+import com.example.trackit.data.weight.WeightDatabase
+import com.example.trackit.data.weight.WeightRepository
 import com.example.trackit.data.food.*
 import com.example.trackit.data.workout.WorkoutCategoryDatabase
 import com.example.trackit.data.workout.WorkoutCategoryRepository

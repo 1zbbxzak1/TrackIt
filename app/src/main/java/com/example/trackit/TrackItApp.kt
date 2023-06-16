@@ -16,10 +16,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.trackit.data.Screen
-import com.example.trackit.ui.FoodPage
-import com.example.trackit.ui.Nutrition.Food.FoodScreen
-import com.example.trackit.ui.ProfilePage
+import com.example.trackit.ui.food.FoodPage
+import com.example.trackit.ui.food.FoodScreen
 import com.example.trackit.ui.navigation.BottomBar
+import com.example.trackit.ui.profile.ProfilePage
 import com.example.trackit.ui.statistics.StatisticsPage
 import com.example.trackit.ui.workout.WorkoutPage
 import com.example.trackit.ui.workout.category.WorkoutCategoryScreen
@@ -28,7 +28,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import java.time.LocalDate
-import java.time.LocalTime
 
 @OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnrememberedMutableState")
@@ -315,19 +314,3 @@ fun TrackItApp(
         )
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun PreviewTrackItApp(){
-//    TrackItTheme {
-//        TrackItApp()
-//    }
-//}
-//
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun PreviewTrackItAppDarkTheme(){
-//    TrackItTheme(darkTheme = true) {
-//        TrackItApp()
-//    }
-//}

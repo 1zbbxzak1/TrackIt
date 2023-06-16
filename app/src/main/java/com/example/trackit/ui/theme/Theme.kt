@@ -1,6 +1,5 @@
 package com.example.trackit.ui.theme
 
-import android.graphics.Color.parseColor
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
@@ -8,7 +7,6 @@ import androidx.compose.material.MaterialTheme.shapes
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -26,20 +24,11 @@ private val LightColorPalette = lightColors(
     onError = PermanentGeraniumLake,
     onSurface = Arsenic,
     background = Color.White
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @Composable
 fun TrackItTheme(
-    darkTheme: Boolean = false, //isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val systemUiController = rememberSystemUiController()

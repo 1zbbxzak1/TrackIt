@@ -1,4 +1,4 @@
-package com.example.trackit.Activity
+package com.example.trackit.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

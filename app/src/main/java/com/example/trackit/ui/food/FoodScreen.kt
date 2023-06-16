@@ -1,4 +1,4 @@
-package com.example.trackit.ui.Nutrition.Food
+package com.example.trackit.ui.food
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -19,17 +19,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trackit.R
+import com.example.trackit.data.PreCreatedFoodList
 import com.example.trackit.data.food.*
 import com.example.trackit.ui.AppViewModelProvider
-import com.example.trackit.ui.Nutrition.FoodAdapter
-import com.example.trackit.ui.Nutrition.FoodData
 import com.example.trackit.ui.navigation.SearchView
+import com.example.trackit.ui.setupFoodList
+import com.example.trackit.ui.showAddDialog
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.BrightGray
-import values.NedoFoodList
 import java.time.LocalDate
 import java.util.*
-
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -46,7 +45,7 @@ fun FoodScreen(
 
 ) {
     val context = LocalContext.current
-    val foodList = NedoFoodList
+    val foodList = PreCreatedFoodList
 
     val searchQuery = remember { mutableStateOf(TextFieldValue("")) }
     var recyclerView: RecyclerView

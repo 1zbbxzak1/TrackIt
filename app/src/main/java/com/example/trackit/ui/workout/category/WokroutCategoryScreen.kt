@@ -14,7 +14,6 @@ import androidx.compose.material.icons.rounded.KeyboardArrowRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -44,13 +43,13 @@ import java.util.*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutCategoryScreen(
+    modifier: Modifier = Modifier,
     onCategorySelect: (Int, String) -> Unit,
     navigateBack: () -> Unit,
     navigateToWorkoutPage: () -> Unit,
     selectedDate: LocalDate = LocalDate.now(),
     viewModel: WorkoutCategoryViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    exerciseViewModel: WorkoutExerciseViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    modifier: Modifier = Modifier
+    exerciseViewModel: WorkoutExerciseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val uiState by viewModel.workoutCategoryUiState.collectAsState()
 

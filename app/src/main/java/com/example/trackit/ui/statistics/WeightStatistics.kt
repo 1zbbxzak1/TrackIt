@@ -3,7 +3,6 @@ package com.example.trackit.ui.statistics
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
-import com.example.trackit.data.Weight.DateTimeWrapper
-import com.example.trackit.data.Weight.WeightEntry
-import com.example.trackit.data.Weight.WeightViewModel
+import com.example.trackit.data.weight.DateTimeWrapper
+import com.example.trackit.data.weight.WeightEntry
+import com.example.trackit.data.weight.WeightViewModel
 import com.example.trackit.ui.AppViewModelProvider
-import com.example.trackit.ui.Background
+import com.example.trackit.ui.food.Background
 import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.CaptionColor
 import com.example.trackit.ui.theme.WeightEmpty
@@ -81,7 +80,7 @@ fun WeightStatistics(
                 }
             }
             else {
-                WeightStatisticsChart(
+                WeightLineGraph(
                     data = weightData,
                     modifier = Modifier.height(300.dp)
                 )

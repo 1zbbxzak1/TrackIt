@@ -1,4 +1,4 @@
-package com.example.trackit.data.Weight
+package com.example.trackit.data.weight
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

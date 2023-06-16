@@ -25,13 +25,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,10 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.trackit.R
 import com.example.trackit.ui.theme.Arsenic
-import com.example.trackit.ui.theme.WelcomeCaptionTextStyle
-import com.example.trackit.ui.theme.WelcomeTextFieldStyle
 import com.example.trackit.ui.theme.TrackItTheme
+import com.example.trackit.ui.theme.WelcomeCaptionTextStyle
 import com.example.trackit.ui.theme.WelcomeLabelTextStyle
+import com.example.trackit.ui.theme.WelcomeTextFieldStyle
 
 @Composable
 fun PageWithTextField(
@@ -81,7 +79,6 @@ fun PageWithTextField(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WelcomeTextField(
     modifier: Modifier = Modifier,
@@ -96,7 +93,6 @@ fun WelcomeTextField(
         backgroundColor = Transparent,
     )
 
-    val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
     CompositionLocalProvider(

@@ -1,4 +1,4 @@
-package com.example.trackit.data.food
+package com.example.trackit.ui
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -23,10 +23,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat
 import com.example.trackit.R
+import com.example.trackit.data.food.Breakfast
+import com.example.trackit.data.food.BreakfastViewModel
+import com.example.trackit.data.food.Dinner
+import com.example.trackit.data.food.DinnerViewModel
+import com.example.trackit.data.food.FoodData
+import com.example.trackit.data.food.Lunch
+import com.example.trackit.data.food.LunchViewModel
+import com.example.trackit.data.food.Meal
+import com.example.trackit.data.food.Snack
+import com.example.trackit.data.food.SnackViewModel
+import com.example.trackit.data.food.Total
+import com.example.trackit.data.food.TotalViewModel
+import com.example.trackit.data.food.generateUniqueID
 import com.example.trackit.ui.*
-import com.example.trackit.ui.Nutrition.*
 import com.example.trackit.ui.theme.*
 import com.example.trackit.ui.workout.AddDeleteButton
 import com.google.gson.Gson
@@ -36,7 +47,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.round
 import kotlin.math.roundToInt
 

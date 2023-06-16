@@ -1,7 +1,7 @@
 package com.example.trackit.data
 
 import androidx.room.TypeConverter
-import com.example.trackit.ui.Nutrition.FoodData
+import com.example.trackit.data.food.FoodData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate

@@ -35,10 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.trackit.Activity.MainActivity
 import com.example.trackit.R
-import com.example.trackit.data.Weight.WeightEntry
-import com.example.trackit.data.Weight.WeightViewModel
+import com.example.trackit.activity.MainActivity
+import com.example.trackit.data.weight.WeightEntry
+import com.example.trackit.data.weight.WeightViewModel
 import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.theme.AndroidGreen
 import com.example.trackit.ui.theme.Arsenic

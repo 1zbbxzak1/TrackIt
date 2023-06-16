@@ -13,13 +13,13 @@
         android:theme="@style/Theme.TrackIt"
         tools:targetApi="s">
         <activity
-            android:name=".Activity.WelcomeActivity"
+            android:name=".activity.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:label="WelcomeScreen"
             android:theme="@style/Theme.SplashScreen" />
         <activity
-            android:name=".Activity.LoadActivity"
+            android:name=".activity.LoadActivity"
             android:exported="true"
             android:theme="@style/Theme.SplashScreen">
             <intent-filter>
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:label="TrackIt"
             android:theme="@style/Theme.TrackIt" />

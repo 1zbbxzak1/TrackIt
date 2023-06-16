@@ -1,4 +1,4 @@
-package com.example.trackit.ui
+package com.example.trackit.ui.profile
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -33,9 +33,10 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
-import com.example.trackit.data.Weight.WeightEntry
-import com.example.trackit.data.Weight.WeightViewModel
-import com.example.trackit.data.food.AddWeightDialog
+import com.example.trackit.data.weight.WeightEntry
+import com.example.trackit.data.weight.WeightViewModel
+import com.example.trackit.ui.AddWeightDialog
+import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.theme.Arsenic
 import kotlinx.coroutines.launch
 import java.time.LocalDate

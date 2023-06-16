@@ -3,9 +3,10 @@ package com.example.trackit.data.workout
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.trackit.data.PreCreatedCategoryList
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.example.trackit.data.preCreatedCategoryList
 
 @Database(entities = [WorkoutEntity::class], version = 3, exportSchema = false)
 @TypeConverters(LocalDateConverter::class, ExerciseConverter::class)
@@ -38,6 +39,7 @@ abstract class WorkoutCategoryDatabase : RoomDatabase(){
         @Volatile
         private var Instance: WorkoutCategoryDatabase? = null
 
+        @OptIn(DelicateCoroutinesApi::class)
         fun getDatabase(context: Context): WorkoutCategoryDatabase {
             // if the Instance is not null, return it, otherwise create a new database instance.
             return Instance ?: synchronized(this) {
@@ -48,7 +50,7 @@ abstract class WorkoutCategoryDatabase : RoomDatabase(){
                             super.onCreate(db)
                             // Insert pre-created objects into the database
                             GlobalScope.launch {
-                                preCreatedCategoryList.forEach{ category ->
+                                PreCreatedCategoryList.forEach{ category ->
                                     category.exercises.reverse()
                                     getDatabase(context).itemDao().insert(category)
                                 }

@@ -1,4 +1,4 @@
-package com.example.trackit.ui
+package com.example.trackit.ui.food
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
@@ -29,11 +29,11 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.trackit.R
 import com.example.trackit.data.food.*
-import com.example.trackit.ui.Nutrition.*
-import java.time.LocalDate
+import com.example.trackit.ui.AppViewModelProvider
 import com.example.trackit.ui.theme.PermanentGeraniumLake
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @Composable
@@ -127,7 +127,7 @@ fun FoodPage(
                             modifier = Modifier.padding(start = 10.dp, top = 18.dp)
                         )
                         Text(
-                            text = "${totalProteins}",
+                            text = "$totalProteins",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -149,7 +149,7 @@ fun FoodPage(
                                 .offset(x = (-7).dp)
                         )
                         Text(
-                            text = "${totalFats}",
+                            text = "$totalFats",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -169,7 +169,7 @@ fun FoodPage(
                             modifier = Modifier.padding(top = 18.dp)
                         )
                         Text(
-                            text = "${totalCarbs}",
+                            text = "$totalCarbs",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier
@@ -189,7 +189,7 @@ fun FoodPage(
                             modifier = Modifier.padding(top = 18.dp, end = 10.dp)
                         )
                         Text(
-                            text = "${totalCalories}",
+                            text = "$totalCalories",
                             fontSize = 20.sp,
                             color = Color.White,
                             modifier = Modifier

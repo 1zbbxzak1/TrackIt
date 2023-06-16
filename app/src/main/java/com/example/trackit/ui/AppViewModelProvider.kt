@@ -1,13 +1,17 @@
 package com.example.trackit.ui
 
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.trackit.TrackItApplication
+import com.example.trackit.data.food.BreakfastViewModel
+import com.example.trackit.data.food.DinnerViewModel
+import com.example.trackit.data.food.LunchViewModel
+import com.example.trackit.data.food.SnackViewModel
+import com.example.trackit.data.food.TotalViewModel
+import com.example.trackit.data.weight.WeightViewModel
 import com.example.trackit.ui.workout.WorkoutViewModel
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
-import com.example.trackit.data.Weight.WeightViewModel
-import com.example.trackit.data.food.*
 import com.example.trackit.ui.workout.category.WorkoutCategoryViewModel
 import com.example.trackit.ui.workout.exercise.WorkoutExerciseViewModel
 

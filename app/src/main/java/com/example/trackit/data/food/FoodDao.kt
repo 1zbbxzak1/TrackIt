@@ -1,7 +1,6 @@
 package com.example.trackit.data.food
 
 import androidx.room.*
-import com.example.trackit.ui.Nutrition.*
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

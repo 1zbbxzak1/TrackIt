@@ -1,9 +1,9 @@
-package com.example.trackit.ui.Nutrition
+package com.example.trackit.data.food
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 data class FoodData(
     var id: Long = 0,

@@ -1,4 +1,4 @@
-package com.example.trackit.data.Weight
+package com.example.trackit.data.weight
 
 import android.content.Context
 import androidx.room.Database

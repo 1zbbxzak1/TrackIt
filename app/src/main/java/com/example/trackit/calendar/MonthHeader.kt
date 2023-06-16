@@ -1,8 +1,14 @@
 package com.example.trackit.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -19,12 +25,11 @@ import com.example.trackit.ui.theme.Arsenic
 import com.example.trackit.ui.theme.CalendarDayTextStyle
 import io.github.boguszpawlowski.composecalendar.header.MonthState
 import java.time.format.TextStyle
-import java.util.*
+import java.util.Locale
 
 @Composable
 fun MonthHeader(
     monthState: MonthState,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Surface(
@@ -34,7 +39,6 @@ fun MonthHeader(
     ) {
         Column(
             modifier = modifier
-                //.clickable { onClick() }
                 .background(Arsenic),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally

@@ -1,5 +1,7 @@
 package com.example.trackit.ui.navigation
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
@@ -24,6 +26,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -41,6 +44,7 @@ import com.example.trackit.R
 import com.example.trackit.calendar.ExpandableCalendar
 import com.example.trackit.data.Screen
 import com.example.trackit.ui.theme.*
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 @Composable
@@ -53,6 +57,30 @@ fun BottomBar(
 ){
     var calendarExpanded by remember {
         mutableStateOf(false)
+    }
+
+    var showToast by remember { mutableStateOf(false) }
+
+    var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
+    val context = LocalContext.current
+
+    if(showToast){
+        Toast.makeText(context, "Нажмите еще раз для выхода", Toast.LENGTH_SHORT).show()
+        showToast= false
+    }
+
+    LaunchedEffect(key1 = backPressState) {
+        if (backPressState == BackPress.InitialTouch) {
+            delay(2000)
+            backPressState = BackPress.Idle
+        }
+    }
+
+    if (barState){
+        BackHandler(backPressState == BackPress.Idle) {
+            backPressState = BackPress.InitialTouch
+            showToast = true
+        }
     }
 
     AnimatedVisibility(
@@ -79,7 +107,6 @@ fun BottomBar(
             Surface(
                 color = MaterialTheme.colors.primaryVariant,
                 contentColor = contentColorFor(MaterialTheme.colors.primaryVariant),
-                //shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
             ) {
                 Row(
                     Modifier
@@ -185,6 +212,11 @@ fun BottomBar(
             }
         }
     }
+}
+
+sealed class BackPress {
+    object Idle : BackPress()
+    object InitialTouch : BackPress()
 }
 
 @Composable

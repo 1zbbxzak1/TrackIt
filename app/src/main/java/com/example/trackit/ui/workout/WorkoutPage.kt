@@ -33,7 +33,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.trackit.ui.navigation.FloatingButton
 import com.example.trackit.R
 import com.example.trackit.R.drawable.workout_icon
 import com.example.trackit.data.Screen
@@ -42,6 +41,7 @@ import com.example.trackit.data.workout.StrengthExercise
 import com.example.trackit.data.workout.WorkoutCategory
 import com.example.trackit.data.workout.WorkoutEntity
 import com.example.trackit.ui.AppViewModelProvider
+import com.example.trackit.ui.navigation.FloatingButton
 import com.example.trackit.ui.theme.*
 import kotlinx.coroutines.launch
 import java.time.Duration

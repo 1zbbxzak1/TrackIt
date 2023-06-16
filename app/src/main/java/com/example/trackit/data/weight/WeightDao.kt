@@ -1,4 +1,4 @@
-package com.example.trackit.data.Weight
+package com.example.trackit.data.weight
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
