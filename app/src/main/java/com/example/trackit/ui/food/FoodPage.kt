@@ -208,7 +208,7 @@ fun FoodPage(
                 Spacer(modifier = Modifier.padding(20.dp))
                 MealPanel(
                     mealType = "Завтрак",
-                    mealIcon = R.drawable.breakfast_icon,
+                    mealIcon = if (breakfastUiState.breakfastList.isNotEmpty()) R.drawable.breakfast_icon_green else R.drawable.breakfast_icon,
                     foods = breakfastUiState.breakfastList,
                     isExpanded = breakfastExpanded,
                     onPanelClicked = { breakfastExpanded = !breakfastExpanded },
@@ -237,7 +237,7 @@ fun FoodPage(
             item {
                 MealPanel(
                     mealType = "Обед",
-                    mealIcon = R.drawable.lunch_icon,
+                    mealIcon = if (lunchUiState.lunchList.isNotEmpty()) R.drawable.lunch_icon_green else R.drawable.lunch_icon,
                     foods = lunchUiState.lunchList,
                     isExpanded = lunchExpanded,
                     onPanelClicked = { lunchExpanded = !lunchExpanded },
@@ -266,7 +266,7 @@ fun FoodPage(
             item {
                 MealPanel(
                     mealType = "Ужин",
-                    mealIcon = R.drawable.dinner_icon,
+                    mealIcon = if (dinnerUiState.dinnerList.isNotEmpty()) R.drawable.dinner_icon_green else R.drawable.dinner_icon,
                     foods = dinnerUiState.dinnerList,
                     isExpanded = dinnerExpanded,
                     onPanelClicked = { dinnerExpanded = !dinnerExpanded },
@@ -295,7 +295,7 @@ fun FoodPage(
             item {
                 MealPanel(
                     mealType = "Перекус",
-                    mealIcon = R.drawable.snack_icon,
+                    mealIcon = if (snackUiState.snackList.isNotEmpty()) R.drawable.snack_icon_green else R.drawable.snack_icon,
                     foods = snackUiState.snackList,
                     isExpanded = snackExpanded,
                     onPanelClicked = { snackExpanded = !snackExpanded },
