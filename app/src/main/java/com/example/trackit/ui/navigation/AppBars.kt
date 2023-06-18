@@ -1,5 +1,6 @@
 package com.example.trackit.ui.navigation
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.example.trackit.R
 import com.example.trackit.calendar.ExpandableCalendar
@@ -46,6 +48,7 @@ import com.example.trackit.data.Screen
 import com.example.trackit.ui.theme.*
 import kotlinx.coroutines.delay
 import java.time.LocalDate
+import kotlin.system.exitProcess
 
 @Composable
 fun BottomBar(
@@ -59,28 +62,10 @@ fun BottomBar(
         mutableStateOf(false)
     }
 
-    var showToast by remember { mutableStateOf(false) }
+    val activity = (LocalContext.current as? Activity)
 
-    var backPressState by remember { mutableStateOf<BackPress>(BackPress.Idle) }
-    val context = LocalContext.current
-
-    if(showToast){
-        Toast.makeText(context, "Нажмите еще раз для выхода", Toast.LENGTH_SHORT).show()
-        showToast= false
-    }
-
-    LaunchedEffect(key1 = backPressState) {
-        if (backPressState == BackPress.InitialTouch) {
-            delay(2000)
-            backPressState = BackPress.Idle
-        }
-    }
-
-    if (barState){
-        BackHandler(backPressState == BackPress.Idle) {
-            backPressState = BackPress.InitialTouch
-            showToast = true
-        }
+    BackHandler(barState) {
+        activity?.finishAffinity()
     }
 
     AnimatedVisibility(
@@ -212,11 +197,6 @@ fun BottomBar(
             }
         }
     }
-}
-
-sealed class BackPress {
-    object Idle : BackPress()
-    object InitialTouch : BackPress()
 }
 
 @Composable
