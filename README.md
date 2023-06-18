@@ -24,12 +24,12 @@ _Developed by 1st year students for the Project Practice_
 
 ## Screenshots
 
-![App Screenshot](https://ibb.co/wyrLh8C)
-![App Screenshot](https://ibb.co/gvmY90f)
-![App Screenshot](https://ibb.co/vjw7v9z)
-![App Screenshot](https://ibb.co/Chx51J2)
-![App Screenshot](https://ibb.co/VHcb0ZV)
-![App Screenshot](https://ibb.co/vc14xMp)
+![App Screenshot](https://media.discordapp.net/attachments/1083788314743681025/1120131732369309786/Screenshot_20230616-214516_TrackIt.jpg?width=285&height=617)
+![App Screenshot](https://media.discordapp.net/attachments/1083788314743681025/1120131732721651802/Screenshot_20230616-214743_TrackIt.jpg?width=285&height=617)
+![App Screenshot](https://media.discordapp.net/attachments/1083788314743681025/1120131730796466207/Screenshot_20230616-214753_TrackIt.jpg?width=285&height=617)
+![App Screenshot](https://media.discordapp.net/attachments/1083788314743681025/1120131731106824202/Screenshot_20230616-214806_TrackIt.jpg?width=285&height=617)
+![App Screenshot](https://media.discordapp.net/attachments/1083788314743681025/1120131731564007505/Screenshot_20230619-043939_TrackIt.jpg?width=312&height=616)
+![App Screenshot](https://media.discordapp.net/attachments/1083788314743681025/1120131732017008700/Screenshot_20230616-214916_TrackIt.jpg?width=285&height=617)
 
 
 ## Installation
