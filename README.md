@@ -26,17 +26,17 @@ _Developed by 1st year students for the Project Practice_
 
 <p float="left" align="center">
   <img src="pictures/profile.jpg" height="550" width="250" />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="pictures/nutrition.jpg" height="550" width="250" />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="pictures/training.jpg" height="550" width="250" />
 </p>
 
 <p float="left" align="center">
   <img src="pictures/stats1.jpg" height="550" width="250" />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="pictures/stats2.jpg" height="550" width="250" />
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <img src="pictures/stats3.jpg" height="550" width="250" />
 </p>
 
